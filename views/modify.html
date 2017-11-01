@@ -1,0 +1,237 @@
+<div class='panel panel-default'>
+  <div class='panel-heading'>
+    <spin id="edit-nickname" class='app-form-header glyphicon glyphicon-pencil' title="修改昵称"></spin>
+    昵称
+  </div>
+  <div class='panel-body'>
+    <form class='form-horizontal' id="form-nickname" method="post" action="/modify_nickname">
+      <div id="form-nickname-display" class="row">
+        <label class='col-lg-2' style="text-align: right">昵称</label>
+        <div class='col-lg-6'>
+          <spin>
+            <%= user.nickname %>
+          </spin>
+        </div>
+      </div>
+
+      <div id="form-nickname-edit" style="display: none">
+        <div class='form-group'>
+          <label class='col-lg-2 control-label'>昵称</label>
+          <div class='col-lg-6'>
+            <input class='form-control' placeholder='昵称' type='text' name="nickname" value="<%= user.nickname %>" />
+          </div>
+        </div>
+        <div class="form-group">
+          <div class='col-lg-offset-2 col-lg-6'>
+            <button class='btn btn-default' type='submit'>修改昵称</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class='panel panel-default'>
+  <div class='panel-heading'>
+    <spin id="edit-email" class='app-form-header glyphicon glyphicon-pencil' title="修改关联邮箱"></spin>
+    邮箱
+  </div>
+  <div class='panel-body'>
+    <form class='form-horizontal' id="form-email" method="post" action="/modify_email">
+      <div id="form-email-display" class="row">
+        <label class='col-lg-2' style="text-align: right">关联邮箱</label>
+        <div class='col-lg-6'>
+          <spin>
+            <%= user.email || "暂无" %>
+          </spin>
+        </div>
+      </div>
+
+      <div id="form-email-edit" style="display: none">
+        <div class='form-group'>
+          <label class='col-lg-2 control-label'>关联邮箱</label>
+          <div class='col-lg-6'>
+            <input class='form-control' placeholder='邮箱' type='email' name="email" value="<%= user.email %>" />
+          </div>
+        </div>
+        <div class="form-group">
+          <div class='col-lg-offset-2 col-lg-6'>
+            <button class='btn btn-default' type='submit'>激活邮箱</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class='panel panel-default'>
+  <div class='panel-heading'>
+    <spin id="edit-info" class='app-form-header glyphicon glyphicon-pencil' title="修改基本资料"></spin>
+    基本资料
+  </div>
+  <div class='panel-body'>
+    <form class='form-horizontal' id="form-info" method="post" action="/modify_info">
+      <div id="form-info-display" class="row">
+        <div class="row">
+          <label class='col-lg-2' style="text-align: right">真实姓名</label>
+          <div class='col-lg-6'>
+            <spin>
+              <%= user.real_name || "不愿透露姓名的侠客" %>
+            </spin>
+          </div>
+        </div>
+        <div class="row">
+          <label class='col-lg-2' style="text-align: right">学校</label>
+          <div class='col-lg-6'>
+            <spin>
+              <%= user.school || "家里蹲" %>
+            </spin>
+          </div>
+        </div>
+        <div class="row">
+          <label class='col-lg-2' style="text-align: right">性别</label>
+          <div class='col-lg-6'>
+            <spin>
+              <%= user.sex || "未知" %>
+            </spin>
+          </div>
+        </div>
+        <div class="row">
+          <label class='col-lg-2' style="text-align: right">电话号码</label>
+          <div class='col-lg-6'>
+            <spin>
+              <%= user.phone_number || "110" %>
+            </spin>
+          </div>
+        </div>
+      </div>
+
+      <div id="form-info-edit" style="display: none">
+        <div class='form-group'>
+          <label class='col-lg-2 control-label'>真实姓名</label>
+          <div class='col-lg-6'>
+            <input class='form-control' placeholder='真实姓名' type='text' name="real_name" value="<%= user.real_name %>" />
+          </div>
+        </div>
+        <div class='form-group'>
+          <label class='col-lg-2 control-label'>学校</label>
+          <div class='col-lg-6'>
+            <input class='form-control' placeholder='学校' type='text' name="school" value="<%= user.school %>" />
+          </div>
+        </div>
+        <div class='form-group'>
+          <label class='col-lg-2 control-label'>性别</label>
+          <div class='col-lg-6'>
+            <select class='form-control' name="sex" value="<%= user.sex %>">
+              <option value="保密">保密</option>
+              <option value="男">男</option>
+              <option value="女">女</option>
+              <option value="其他">其他</option>
+            </select>
+          </div>
+        </div>
+        <div class='form-group'>
+          <label class='col-lg-2 control-label'>电话号码</label>
+          <div class='col-lg-6'>
+            <input class='form-control' placeholder='电话号码' type='text' name="phone_number" value="<%= user.phone_number %>" />
+          </div>
+        </div>
+        <div class="form-group">
+          <div class='col-lg-offset-2 col-lg-6'>
+            <button class='btn btn-default' type='submit'>修改资料</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+  $(function() {
+    $('select').each(function() {
+      let value = $(this).attr('value');
+      if (!value) return;
+      $(this).find('option[value="' + value + '"]').attr('selected', true);
+    });
+  });
+</script>
+
+
+<% if (normal_login) { %>
+  <div class='panel panel-default'>
+    <div class='panel-heading'>
+      <spin id="edit-password" class='app-form-header glyphicon glyphicon-pencil' title="修改帐号密码"></spin>
+      帐号密码
+    </div>
+    <div class='panel-body'>
+      <form class='form-horizontal' id="form-password" method="post" action="/modify_password">
+        <div id="form-password-display" class="row">
+          <div class="row">
+            <label class='col-lg-2' style="text-align: right">用户名</label>
+            <div class='col-lg-6'>
+              <spin>
+                <%= normal_login.username %>
+              </spin>
+            </div>
+          </div>
+          <div class="row">
+            <label class='col-lg-2' style="text-align: right">密码</label>
+            <div class='col-lg-6'>
+              <spin>
+                *****
+              </spin>
+            </div>
+          </div>
+        </div>
+
+        <div id="form-password-edit" style="display: none">
+          <div class='form-group'>
+            <label class='col-lg-2 control-label'>用户名</label>
+            <div class='col-lg-6'>
+              <input class='form-control' placeholder='用户名' type='text' value="<%= normal_login.username %>" readonly />
+            </div>
+          </div>
+          <div class='form-group'>
+            <label class='col-lg-2 control-label'>密码</label>
+            <div class='col-lg-6'>
+              <input class='form-control' placeholder='密码' type='password' name="password" id="password" />
+            </div>
+          </div>
+          <div class='form-group'>
+            <label class='col-lg-2 control-label'>确认密码</label>
+            <div class='col-lg-6'>
+              <input class='form-control' placeholder='密码' type='password' id="confirm_password" />
+            </div>
+          </div>
+          <div class="form-group">
+            <div class='col-lg-offset-2 col-lg-6'>
+              <button class='btn btn-default' type='submit'>修改密码</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script>
+    $(function () {
+      $('#form-password').submit(function () {
+        if ($('#password').val() != $('#confirm_password').val()) {
+          alert('两次输入的密码不一致');
+          return false;
+        }
+        return true;
+      });
+    });
+  </script>
+  <% } %>
+
+    <script>
+      $(function () {
+        var FORMS = ['email', 'nickname', 'password', 'info'];
+        FORMS.forEach(function (v) {
+          $('#edit-' + v).click(function () {
+            $('#form-' + v + '-display').toggle();
+            $('#form-' + v + '-edit').toggle();
+          });
+        });
+      });
+    </script>

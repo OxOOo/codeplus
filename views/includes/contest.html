@@ -1,0 +1,41 @@
+<div class='panel panel-default'>
+    <div class='panel-body'>
+        <%- md.render(contest.description); %>
+
+        <% if (contest_sign) {%>
+            <hr/>
+            <div class='panel panel-default'>
+                <div class='panel-body'>
+                    用户名：<%= contest_sign.username %>
+                    密码：<spin class="contest_sign_password_mark">**********</spin><spin class="contest_sign_password" style="display: none"><%= contest_sign.password %></spin>
+                    <a href="#" class="contest_sign_password_switch">显示密码</a>
+                </div>
+            </div>
+        <% } %>
+
+    </div>
+    <div class="panel-footer">
+        <% if (Date.now() < contest.begin_sign_time ) { %>
+            还未开始报名
+        <% } else if (contest.end_sign_time < Date.now()) {%>
+            报名已结束
+        <% } else if (!user) { %>
+            <a href="/login">登录后报名</a>
+        <% } else if (contest_sign) { %>
+            <a href="/contests/unsign?contest_id=<%= contest._id %>&user_id=<%= user._id %>">取消报名</a>
+        <% } else { %>
+            <a href="/contests/sign?contest_id=<%= contest._id %>&user_id=<%= user._id %>">报名</a>
+        <% } %>
+            | <a>报名表</a>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        $('.contest_sign_password_switch').click(function() {
+            $('.contest_sign_password_mark').toggle();
+            $('.contest_sign_password').toggle();
+            $('.contest_sign_password_switch').text($('.contest_sign_password').is(':visible') ? '隐藏密码' : '显示密码');
+        });
+    });
+</script>
