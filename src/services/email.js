@@ -34,3 +34,22 @@ exports.sendActiveEmail = (user) => {
         }
     });
 }
+
+// 忘记密码
+exports.sendForgotEmail = (user) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            server.send({
+                text: `验证码：${user.forgot_password_code}`,
+                from: `Code+ <${EMAIL.USER}>`,
+                to: `${tools.emailName(user.email_will)} <${user.email_will}>`,
+                subject: "Code+密码找回"
+            }, function(err, message) {
+                if (err) reject(err);
+                else resolve();
+            });
+        } catch(e) {
+            reject(e);
+        }
+    });
+}

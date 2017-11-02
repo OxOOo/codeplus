@@ -16,10 +16,19 @@ let userSchema = new mongoose.Schema({
 		required: true,
 		default: false
 	},
-	email: String,
+	email: {
+		type: String,
+		trim: true,
+		unique: true,
+		sparse: true
+	},
 	email_will: String, // 将要设置的邮箱
 	email_code: String,
 	email_code_expire: Date,
+
+	// 通过邮箱找回密码
+	forgot_password_code: String,
+	forgot_password_code_expire: Date,
 
 	// 基本信息
 	info_filled: { // 是否已填基本信息

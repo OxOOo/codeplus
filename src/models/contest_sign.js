@@ -16,6 +16,11 @@ let contestSignSchema = new mongoose.Schema({
 		ref : 'Contest',
 		required: true
     },
+
+    type: {
+        type: String,
+        required: true
+    },
     
     username: String,
     password: String,

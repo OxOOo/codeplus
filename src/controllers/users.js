@@ -3,6 +3,7 @@ let Router = require('koa-router');
 let _ = require('lodash');
 let path = require('path');
 let utils = require('utility');
+let qs = require('querystring');
 require('should');
 
 let config = require('../config');
@@ -15,7 +16,7 @@ const router = module.exports = new Router();
 
 // 注册
 router.get('/register', async (ctx, next) => {
-    await ctx.render("register", {layout: false});
+    await ctx.render("register", {layout: 'user_layout', title: "注册"});
 });
 router.post('/register', async (ctx, next) => {
     ctx.request.body.username.should.be.a.String().and.not.empty();
@@ -28,7 +29,7 @@ router.post('/register', async (ctx, next) => {
 
 // 登录
 router.get('/login', async (ctx, next) => {
-    await ctx.render("login", {layout: false});
+    await ctx.render("login", {layout: 'user_layout', title: "登录"});
 });
 router.post('/normal_login', async (ctx, next) => {
     ctx.request.body.username.should.be.a.String().and.not.empty();
@@ -43,9 +44,48 @@ router.get('/logout', async (ctx, next) => {
     await ctx.redirect("/");
 });
 
+// 忘记密码
+router.get('/forgot_password', async (ctx, next) => {
+    await ctx.render("forgot_password", {layout: 'user_layout', title: "忘记密码"});
+});
+router.get('/forgot_password_sendemail', async (ctx, next) => {
+    ctx.request.query.email.should.be.a.String().and.not.empty();
+
+    let user = await User.findOne({email: ctx.request.query.email});
+    auth.assert(user, "不存在与该邮箱关联的用户");
+
+    user.forgot_password_code = utils.randomString(10, '1234567890');
+    user.forgot_password_code_expire = Date.now() + 10*60*1000;
+    await user.save();
+
+    await email.sendForgotEmail(user);
+    ctx.state.flash.success = "邮件发送成功";
+
+    await ctx.redirect('/forgot_password2?' + qs.stringify({email: ctx.request.query.email}));
+});
+router.get('/forgot_password2', async (ctx, next) => {
+    ctx.request.query.email.should.be.a.String().and.not.empty();
+
+    await ctx.render("forgot_password2", {layout: 'user_layout', title: "忘记密码", email: ctx.request.query.email});
+});
+router.post('/forgot_password_reset', async (ctx, next) => {
+    ctx.request.body.email.should.be.a.String().and.not.empty();
+    ctx.request.body.code.should.be.a.String().and.not.empty();
+    ctx.request.body.password.should.be.a.String().and.not.empty();
+
+    let user = await User.findOne({email: ctx.request.body.email});
+    auth.assert(user, "用户不存在");
+    auth.assert(user.forgot_password_code_expire > Date.now(), "验证码已过期");
+    auth.assert(user.forgot_password_code == ctx.request.body.code, "验证码不正确");
+
+    await auth.resetPassword(ctx, user, ctx.request.body.password);
+    ctx.state.flash.success = "重置密码成功";
+    await ctx.redirect('/');
+});
+
 // 修改资料
 router.get('/modify', auth.loginRequired, async (ctx, next) => {
-    await ctx.render('modify', {current_page: 'modify'});
+    await ctx.render('modify', {current_page: 'modify', title: "修改资料"});
 });
 // 修改昵称
 router.post('/modify_nickname', auth.loginRequired, async (ctx, next) => {
@@ -74,7 +114,7 @@ router.post('/modify_email', auth.loginRequired, async (ctx, next) => {
     await ctx.redirect('/email_sended');
 });
 router.get('/email_sended', auth.loginRequired, async (ctx, next) => {
-    await ctx.render('email_sended', {current_page: 'modify'});
+    await ctx.render('email_sended', {current_page: 'modify', title: "验证邮箱"});
 });
 router.get('/resend_email', auth.loginRequired, async (ctx, next) => {
     let user = ctx.state.user;

@@ -26,7 +26,7 @@ let userM = exports.userM = async function (ctx, next) {
 		} else {
             ctx.state.flash.error = e.message;
             await ctx.redirect('back');
-            console.error(e.message);
+            console.error(e);
         }
 	}
 }
@@ -71,9 +71,27 @@ exports.register = async function (ctx, username, password) {
 	ctx.state.user = user;
 }
 
+// 登录的情况下修改密码
 exports.modifyPassword = async function (ctx, password) {
     let login = ctx.state.normal_login;
     login.password = utils.sha256(password + login.random_salt);
+
+    await login.save();
+}
+
+// 忘记密码的情况下重置密码
+exports.resetPassword = async function (ctx, user, password) {
+    let login = await NormalLogin.findOne({userID: user._id});
+    if (!login) {
+        login = new NormalLogin();
+        login.userID = user._id;
+        login.username = user.email;
+        login.random_salt = utils.randomString(32, '1234567890');
+    }
+    login.password = utils.sha256(password + login.random_salt);
+
+    ctx.session.user_id = login.userID;
+	ctx.state.user = user;
 
     await login.save();
 }

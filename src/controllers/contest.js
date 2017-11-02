@@ -20,7 +20,7 @@ router.get('/', async (ctx, next) => {
     if (ctx.state.user) {
         contest_sign = await ContestSign.findOne({userID: ctx.state.user._id, contestID: contest._id});
     }
-    await ctx.render("index", { contest: contest, contest_sign: contest_sign, current_page: '/' });
+    await ctx.render("index", { contest: contest, contest_sign: contest_sign, current_page: '/', title: contest.title });
 });
 
 async function ContestSignCheck(contest_id) {
@@ -36,9 +36,11 @@ async function ContestSignCheck(contest_id) {
 router.get('/contests/sign', auth.loginRequired, async (ctx, next) => {
     ctx.request.query.contest_id.should.be.a.String().and.not.empty();
     ctx.request.query.user_id.should.be.a.String().and.not.empty();
+    ctx.request.query.type.should.be.a.String().and.not.empty();
 
     auth.assert(ctx.state.user.email_passed, '尚未关联邮箱，不能报名，前往<a href="/modify">关联邮箱</a>');
     auth.assert(ctx.state.user.info_filled, '基本信息不完善，不能报名，前往<a href="/modify">完善基本信息</a>');
+    auth.assert(_.includes(['div1', 'div2'], ctx.request.query.type), '报名类型不正确');
 
     let contest = await ContestSignCheck(ctx.request.query.contest_id);
 
@@ -52,7 +54,13 @@ router.get('/contests/sign', auth.loginRequired, async (ctx, next) => {
         if (!await ContestSign.findOne({username})) break;
     } while(true);
 
-    await ContestSign.create({userID: ctx.state.user._id, contestID: contest._id, username: username, password: password});
+    await ContestSign.create({
+        userID: ctx.state.user._id,
+        contestID: contest._id,
+        username: username,
+        password: password,
+        type: ctx.request.query.type,
+    });
     ctx.state.flash.success = `报名成功,用户名是'${username}',可在页面下方查看密码`;
     await ctx.redirect('back');
 });

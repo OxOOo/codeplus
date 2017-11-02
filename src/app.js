@@ -37,6 +37,12 @@ app.use(async (ctx, next) => {
     await next();
 });
 
+app.use(async (ctx, next) => {
+    ctx.state.current_page = "404";
+    ctx.state.user = null;
+    ctx.state.title = "Code+";
+    await next();
+});
 app.use(flash);
 app.use(auth.userM);
 
@@ -45,7 +51,7 @@ app.use(require('./controllers/contest').routes());
 app.use(require('./controllers/users').routes());
 app.use(require('koa-static')('public'));
 app.use(async (ctx, next) => {
-    await ctx.render('404', {layout: false});
+    await ctx.render('404');
 });
 
 app.listen(SERVER.PORT, SERVER.ADDRESS);
