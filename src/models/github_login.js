@@ -18,7 +18,8 @@ let githubLoginSchema = new mongoose.Schema({
 	userID : {
 		type : mongoose.Schema.ObjectId,
 		ref : 'User',
-		required: true
+		required: true,
+		unique: true,
 	},
 
 	created_date: { type: Date, default: Date.now },
