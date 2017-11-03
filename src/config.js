@@ -23,3 +23,6 @@ if ('MONGO_HOST' in process.env && 'REDIS_HOST' in process.env) { // for docker
 
 // EMAIL
 const EMAIL = exports.EMAIL = _.pick(config['EMAIL'], 'USER', 'PASSWORD', 'HOST', 'SSL');
+
+// OAUTH
+const OAUTH = exports.OAUTH = _.pick(config['OAUTH'], 'GITHUB');

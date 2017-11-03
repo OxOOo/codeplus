@@ -4,6 +4,7 @@ let _ = require('lodash');
 let path = require('path');
 let utils = require('utility');
 let qs = require('querystring');
+let request = require('superagent');
 require('should');
 
 let config = require('../config');
@@ -29,12 +30,27 @@ router.post('/register', async (ctx, next) => {
 
 // 登录
 router.get('/login', async (ctx, next) => {
-    await ctx.render("login", {layout: 'user_layout', title: "登录"});
+    await ctx.render("login", {layout: 'user_layout', title: "登录", OAUTH: config.OAUTH, URL_PREFIX: config.SERVER.URL_PREFIX});
 });
 router.post('/normal_login', async (ctx, next) => {
     ctx.request.body.username.should.be.a.String().and.not.empty();
     ctx.request.body.password.should.be.a.String().and.not.empty();
     await auth.normal_login(ctx, ctx.request.body.username, ctx.request.body.password);
+    ctx.state.flash.success = '登录成功';
+    await ctx.redirect('/');
+});
+router.get('/github_callback', async (ctx, next) => {
+    ctx.request.query.code.should.be.a.String().and.not.empty();
+    
+    let res = (await request.post('https://github.com/login/oauth/access_token')
+        .send({
+            client_id: config.OAUTH.GITHUB.CLIENT_ID,
+            client_secret: config.OAUTH.GITHUB.CLIENT_SECRET,
+            code: ctx.request.query.code,
+            redirect_uri: config.SERVER.URL_PREFIX + '/github_callback'
+        })).body;
+    let info = (await request.get('https://api.github.com/user').query(res)).body;
+    await auth.github_login(ctx, info);
     ctx.state.flash.success = '登录成功';
     await ctx.redirect('/');
 });

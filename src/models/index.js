@@ -13,6 +13,7 @@ mongoose.connect(config.MONGODB_URL, {
 });
 
 let NormalLogin = exports.NormalLogin = require('./normal_login');
+let GithubLogin = exports.GithubLogin = require('./github_login');
 let User = exports.User = require('./user');
 
 let Contest = exports.Contest = require('./contest');

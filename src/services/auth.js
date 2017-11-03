@@ -1,7 +1,7 @@
 
-let lodash = require('lodash');
+let _ = require('lodash');
 let utils = require('utility');
-let { User, NormalLogin } = require('../models');
+let { User, NormalLogin, GithubLogin } = require('../models');
 require('should');
 
 const ERR_CODE = 978;
@@ -48,6 +48,24 @@ exports.normal_login = async function (ctx, username, password) {
     assert(login, '用户不存在');
     assert(login.password == utils.sha256(password + login.random_salt), '密码错误');
 
+    ctx.session.user_id = login.userID;
+	ctx.state.user = await User.findById(login.userID);
+}
+
+// Github登录
+exports.github_login = async function (ctx, info) {
+    let login = await GithubLogin.findOne({id: info.id});
+    if (!login) {
+        login = new GithubLogin({id: info.id});
+        let user = new User({nickname: info.name});
+        login.userID = user._id;
+        await login.save();
+        await user.save();
+    }
+
+    _.assign(login, info);
+    await login.save();
+    
     ctx.session.user_id = login.userID;
 	ctx.state.user = await User.findById(login.userID);
 }
