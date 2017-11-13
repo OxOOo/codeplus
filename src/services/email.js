@@ -21,10 +21,13 @@ exports.sendActiveEmail = (user) => {
         try {
             let url = SERVER.URL_PREFIX + '/check_email_code?' + qs.stringify({code: user.email_code, user_id: user._id.toString()});
             server.send({
-                text: `<a href="${url}">激活链接</a> : ${url}`,
+                text: `激活链接 : ${url}`,
                 from: `Code+ <${EMAIL.USER}>`,
                 to: `${tools.emailName(user.email_will)} <${user.email_will}>`,
-                subject: "Code+邮箱验证"
+                subject: "Code+邮箱验证",
+                attachment: [
+                    { data: `<a href="${url}">激活链接</a> : ${url}`, alternative: true },
+                ],
             }, function(err, message) {
                 if (err) reject(err);
                 else resolve();
