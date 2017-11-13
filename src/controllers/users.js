@@ -94,6 +94,9 @@ router.post('/forgot_password_reset', async (ctx, next) => {
     auth.assert(user.forgot_password_code_expire > Date.now(), "验证码已过期");
     auth.assert(user.forgot_password_code == ctx.request.body.code, "验证码不正确");
 
+    user.forgot_password_code = undefined;
+    await user.save();
+
     await auth.resetPassword(ctx, user, ctx.request.body.password);
     ctx.state.flash.success = "重置密码成功";
     await ctx.redirect('/');
@@ -158,6 +161,7 @@ router.get('/check_email_code', auth.loginRequired, async (ctx, next) => {
 
     user.email = user.email_will;
     user.email_passed = true;
+    user.email_code = undefined;
     await user.save();
 
     ctx.state.flash.success = "邮箱激活成功";
