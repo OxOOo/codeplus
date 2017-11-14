@@ -68,10 +68,9 @@
                 </li>
                 <li class='launcher <%= current_page == "feedback" ? "active" : "" %>'>
                     <i class='glyphicon glyphicon-book'></i>
-                    <a href='#'>反馈</a>
+                    <a href='/feedback'>反馈</a>
                 </li>
             </ul>
-            <div data-toggle='tooltip' id='beaker' title='Made by lab2023'></div>
         </section>
         <!-- Tools -->
         <section id='tools'>
@@ -83,6 +82,7 @@
         <div id='content'>
             <% include includes/flash %>
             <%- body %>
+            <div class="codeplus-footer">Made with ❤ by THUSAAC. Theme by lab2023.</div>
         </div>
     </div>
     <!-- Footer -->

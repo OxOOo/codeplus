@@ -10,3 +10,7 @@ let auth = require('../services/auth');
 
 const router = module.exports = new Router();
 
+router.get('/feedback', async ctx => {
+    await ctx.render("feedback", { title: '反馈', current_page: 'feedback' });
+});
+

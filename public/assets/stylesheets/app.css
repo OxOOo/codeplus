@@ -2,3 +2,14 @@
 .app-form-header {
     cursor: pointer;
 }
+
+#sidebar ul#dock li.launcher {
+  margin-top: 45px;
+}
+
+.codeplus-footer {
+  font-size: 12px;
+  text-align: center;
+
+  color: rgba(0,0,0,.3);
+}
