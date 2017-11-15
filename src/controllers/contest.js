@@ -79,3 +79,5 @@ router.get('/contests/unsign', auth.loginRequired, async (ctx, next) => {
     ctx.state.flash.success = "取消报名成功";
     await ctx.redirect('back');
 });
+
+// TODO: administrative interface

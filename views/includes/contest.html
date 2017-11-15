@@ -31,7 +31,10 @@
             <a href="/contests/sign?contest_id=<%= contest._id %>&user_id=<%= user._id %>&type=div1">报名div1</a> |
             <a href="/contests/sign?contest_id=<%= contest._id %>&user_id=<%= user._id %>&type=div2">报名div2</a>
         <% } %>
+
+        <% if(contest.signup_form_url) { %>
             | <a>报名表</a>
+        <% } %>
 
         <% if(contest_sign) { %>
           <br><br>
