@@ -7,12 +7,19 @@ body {
   font-family: PingfangSC, "Source Hans Sans SC", "NotoSansCJK SC", RobotoDraft, Roboto, Helvetica, sans-serif;
 }
 
+body.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 button {
   border: 0;
   outline: 0;
   background: none;
   line-height: inherit;
   font-size: inherit;
+  cursor: pointer;
 }
 
 select, input {
@@ -43,14 +50,37 @@ a:hover {
 }
 
 /* Layout components */
+.clearfix {
+  clear: both;
+  height: 0;
+  font-size: 0;
+}
+
 .logo {
   margin: 20px 0;
   padding: 0 40px;
   text-align: center;
 }
 
+.logo.smaller {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 .logo img {
   max-width: 200px;
+}
+
+.logo.smaller img {
+  max-width: 150px;
+}
+
+.smaller-title {
+  color: rgba(0,0,0,.54);
+  font-size: 24px;
+  line-height: 40px;
+  text-align: center;
+  margin-bottom: 10px;
 }
 
 .primary-wrapper {
@@ -61,6 +91,10 @@ a:hover {
 .primary-content {
   max-width: 600px;
   margin: 0 auto;
+}
+
+.primary-content.smaller {
+  max-width: 300px;
 }
 
 .panel {
@@ -107,7 +141,7 @@ a:hover {
 
 .alert-success {
   background: rgba(129, 192, 58, 0.12);
-  color: rgba(129, 192, 58, 1);
+  color: rgba(124, 191, 38, 1);
   border: rgba(129, 192, 58, .3) 1px solid;
 }
 
@@ -119,7 +153,7 @@ a:hover {
 
 .alert-warning {
   background: rgba(245, 198, 43, 0.12);
-  color: rgba(245, 198, 43, 1);
+  color: rgba(226, 134, 23, 1);
   border: rgba(245, 198, 43, .3) 1px solid;
 }
 
@@ -184,10 +218,6 @@ button.close:hover {
   opacity: 1;
 }
 
-#sidebar ul#dock li.launcher {
-  margin-top: 45px;
-}
-
 .codeplus-footer {
   font-size: 12px;
   text-align: center;
@@ -195,27 +225,33 @@ button.close:hover {
   color: rgba(0,0,0,.3);
 }
 
-.navbar-brand {
-  padding: 0;
-}
-
-.navbar-brand img {
-  height: 80px;
-  margin-left: 10px;
-}
-
-.login-brand img {
-  height: 100px;
-}
-
 #wrapper {
   top: 100px;
 }
 
-#navbar .nav>li>a {
-  padding: 25px 10px;
+
+/* Specific */
+button.realbtn {
+  width: 100%;
+  transition: opacity .2s ease;
+  opacity: 1;
+
+  border-radius: 4px;
+  padding: 15px 20px;
+  box-shadow: rgba(0,0,0,.12) 0 4px 6px;
+  background: rgba(0,0,0,.06);
+  display: block;
 }
 
-body.login {
-  background-color: #EEE;
+button.realbtn:hover {
+  opacity: .9;
+}
+
+button.realbtn.login-with-github {
+  background: #444444;
+  color: white;
+}
+
+.login-with-github .fa {
+  margin-right: 6px;
 }
