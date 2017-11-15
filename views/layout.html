@@ -31,7 +31,7 @@
     <!-- Navbar -->
     <div class="navbar">
       <a href="/" class="navlink <%= current_page === '/' ? 'active' : '' %>">当前赛事</a>
-      <a href="/feedback" class="navlink <%= current_page === 'feedback' ? 'active' : '' %>">反馈</a>
+      <a href="/feedback" class="navlink <%= current_page === 'feedback' ? 'active' : '' %>">反馈与支持</a>
       <% if (user) { %>
         <div class="navlink navlink-group <%= current_page === 'modify' ? 'active' : '' %>"><i class="fa fa-user"></i> <%=user.nickname%>
           <div class="navlink-group-content">
