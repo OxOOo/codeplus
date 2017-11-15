@@ -33,8 +33,12 @@
       <a href="/" class="navlink <%= current_page === '/' ? 'active' : '' %>">当前赛事</a>
       <a href="/feedback" class="navlink <%= current_page === 'feedback' ? 'active' : '' %>">反馈</a>
       <% if (user) { %>
-        <a href="/modify" class="navlink <%= current_page === 'modify' ? 'active' : '' %>"><i class="fa fa-user"></i> <%=user.nickname%></a>
-        <a href="/logout" class="navlink">登出</a>
+        <div class="navlink navlink-group <%= current_page === 'modify' ? 'active' : '' %>"><i class="fa fa-user"></i> <%=user.nickname%>
+          <div class="navlink-group-content">
+            <a href="/modify" class="sub-navlink <%= current_page === 'modify' ? 'active' : '' %>">个人资料</a>
+            <a href="/logout" class="sub-navlink">登出</a>
+          </div>
+        </div>
       <% } else { %>
         <a href="/login" class="navlink">登陆</a>
       <% } %>
@@ -44,9 +48,9 @@
       <div class="primary-content">
         <% include includes/flash %>
         <%- body %>
+        <div class="cp-footer">Made with ❤ by THUSAAC. </div>
       </div>
     </div>
-    <div class="codeplus-footer">Made with ❤ by THUSAAC. </div>
 </body>
 
 </html>

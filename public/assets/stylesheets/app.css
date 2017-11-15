@@ -82,7 +82,7 @@ a:hover {
   padding: 0 20px;
 }
 
-a.navlink {
+.navlink {
   display: inline-block;
   margin: 0 5px;
   padding: 10px 15px;
@@ -92,18 +92,70 @@ a.navlink {
   transition: opacity .2s ease;
 }
 
-a.navlink:hover {
+.navlink:hover {
   opacity: 1;
   color: black;
 }
 
-a.navlink.active {
+.navlink.active {
   color: #E60012;
   border-color: #E37639;
 }
 
-a.navlink.active:hover {
+.navlink.active:hover {
   color: #E60012;
+}
+
+.navlink-group {
+  cursor: pointer;
+  position: relative;
+}
+
+.navlink-group-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 160px;
+  box-shadow: rgba(0,0,0,.12) 0 4px 6px;
+  background: white;
+
+  -webkit-backdrop-filter: blur(2px);
+  -moz-backdrop-filter: blur(2px);
+  -o-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+}
+
+.navlink-group:hover .navlink-group-content {
+  display: block;
+}
+
+.sub-navlink {
+  line-height: 48px;
+  font-size: 14px;
+  padding: 0 15px;
+  border-bottom: rgba(0,0,0,.12) 1px solid;
+  display: block;
+  text-align: left;
+
+  color: rgba(0,0,0,.5);
+  transition: color .2s ease; 
+}
+
+.sub-navlink:last-child {
+  border-bottom: none;
+}
+
+.sub-navlink:hover {
+  color: rgba(0,0,0,.87);
+}
+
+.sub-navlink.active {
+  color: rgba(230, 0, 18, 0.5);
+}
+
+.sub-navlink.active:hover {
+  color: rgba(230, 0, 18, 0.87)
 }
 
 .smaller-title {
@@ -159,6 +211,12 @@ a.navlink.active:hover {
   border-top: rgba(0,0,0,.12) 1px solid;
   padding: 20px;
   box-shadow: rgba(0,0,0,.12) 0 1px 2px inset;
+}
+
+.cp-footer {
+  font-size: 12px;
+  text-align: center;
+  color: rgba(0,0,0,.3);
 }
 
 /* Alerts */
@@ -248,18 +306,6 @@ button.close:hover {
 .cp-edit .edit-btn:hover, .cp-edit .done-btn:hover {
   opacity: 1;
 }
-
-.codeplus-footer {
-  font-size: 12px;
-  text-align: center;
-
-  color: rgba(0,0,0,.3);
-}
-
-#wrapper {
-  top: 100px;
-}
-
 
 /* Specific */
 button.realbtn {
