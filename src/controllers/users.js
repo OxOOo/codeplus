@@ -178,7 +178,7 @@ router.post('/modify_info', auth.loginRequired, async (ctx, next) => {
     for(const v in FIELDS)
         ctx.request.body[v].should.be.a.String().and.not.empty(`${FIELDS[v]}不能为空`);
 
-    _.assign(ctx.state.user, _.pick(ctx.request.body, FIEDS));
+    _.assign(ctx.state.user, _.pick(ctx.request.body, Object.keys(FIELDS)));
     ctx.state.user.info_filled = true;
     await ctx.state.user.save();
     ctx.state.flash.success = '资料修改成功';

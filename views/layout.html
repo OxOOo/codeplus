@@ -8,9 +8,8 @@
     <title>Code+ | <%= title %></title>
     <meta content='' name='description'>
     <meta content='' name='keywords'>
-    <link href="assets/stylesheets/application-a07755f5.css" rel="stylesheet" type="text/css" />
     <link href="assets/stylesheets/app.css" rel="stylesheet" type="text/css" />
-    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="assets/images/favicon.ico" rel="icon" type="image/ico" />
 
     <!-- Javascripts -->
@@ -23,12 +22,14 @@
 
 </head>
 
-<body class='main page'>
+<body>
+    <div class="logo">
+      <a href="/">
+        <img src="assets/images/cplogo.svg"></img>
+      </a>
+    </div>
     <!-- Navbar -->
     <div class='navbar navbar-default' id='navbar'>
-        <a class='navbar-brand' href='/'>
-          <img src="assets/images/cplogo.svg"></img>
-        </a>
         <ul class='nav navbar-nav pull-right'>
             <li class='dropdown user'>
                 <% if (user) { %>
@@ -53,39 +54,14 @@
             </li>
         </ul>
     </div>
-    <div id='wrapper'>
-        <!-- Sidebar -->
-        <section id='sidebar'>
-            <i class='icon-align-justify icon-large' id='toggle'></i>
-            <ul id='dock'>
-                <li class='launcher <%= current_page == "/" ? "active" : "" %>'>
-                    <i class='icon-dashboard'></i>
-                    <a href="/">当前赛事</a>
-                </li>
-                <li class='launcher <%= current_page == "modify" ? "active" : "" %>'>
-                    <i class='glyphicon glyphicon-cog'></i>
-                    <a href="/modify">修改资料</a>
-                </li>
-                <li class='launcher <%= current_page == "feedback" ? "active" : "" %>'>
-                    <i class='glyphicon glyphicon-book'></i>
-                    <a href='/feedback'>反馈</a>
-                </li>
-            </ul>
-        </section>
-        <!-- Tools -->
-        <section id='tools'>
-            <ul class='breadcrumb' id='breadcrumb'>
-                <li class='title'><%= title %></li>
-            </ul>
-        </section>
-        <!-- Content -->
-        <div id='content'>
-            <% include includes/flash %>
-            <%- body %>
-            <div class="codeplus-footer">Made with ❤ by THUSAAC. Theme by lab2023.</div>
-        </div>
+    <!-- Content -->
+    <% include includes/flash %>
+    <div class="primary-wrapper">
+      <div class="primary-content">
+        <%- body %>
+      </div>
     </div>
-    <!-- Footer -->
+    <div class="codeplus-footer">Made with ❤ by THUSAAC. </div>
 </body>
 
 </html>

@@ -1,6 +1,124 @@
+/* Global overrides */
+body {
+  background-color: #EEE;
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+  font-family: PingfangSC, "Source Hans Sans SC", "NotoSansCJK SC", RobotoDraft, Roboto, Helvetica, sans-serif;
+}
 
-.app-form-header {
-    cursor: pointer;
+button {
+  border: 0;
+  outline: 0;
+  background: none;
+  line-height: inherit;
+  font-size: inherit;
+}
+
+select, input {
+  border: 0;
+  outline: 0;
+  line-height: inherit;
+  font-size: inherit;
+
+  width: 100%;
+
+  padding: 4px 0;
+  border-bottom: rgba(0,0,0,.12) 1px solid;
+  transition: border-color .2s ease;
+}
+
+select:focus, input:focus {
+  border-color: rgba(0,0,0,.36);
+}
+
+.logo {
+  margin: 20px 0;
+  padding: 0 40px;
+  text-align: center;
+}
+
+.logo img {
+  max-width: 200px;
+}
+
+.primary-wrapper {
+  margin: 20px 0;
+  padding: 0 20px;
+}
+
+.primary-content {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.panel {
+  background: white;
+  margin: 20px 0;
+  border-radius: 2px;
+  padding-bottom: 10px;
+  box-shadow: rgba(0,0,0,.12) 0 2px 3px;
+}
+
+.panel-heading {
+  font-size: 24px;
+  line-height: 36px;
+  font-weight: lighter;
+  padding: 20px;
+  border-bottom: rgba(0,0,0,.12) 1px solid;
+}
+
+.panel-heading .fa {
+  line-height: inherit;
+}
+
+.panel-body {
+  padding: 20px;
+}
+
+.cp-input-group {
+  margin-bottom: 10px;
+
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: bold;
+}
+
+.cp-input-group:last-child {
+  margin-bottom: 0;
+}
+
+.cp-input-group label {
+  opacity: .54;
+  color: black;
+  font-size: 12px;
+  line-height: 20px;
+  font-weight: lighter;
+}
+
+/* I need SASS BADLY */
+.cp-edit .show-on-edit {
+  display: none;
+}
+
+.cp-edit.editing .show-on-edit {
+  display: inherit;
+}
+
+.cp-edit.editing .hide-on-edit {
+  display: none;
+}
+
+.cp-edit .edit-btn, .cp-edit .done-btn {
+  color: black;
+  opacity: 0.54;
+  transition: opacity .2s ease;
+  float: right;
+  cursor: pointer;
+}
+
+.cp-edit .edit-btn:hover, .cp-edit .done-btn:hover {
+  opacity: 1;
 }
 
 #sidebar ul#dock li.launcher {
@@ -33,10 +151,6 @@
 
 #navbar .nav>li>a {
   padding: 25px 10px;
-}
-
-body.main {
-  background-color: #EEE;
 }
 
 body.login {
