@@ -29,7 +29,8 @@ exports.sendActiveEmail = (user) => {
         try {
           console.log(user);
             let url = SERVER.URL_PREFIX + '/check_email_code?' + qs.stringify({code: user.email_code, user_id: user._id.toString()});
-            let mailContent = activeTmpl({ name: user.nickname, link: url });
+            let logo = SERVER.URL_PREFIX + '/assets/images/cplogo.svg';
+            let mailContent = activeTmpl({ name: user.nickname, link: url, logo: logo });
             server.send({
                 text: h2t.fromString(mailContent, { wordwrap: 80 }),
                 from: `Code+ <${EMAIL.USER}>`,
@@ -52,7 +53,8 @@ exports.sendActiveEmail = (user) => {
 exports.sendForgotEmail = (user) => {
     return new Promise(async (resolve, reject) => {
         try {
-            let mailContent = forgotTmpl({ name: user.nickname, code: user.forgot_password_code});
+            let logo = SERVER.URL_PREFIX + '/assets/images/cplogo.svg';
+            let mailContent = forgotTmpl({ name: user.nickname, code: user.forgot_password_code, logo: logo });
             server.send({
                 text: h2t.fromString(mailContent, { wordwrap: 80 }),
                 from: `Code+ <${EMAIL.USER}>`,
