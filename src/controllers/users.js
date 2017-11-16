@@ -175,8 +175,9 @@ router.post('/modify_info', auth.loginRequired, async (ctx, next) => {
       sex: "性别",
       phone_number: "电话号码",
     };
+
     for(const v in FIELDS)
-        ctx.request.body[v].should.be.a.String().and.not.empty(`${FIELDS[v]}不能为空`);
+        ctx.request.body[v].should.be.a.String().and.not.eql("", `${FIELDS[v]}不能为空`);
 
     _.assign(ctx.state.user, _.pick(ctx.request.body, Object.keys(FIELDS)));
     ctx.state.user.info_filled = true;
