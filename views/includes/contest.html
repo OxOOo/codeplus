@@ -31,7 +31,8 @@
             <a href="/contests/sign?contest_id=<%= contest._id %>&user_id=<%= user._id %>&type=div1">报名div1</a> |
             <a href="/contests/sign?contest_id=<%= contest._id %>&user_id=<%= user._id %>&type=div2">报名div2</a>
             <% if(contest.terms) { %>
-              | <strong>点击报名即同意<a id="terms-link" href="#">选手须知</a></strong>
+              <br>
+              <strong>点击报名即同意<a id="terms-link" href="#">选手须知</a></strong>
             <% } %>
         <% } %>
 
