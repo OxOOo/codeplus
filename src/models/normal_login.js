@@ -19,6 +19,15 @@ let normalLoginSchema = new mongoose.Schema({
 		required: true
 	},
 
+	oj_username: {
+		type: String,
+		required: true,
+	},
+	oj_password: {
+		type: String,
+		required: true
+	},
+
 	userID : {
 		type : mongoose.Schema.ObjectId,
 		ref : 'User',

@@ -9,8 +9,6 @@ let config = require('../config');
 let { User, Contest, ContestSign } = require('../models');
 let auth = require('../services/auth');
 
-const FRIENDLY_CHARSET = "123456789qwertyuplkjhgfdsazxcvbnmQWERTYUPKJHGFDSAZXCVBNM";
-
 const router = module.exports = new Router();
 
 // 首页
@@ -38,6 +36,7 @@ router.get('/contests/sign', auth.loginRequired, async (ctx, next) => {
     ctx.request.query.user_id.should.be.a.String().and.not.empty();
     ctx.request.query.type.should.be.a.String().and.not.empty();
 
+    auth.assert(ctx.state.normal_login, '尚未创建帐号，不能报名，前往<a href="/modify">创建帐号</a>');
     auth.assert(ctx.state.user.email_passed, '尚未关联邮箱，不能报名，前往<a href="/modify">关联邮箱</a>');
     auth.assert(ctx.state.user.info_filled, '基本信息不完善，不能报名，前往<a href="/modify">完善基本信息</a>');
     auth.assert(_.includes(['div1', 'div2'], ctx.request.query.type), '报名类型不正确');
@@ -47,21 +46,12 @@ router.get('/contests/sign', auth.loginRequired, async (ctx, next) => {
     let contest_sign = await ContestSign.findOne({userID: ctx.state.user._id, contestID: contest._id});
     auth.assert(!contest_sign, '已报名');
 
-    let username;
-    let password = utils.randomString(10, FRIENDLY_CHARSET);
-    do {
-        username = utils.randomString(10, FRIENDLY_CHARSET);
-        if (!await ContestSign.findOne({username})) break;
-    } while(true);
-
     await ContestSign.create({
         userID: ctx.state.user._id,
         contestID: contest._id,
-        username: username,
-        password: password,
         type: ctx.request.query.type,
     });
-    ctx.state.flash.success = `报名成功,用户名是'${username}',可在页面下方查看密码`;
+    ctx.state.flash.success = `报名成功`;
     await ctx.redirect('back');
 });
 

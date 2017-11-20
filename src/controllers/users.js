@@ -120,6 +120,7 @@ router.post('/modify_nickname', auth.loginRequired, async (ctx, next) => {
 router.post('/modify_email', auth.loginRequired, async (ctx, next) => {
     ctx.request.body.email.should.be.a.String().and.not.eql("","请填入邮箱");
     let user = ctx.state.user;
+    auth.assert(ctx.state.normal_login, "请先创建帐号密码");
 
     tools.emailFormatCheck(ctx.request.body.email);
     let already_user = await User.findOne({email: ctx.request.body.email});
@@ -147,7 +148,7 @@ router.get('/resend_email', auth.loginRequired, async (ctx, next) => {
 
     await ctx.redirect('back');
 });
-router.get('/check_email_code', auth.loginRequired, async (ctx, next) => {
+router.get('/check_email_code', async (ctx, next) => {
     ctx.request.query.code.should.be.a.String().and.not.empty();
     ctx.request.query.user_id.should.be.a.String().and.not.empty();
 
@@ -174,6 +175,8 @@ router.post('/modify_info', auth.loginRequired, async (ctx, next) => {
       school: "学校",
       sex: "性别",
       phone_number: "电话号码",
+      address: "联系地址",
+      tshirt_size: "衣服尺寸",
     };
 
     for(const v in FIELDS)
@@ -183,6 +186,14 @@ router.post('/modify_info', auth.loginRequired, async (ctx, next) => {
     ctx.state.user.info_filled = true;
     await ctx.state.user.save();
     ctx.state.flash.success = '资料修改成功';
+    await ctx.redirect('back');
+});
+// 创建帐号
+router.post('/create_account', auth.loginRequired, async (ctx, next) => {
+    ctx.request.body.username.should.be.a.String().and.not.eql("","请填入用户名");
+    ctx.request.body.password.should.be.a.String().and.not.eql("","请填入密码");
+    await auth.createAccount(ctx, ctx.request.body.username, ctx.request.body.password);
+    ctx.state.flash.success = '修改帐号成功';
     await ctx.redirect('back');
 });
 // 修改密码

@@ -21,9 +21,6 @@ let contestSignSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    
-    username: String,
-    password: String,
 
 	created_date: { type: Date, default: Date.now },
 });

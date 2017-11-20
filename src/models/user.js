@@ -52,6 +52,14 @@ let userSchema = new mongoose.Schema({
 		type: String,
 		minlength: 1
 	},
+	address: {
+		type: String,
+		minlength: 1
+	},
+	tshirt_size: {
+		type: String,
+		minlength: 1
+	},
 
 	created_date: { type: Date, default: Date.now },
 });
