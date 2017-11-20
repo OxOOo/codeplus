@@ -15,7 +15,9 @@ Code+系列赛具有以下特点：
 
 * 每场比赛一共 $4$ 道题目，比赛时长 $3$ 小时，实时返回评测结果，错误提交不计罚时，每道题目有提交次数限制
 
-* $div1$ 和 $div2$ 公用 $2$ 到题目（ $div2$ 的后两题和 $div1$ 的前两题相同）
+* 排名按照通过题目数量为第一关键字，通过时间为第二关键字进行排序
+
+* $div1$ 和 $div2$ 公用 $2$ 道题目（ $div2$ 的后两题和 $div1$ 的前两题相同）
 
 我们对于在比赛中表现较好的选手将会给予奖励，对于表现优秀的选手将会发放精美礼品。
 
@@ -31,16 +33,21 @@ Code+系列赛具有以下特点：
 
 ### 比赛奖品
 
-* **$div1$ 第一名**： 2000元现金
+* $div1$
 
-* **$div1$ 第二、三名**： 1000元现金
+    * **第一名**： 2000元现金/人
 
-* **$div1$ 第四、五、六名**： 500元现金
+    * **第二、三名**： 1000元现金/人
 
-* **$div1$、$div2$ 各前五十名**： T恤/外套一件
+    * **第四、五、六名**： 500元现金/人
 
-<div style="height: 40px"></div>
+    * **优秀选手奖**： T恤/外套一件 * 50份
+
+* $div2$
+
+    * **优秀选手奖**： T恤/外套一件 * 50份
+
 <p style="text-align: center">
-<img src="https://www.tencent.com/images/2x/global/footer_logo.png" style="max-width: 100%; width: 300px; padding-bottom: 20px"></img><br>
+<img src="https://www.tencent.com/images/2x/global/footer_logo.png" style="max-width: 100%; width: 300px; padding-bottom: 20px"><br>
 感谢腾讯公司对本次比赛的赞助
 </p>

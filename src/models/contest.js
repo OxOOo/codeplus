@@ -43,7 +43,7 @@ let contestSchema = new mongoose.Schema({
         defualt: "如果有可下载的报名表链接，请在这里填入",
     },
 
-    terms: {
+    terms: { // 报名协议
         type: String,
     },
 

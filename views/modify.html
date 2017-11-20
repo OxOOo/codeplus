@@ -1,3 +1,18 @@
+<style>
+  .switch_on_click {
+    cursor: pointer;
+  }
+
+  .switch_on_click_mark {
+    color: rgba(0, 0, 0, .3);
+  }
+
+  .switch_on_click_copy {
+    cursor: pointer;
+    color: rgba(0, 0, 0, .3);
+  }
+</style>
+
 <div class='panel panel-default cp-edit'>
   <form method="post" action="/modify_nickname">
     <div class='panel-heading'>
@@ -14,6 +29,88 @@
     </div>
   </form>
 </div>
+
+<% if (normal_login) { %>
+  <div class='panel panel-default cp-edit'>
+    <form id="form-account" method="post" action="/modify_password">
+    <div class='panel-heading'>
+      帐号密码
+      <i class="hide-on-edit edit-btn fa fa-pencil"></i>
+      <button class="invisible show-on-edit done-btn" type="submit"><i class="fa fa-check"></i></button>
+    </div>
+
+    <div class='panel-body'>
+      <div class="cp-input-group">
+        <label>用户名</label>
+        <div><%= normal_login.username %></div>
+      </div>
+      <div class="cp-input-group">
+        <label>密码</label>
+        <div class="hide-on-edit">[DELETED]</div>
+        <input type="password" class="show-on-edit" name="password" id="password">
+      </div>
+      <div class="cp-input-group show-on-edit">
+        <label>确认密码</label>
+        <input type="password" class="show-on-edit" id="confirm_password">
+      </div>
+      <div class="cp-input-group hide-on-edit">
+        <label>OJ帐号</label>
+        <div><%= normal_login.oj_username %></div>
+      </div>
+      <div class="cp-input-group hide-on-edit">
+        <label>OJ密码</label>
+        <div>
+          <spin class="switch_on_click switch_on_click_mark">[点击显示]</spin>
+          <spin class="switch_on_click" style="display: none"><%= normal_login.oj_password %></spin>
+        </div>
+      </div>
+    </div>
+    </form>
+  </div>
+  <script>
+    $(function() {
+      $('.switch_on_click').click(function() {
+        $('.switch_on_click').toggle();
+      });
+    });
+  </script>
+<% } else {%>
+  <div class='panel panel-default cp-edit'>
+    <form id="form-account" method="post" action="/create_account">
+    <div class='panel-heading'>
+      创建帐号
+      <i class="show-on-edit edit-btn fa fa-pencil"></i>
+      <button class="invisible hide-on-edit done-btn" type="submit"><i class="fa fa-check"></i></button>
+    </div>
+
+    <div class='panel-body'>
+      <div class="cp-input-group">
+        <label>用户名</label>
+        <input type="text" class="hide-on-edit" name="username" id="username">
+      </div>
+      <div class="cp-input-group">
+        <label>密码</label>
+        <input type="password" class="hide-on-edit" name="password" id="password">
+      </div>
+      <div class="cp-input-group hide-on-edit">
+        <label>确认密码</label>
+        <input type="password" class="hide-on-edit" id="confirm_password">
+      </div>
+    </div>
+    </form>
+  </div>
+<% } %>
+<script>
+  $(function () {
+    $('#form-account').submit(function () {
+      if ($('#password').val() != $('#confirm_password').val()) {
+        alert('两次输入的密码不一致');
+        return false;
+      }
+      return true;
+    });
+  });
+</script>
 
 <div class='panel panel-default cp-edit'>
   <form method="post" action="/modify_email">
@@ -62,8 +159,24 @@
       </div>
       <div class="cp-input-group">
         <label>电话号码</label>
-        <div class="hide-on-edit"><%= user.phone_number || "110" %></div>
+        <div class="hide-on-edit"><%= user.phone_number || "369958" %></div>
         <input type="text" class="show-on-edit" name="phone_number" value="<%= user.phone_number %>">
+      </div>
+      <div class="cp-input-group">
+        <label>联系地址(用于发放奖品)</label>
+        <div class="hide-on-edit"><%= user.address || "幻想乡" %></div>
+        <input type="text" class="show-on-edit" name="address" value="<%= user.address %>">
+      </div>
+      <div class="cp-input-group">
+        <label>衣服尺寸</label>
+        <div class="hide-on-edit"><%= user.tshirt_size || "童装" %></div>
+        <select class="show-on-edit" name="tshirt_size" value="<%= user.tshirt_size %>">
+          <option value="S">S</option>
+          <option value="M">M</option>
+          <option value="L">L</option>
+          <option value="XL">XL</option>
+          <option value="XXL">XXL</option>
+        </select>
       </div>
     </div>
   </form>
@@ -78,46 +191,6 @@
     });
   });
 </script>
-
-
-<% if (normal_login) { %>
-  <div class='panel panel-default cp-edit'>
-    <form id="form-password" method="post" action="/modify_password">
-    <div class='panel-heading'>
-      帐号密码
-      <i class="hide-on-edit edit-btn fa fa-pencil"></i>
-      <button class="invisible show-on-edit done-btn" type="submit"><i class="fa fa-check"></i></button>
-    </div>
-
-    <div class='panel-body'>
-      <div class="cp-input-group">
-        <label>用户名</label>
-        <div><%= normal_login.username %></div>
-      </div>
-      <div class="cp-input-group">
-        <label>密码</label>
-        <div class="hide-on-edit">[DELETED]</div>
-        <input type="password" class="show-on-edit" name="password" id="password">
-      </div>
-      <div class="cp-input-group show-on-edit">
-        <label>确认密码</label>
-        <input type="password" class="show-on-edit" id="confirm_password">
-      </div>
-    </form>
-  </div>
-  <script>
-    $(function () {
-      $('#form-password').submit(function () {
-        if ($('#password').val() != $('#confirm_password').val()) {
-          alert('两次输入的密码不一致');
-          return false;
-        }
-        return true;
-      });
-    });
-  </script>
-  <% } %>
-</div>
 
 <script>
 $(function () {

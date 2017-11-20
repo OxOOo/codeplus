@@ -7,6 +7,7 @@ let session = require('koa-session-minimal')
 let redisStore = require('koa-redis');
 let path = require('path');
 let MarkdownIt = require('markdown-it');
+let moment = require('moment');
 
 let config = require('./config');
 let { log, SERVER } = require('./config');
@@ -34,6 +35,9 @@ app.use(async (ctx, next) => {
         html: true
     });
     ctx.state.md.use(require('markdown-it-katex'));
+    ctx.state.moment_format = function(date) {
+        return moment(date).format('YYYY-MM-DD HH:mm:ss UCTZZ');
+    }
     await next();
 });
 

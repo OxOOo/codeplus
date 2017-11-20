@@ -14,7 +14,8 @@
         <div id="contest-desc">
           <%- md.render(contest.description); %>
         </div>
-
+        <div>报名开始时间: <%= moment_format(contest.begin_sign_time) %></div>
+        <div>报名结束时间: <%= moment_format(contest.end_sign_time) %></div>
     </div>
     <div class="panel-footer">
         <% if (Date.now() < contest.begin_sign_time ) { %>
@@ -41,9 +42,8 @@
         <% } %>
 
         <% if(contest_sign) { %>
-          <br><br>
-          用户名: <%= contest_sign.username %><br>
-           密码: <span class="contest_sign_password_switch"><span class="contest_sign_password_mark">[点击显示]</span><span class="contest_sign_password" style="display: none"><%= contest_sign.password %></span></span>
+            <br><br>
+            比赛网站为<a href="https://oj.thusaac.org" target="_blank">https://oj.thusaac.org</a>，可以在<a href="/modify">个人资料</a>页面查看登录密码，比赛开始前1个小时可以登录比赛网站。
         <% } %>
     </div>
 </div>
@@ -61,11 +61,6 @@
 
 <script>
 $(function() {
-  $('.contest_sign_password_switch').click(function() {
-    $('.contest_sign_password_mark').hide();
-    $('.contest_sign_password').show();
-  });
-
   var firstHeader = $("#contest-desc").find("h1").first();
   $("#contest-heading").text(firstHeader.text());
   if(firstHeader.is(":first-child")) firstHeader.remove();

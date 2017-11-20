@@ -6,6 +6,8 @@ require('should');
 
 const ERR_CODE = 978;
 
+const FRIENDLY_CHARSET = "123456789qwertyuplkjhgfdsazxcvbnmQWERTYUPKJHGFDSAZXCVBNM";
+
 /// 用户中间件
 /// 检查用户是否已经登录，查询数据库并放在ctx.state.user变量上
 let userM = exports.userM = async function (ctx, next) {
@@ -77,6 +79,8 @@ exports.register = async function (ctx, username, password) {
     login.username = username;
     login.random_salt = utils.randomString(32, '1234567890');
     login.password = utils.sha256(password + login.random_salt);
+    login.oj_username = "code+_" + username;
+    login.oj_password = utils.randomString(10, FRIENDLY_CHARSET);
 
     let user = new User();
     login.userID = user._id;
@@ -87,6 +91,21 @@ exports.register = async function (ctx, username, password) {
 
     ctx.session.user_id = user._id;
 	ctx.state.user = user;
+}
+
+exports.createAccount = async function (ctx, username, password) {
+    assert(!await NormalLogin.findOne({username: username}), '用户名已存在');
+    
+    let login = new NormalLogin();
+    login.username = username;
+    login.random_salt = utils.randomString(32, '1234567890');
+    login.password = utils.sha256(password + login.random_salt);
+    login.oj_username = "code+_" + username;
+    login.oj_password = utils.randomString(10, FRIENDLY_CHARSET);
+
+    login.userID = ctx.state.user;
+
+    await login.save();
 }
 
 // 登录的情况下修改密码
@@ -100,12 +119,13 @@ exports.modifyPassword = async function (ctx, password) {
 // 忘记密码的情况下重置密码
 exports.resetPassword = async function (ctx, user, password) {
     let login = await NormalLogin.findOne({userID: user._id});
-    if (!login) {
-        login = new NormalLogin();
-        login.userID = user._id;
-        login.username = user.email;
-        login.random_salt = utils.randomString(32, '1234567890');
-    }
+    assert(login); // 要求有帐号才能找回密码
+    // if (!login) {
+    //     login = new NormalLogin();
+    //     login.userID = user._id;
+    //     login.username = user.email;
+    //     login.random_salt = utils.randomString(32, '1234567890');
+    // }
     login.password = utils.sha256(password + login.random_salt);
 
     ctx.session.user_id = login.userID;
