@@ -67,6 +67,13 @@
     </div>
     </form>
   </div>
+  <script>
+    $(function() {
+      $('.switch_on_click').click(function() {
+        $('.switch_on_click').toggle();
+      });
+    });
+  </script>
 <% } else {%>
   <div class='panel panel-default cp-edit'>
     <form id="form-account" method="post" action="/create_account">
