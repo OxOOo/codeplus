@@ -15,6 +15,7 @@ async function main() {
     contest.public = true;
     contest.begin_sign_time = Date.now();
     contest.end_sign_time = "2017-11-25 03:00";
+    contest.terms = await mzfs.readFile('terms.md', 'utf-8');
     await contest.save();
     console.log('success save');
 }
