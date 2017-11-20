@@ -180,6 +180,28 @@ a:hover {
   max-width: 300px;
 }
 
+.overlap-wrapper {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,.2);
+  -webkit-backdrop-filter: blur(2px);
+  -moz-backdrop-filter: blur(2px);
+  -o-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.overlap-content {
+  max-width: 500px;
+}
+
 .panel {
   background: white;
   margin: 20px 0;
@@ -211,6 +233,7 @@ a:hover {
   border-top: rgba(0,0,0,.12) 1px solid;
   padding: 20px;
   box-shadow: rgba(0,0,0,.12) 0 1px 2px inset;
+  line-height: 28px;
 }
 
 .cp-footer {

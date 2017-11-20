@@ -31,6 +31,10 @@
         <% } else { %>
             <a href="/contests/sign?contest_id=<%= contest._id %>&user_id=<%= user._id %>&type=div1">报名div1</a> |
             <a href="/contests/sign?contest_id=<%= contest._id %>&user_id=<%= user._id %>&type=div2">报名div2</a>
+            <% if(contest.terms) { %>
+              <br>
+              <strong>点击报名即同意<a id="terms-link" href="#">选手须知</a></strong>
+            <% } %>
         <% } %>
 
         <% if(contest.signup_form_url) { %>
@@ -44,10 +48,30 @@
     </div>
 </div>
 
+<% if(contest.terms) { %>
+  <div class="overlap-wrapper" style="display: none" id="terms">
+    <div class="overlap-content">
+      <div class="panel">
+        <div class="panel-heading">选手须知</div>
+        <div class="panel-body"><%- md.render(contest.terms) %></div>
+      </div>
+    </div>
+  </div>
+<% } %>
+
 <script>
-    $(function() {
-        var firstHeader = $("#contest-desc").find("h1").first();
-        $("#contest-heading").text(firstHeader.text());
-        if(firstHeader.is(":first-child")) firstHeader.remove();
-    });
+$(function() {
+  var firstHeader = $("#contest-desc").find("h1").first();
+  $("#contest-heading").text(firstHeader.text());
+  if(firstHeader.is(":first-child")) firstHeader.remove();
+
+  $(".overlap-wrapper").click(function(e) {
+    $(this).fadeOut(200);
+  });
+
+  $("#terms-link").click(function(e) {
+    e.preventDefault();
+    $(".overlap-wrapper#terms").fadeIn(200);
+  });
+});
 </script>

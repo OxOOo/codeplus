@@ -51,7 +51,7 @@ router.get('/contests/sign', auth.loginRequired, async (ctx, next) => {
         contestID: contest._id,
         type: ctx.request.query.type,
     });
-    ctx.state.flash.success = `报名成功`;
+    ctx.state.flash.success = `报名成功，比赛网站为<a href="https://oj.thusaac.org" target="_blank">https://oj.thusaac.org</a>，可以在<a href="/modify">个人资料</a>页面查看登录密码，比赛开始前1个小时可以登录比赛网站。`;
     await ctx.redirect('back');
 });
 

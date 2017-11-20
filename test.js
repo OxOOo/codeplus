@@ -12,6 +12,7 @@ async function main() {
     }
     contest.title = title;
     contest.description = await mzfs.readFile('test.md', 'utf-8');
+    contest.terms = await mzfs.readFile('terms.md', 'utf-8');
     contest.public = true;
     contest.begin_sign_time = "2017-11-18 00:00 UTC+8";
     contest.end_sign_time = "2017-11-25 12:00 UTC+8";
