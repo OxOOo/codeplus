@@ -1,17 +1,19 @@
-<div class='panel panel-default'>
-    <div class='panel-body'>
-        <%- md.render(contest.description); %>
+<style>
+.contest_sign_password_switch {
+  cursor: pointer;
+}
 
-        <% if (contest_sign) {%>
-            <hr/>
-            <div class='panel panel-default'>
-                <div class='panel-body'>
-                    用户名：<%= contest_sign.username %>
-                    密码：<spin class="contest_sign_password_mark">**********</spin><spin class="contest_sign_password" style="display: none"><%= contest_sign.password %></spin>
-                    <a href="#" class="contest_sign_password_switch">显示密码</a>
-                </div>
-            </div>
-        <% } %>
+.contest_sign_password_mark {
+  color: rgba(0,0,0,.3);
+}
+</style>
+
+<div class='panel panel-default'>
+    <div class="panel-heading" id="contest-heading"></div>
+    <div class='panel-body'>
+        <div id="contest-desc">
+          <%- md.render(contest.description); %>
+        </div>
 
     </div>
     <div class="panel-footer">
@@ -24,20 +26,33 @@
         <% } else if (contest_sign) { %>
             已报名<%= contest_sign.type %>
             <a href="/contests/unsign?contest_id=<%= contest._id %>&user_id=<%= user._id %>">取消报名</a>
+
         <% } else { %>
             <a href="/contests/sign?contest_id=<%= contest._id %>&user_id=<%= user._id %>&type=div1">报名div1</a> |
             <a href="/contests/sign?contest_id=<%= contest._id %>&user_id=<%= user._id %>&type=div2">报名div2</a>
         <% } %>
+
+        <% if(contest.signup_form_url) { %>
             | <a>报名表</a>
+        <% } %>
+
+        <% if(contest_sign) { %>
+          <br><br>
+          用户名: <%= contest_sign.username %><br>
+           密码: <span class="contest_sign_password_switch"><span class="contest_sign_password_mark">[点击显示]</span><span class="contest_sign_password" style="display: none"><%= contest_sign.password %></span></span>
+        <% } %>
     </div>
 </div>
 
 <script>
     $(function() {
         $('.contest_sign_password_switch').click(function() {
-            $('.contest_sign_password_mark').toggle();
-            $('.contest_sign_password').toggle();
-            $('.contest_sign_password_switch').text($('.contest_sign_password').is(':visible') ? '隐藏密码' : '显示密码');
+            $('.contest_sign_password_mark').hide();
+            $('.contest_sign_password').show();
         });
+
+        var firstHeader = $("#contest-desc").find("h1").first();
+        $("#contest-heading").text(firstHeader.text());
+        if(firstHeader.is(":first-child")) firstHeader.remove();
     });
 </script>

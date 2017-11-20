@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <div class="container">
+      <div class="brand-wrapper">
+        <img src="<%= logo %>" class="brand"></img>
+      </div>
+      <div class="header">密码找回</div>
+      <div class="main">
+        <p>
+          您好，<%= name %>！
+        </p>
+
+        <p>
+          请输入以下的验证码以重置您的密码。如果这不是您本人的操作，请忽略这一邮件。请勿将此验证码告诉任何其他人。<br>
+        </p>
+
+        <pre class="code"><%= code %></pre>
+      </div>
+    </div>
+    <div class="hidden">Meow~</div>
+  </body>
+</html>
+
+<style>
+.container {
+  font-family: sans-serif;
+  width: 400px;
+  margin: 20px auto;
+  border: rgba(0,0,0,.12) 1px solid;
+  box-shadow: rgba(0,0,0,.12) 0 2px 3px;
+  border-radius: 4px;
+  overflow: hidden;
+  font-size: 14px;
+  color: rgba(0,0,0,.87);
+}
+
+.brand-wrapper {
+  padding-top: 20px;
+  padding-bottom: 10px;
+  text-align: center;
+  background: #EFEFEF;
+}
+
+.brand {
+  width: 200px;
+}
+
+.header {
+  text-align: center;
+  font-weight: bold;
+  background: #E37639;
+  line-height: 80px;
+  font-size: 24px;
+  color: rgba(255,255,255,.87);
+}
+
+.main {
+  padding: 10px 20px;
+}
+
+.code {
+  background: rgba(0,0,0,.06);
+  line-height: 40px;
+  font-size: 20px;
+  text-align: center;
+  border: rgba(0,0,0,.12) 1px solid;
+  border-radius: 4px;
+  box-shadow: rgba(0,0,0,.12) 0 2px 3px inset;
+}
+
+.hidden {
+  opacity: 0;
+}
+</style>
+

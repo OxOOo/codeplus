@@ -38,6 +38,11 @@ let contestSchema = new mongoose.Schema({
         default: "这里是比赛描述，markdown格式"
     },
 
+    signup_form_url: {
+        type: String,
+        defualt: "如果有可下载的报名表链接，请在这里填入",
+    },
+
 	created_date: { type: Date, default: Date.now },
 });
 

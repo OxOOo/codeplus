@@ -7,7 +7,7 @@ require('should');
 const ERR_CODE = 978;
 
 /// 用户中间件
-/// 检查用户是否已经登陆，查询数据库并放在ctx.state.user变量上
+/// 检查用户是否已经登录，查询数据库并放在ctx.state.user变量上
 let userM = exports.userM = async function (ctx, next) {
 	let user_id = ctx.session.user_id;
     ctx.state.user = null;
@@ -42,7 +42,7 @@ let assert = exports.assert = function (condition, msg) {
 	}
 }
 
-// 正常登陆
+// 正常登录
 exports.normal_login = async function (ctx, username, password) {
     let login = await NormalLogin.findOne({username: username});
     assert(login, '用户不存在');
@@ -119,7 +119,7 @@ exports.logout = async function (ctx) {
 	ctx.session.user_id = null;
 }
 
-/// 需用户登陆
+/// 需用户登录
 exports.loginRequired = async function (ctx, next) {
     assert(ctx.state.user, '尚未登录');
 	await next();

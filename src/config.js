@@ -26,3 +26,5 @@ const EMAIL = exports.EMAIL = _.pick(config['EMAIL'], 'USER', 'PASSWORD', 'HOST'
 
 // OAUTH
 const OAUTH = exports.OAUTH = _.pick(config['OAUTH'], 'GITHUB');
+
+const SUPPORT = exports.SUPPORT = config['SUPPORT'];

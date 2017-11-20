@@ -18,6 +18,8 @@ EMAIL: # 邮箱设置，用于找回密码等功能
   HOST: smtp.163.com
   SSL: true
 
+SUPPORT: codeplus@thusaac.org
+
 OAUTH:
   GITHUB:
     CLIENT_ID: xxxxxxxxxxxxxxx

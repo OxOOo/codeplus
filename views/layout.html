@@ -4,88 +4,65 @@
 <head>
     <meta charset='utf-8'>
     <meta content='IE=edge,chrome=1' http-equiv='X-UA-Compatible'>
+    <meta name='viewport' content="user-scalable=no, initial-scale=1, width=device-width, height=device-height">
     <title>Code+ | <%= title %></title>
     <meta content='' name='description'>
     <meta content='' name='keywords'>
-    <link href="assets/stylesheets/application-a07755f5.css" rel="stylesheet" type="text/css" />
     <link href="assets/stylesheets/app.css" rel="stylesheet" type="text/css" />
-    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="assets/images/favicon.ico" rel="icon" type="image/ico" />
 
     <!-- Javascripts -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js" type="text/javascript"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js" type="text/javascript"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js" type="text/javascript"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdn.bootcss.com/modernizr/2.8.3/modernizr.min.js"></script>
     <script src="assets/javascripts/application-985b892b.js" type="text/javascript"></script>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.css">
+    <link href="https://cdn.bootcss.com/KaTeX/0.9.0-alpha1/katex.min.css" rel="stylesheet">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16x16.png">
+    <link rel="manifest" href="/assets/images/manifest.json">
+    <link rel="mask-icon" href="/assets/images/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/assets/images/favicon.ico">
+    <meta name="apple-mobile-web-app-title" content="Code+">
+    <meta name="application-name" content="Code+">
+    <meta name="msapplication-config" content="/assets/images/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
 
 </head>
 
-<body class='main page'>
+<body>
+    <div class="logo">
+      <a href="/">
+        <img src="assets/images/cplogo.svg"></img>
+      </a>
+    </div>
     <!-- Navbar -->
-    <div class='navbar navbar-default' id='navbar'>
-        <a class='navbar-brand' href='/'>
-            <i class='icon-beer'></i>
-            Code+
-        </a>
-        <ul class='nav navbar-nav pull-right'>
-            <li class='dropdown user'>
-                <% if (user) { %>
-                    <a class='dropdown-toggle' data-toggle='dropdown' href='#'>
-                        <i class='icon-user'></i>
-                        <strong><%= user.nickname %></strong>
-                        <img class="img-rounded" src="http://placehold.it/20x20/ccc/777" />
-                        <b class='caret'></b>
-                    </a>
-                    <ul class='dropdown-menu'>
-                        <li>
-                            <a href='/modify'>修改资料</a>
-                        </li>
-                        <li class='divider'></li>
-                        <li>
-                            <a href="/logout">登出</a>
-                        </li>
-                    </ul>
-                <% } else { %>
-                    <a href="/login"><strong>登 录</strong></a>
-                <% } %>
-            </li>
-        </ul>
-    </div>
-    <div id='wrapper'>
-        <!-- Sidebar -->
-        <section id='sidebar'>
-            <i class='icon-align-justify icon-large' id='toggle'></i>
-            <ul id='dock'>
-                <li class='launcher <%= current_page == "/" ? "active" : "" %>'>
-                    <i class='icon-dashboard'></i>
-                    <a href="/">当前赛事</a>
-                </li>
-                <li class='launcher <%= current_page == "modify" ? "active" : "" %>'>
-                    <i class='glyphicon glyphicon-cog'></i>
-                    <a href="/modify">修改资料</a>
-                </li>
-                <li class='launcher <%= current_page == "feedback" ? "active" : "" %>'>
-                    <i class='glyphicon glyphicon-book'></i>
-                    <a href='#'>反馈</a>
-                </li>
-            </ul>
-            <div data-toggle='tooltip' id='beaker' title='Made by lab2023'></div>
-        </section>
-        <!-- Tools -->
-        <section id='tools'>
-            <ul class='breadcrumb' id='breadcrumb'>
-                <li class='title'><%= title %></li>
-            </ul>
-        </section>
-        <!-- Content -->
-        <div id='content'>
-            <% include includes/flash %>
-            <%- body %>
+    <div class="navbar">
+      <a href="/" class="navlink <%= current_page === '/' ? 'active' : '' %>">当前赛事</a>
+      <a href="/feedback" class="navlink <%= current_page === 'feedback' ? 'active' : '' %>">反馈与支持</a>
+      <% if (user) { %>
+        <div class="navlink navlink-group <%= current_page === 'modify' ? 'active' : '' %>"><i class="fa fa-user"></i> <%=user.nickname%>
+          <div class="navlink-group-content">
+            <a href="/modify" class="sub-navlink <%= current_page === 'modify' ? 'active' : '' %>">个人资料</a>
+            <a href="/logout" class="sub-navlink">登出</a>
+          </div>
         </div>
+      <% } else { %>
+        <a href="/login" class="navlink">登录</a>
+      <% } %>
     </div>
-    <!-- Footer -->
+    <!-- Content -->
+    <div class="primary-wrapper">
+      <div class="primary-content">
+        <% include includes/flash %>
+        <%- body %>
+        <div class="cp-footer">Made with ❤ by THUSAAC. </div>
+      </div>
+    </div>
 </body>
 
 </html>
