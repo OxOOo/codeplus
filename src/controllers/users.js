@@ -131,11 +131,15 @@ router.post('/modify_email', auth.loginRequired, async (ctx, next) => {
     await user.save();
 
     await email.sendActiveEmail(user);
-    await ctx.redirect('/email_sended');
+    await ctx.redirect('/email_sent');
+});
+router.get('/email_sent', auth.loginRequired, async (ctx, next) => {
+    await ctx.render('email_sent', {current_page: 'modify', title: "验证邮箱"});
 });
 router.get('/email_sended', auth.loginRequired, async (ctx, next) => {
-    await ctx.render('email_sended', {current_page: 'modify', title: "验证邮箱"});
+    await ctx.render('email_sent', {current_page: 'modify', title: "验证邮箱"});
 });
+
 router.get('/resend_email', auth.loginRequired, async (ctx, next) => {
     let user = ctx.state.user;
 
