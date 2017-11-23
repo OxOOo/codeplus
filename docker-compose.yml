@@ -1,0 +1,24 @@
+mongodb:
+  image: mongo
+  volumes:
+    - ./data/mongodb:/data/db:z
+redis:
+  image: redis
+  volumes:
+    - ./data/redisdb:/data:z
+codeplus:
+  build: .
+  volumes:
+    - ./data:/srv/data:z
+    - ./public:/srv/public:z
+    - ./src:/srv/src:z
+    - ./views:/srv/views:z
+    - ./config.yml:/srv/config.yml:ro
+  ports:
+    - 4399:4399
+  links:
+    - mongodb
+    - redis
+  environment:
+    - MONGO_HOST=mongodb
+    - REDIS_HOST=redis

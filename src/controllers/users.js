@@ -125,18 +125,23 @@ router.post('/modify_email', auth.loginRequired, async (ctx, next) => {
     tools.emailFormatCheck(ctx.request.body.email);
     let already_user = await User.findOne({email: ctx.request.body.email});
     auth.assert(!already_user || already_user._id.equals(ctx.state.user._id), '该邮箱已关联其他用户');
-    user.email_will = ctx.request.body.email;
-    user.email_code = utils.randomString(10, '1234567890');
-    user.email_code_expire = Date.now() + 10 * 60 * 1000; // 10分钟后过期
+    // user.email_will = ctx.request.body.email;
+    // user.email_code = utils.randomString(10, '1234567890');
+    // user.email_code_expire = Date.now() + 10 * 60 * 1000; // 10分钟后过期
+    // await user.save();
+
+    // await email.sendActiveEmail(user);
+    // await ctx.redirect('/email_sended');
+    user.email = ctx.request.body.email;
+    user.email_passed = true;
+    user.email_code = undefined;
     await user.save();
 
-    await email.sendActiveEmail(user);
-    await ctx.redirect('/email_sent');
+    ctx.state.flash.success = "邮箱激活成功";
+    await ctx.redirect("/");
 });
+
 router.get('/email_sent', auth.loginRequired, async (ctx, next) => {
-    await ctx.render('email_sent', {current_page: 'modify', title: "验证邮箱"});
-});
-router.get('/email_sended', auth.loginRequired, async (ctx, next) => {
     await ctx.render('email_sent', {current_page: 'modify', title: "验证邮箱"});
 });
 
