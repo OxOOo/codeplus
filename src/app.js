@@ -36,7 +36,7 @@ app.use(async (ctx, next) => {
     });
     ctx.state.md.use(require('markdown-it-katex'));
     ctx.state.moment_format = function(date) {
-        return moment(date).format('YYYY-MM-DD HH:mm:ss UCTZZ');
+        return moment(date).format('YYYY-MM-DD HH:mm:ss UTCZZ');
     }
     await next();
 });
