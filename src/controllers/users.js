@@ -197,6 +197,28 @@ router.post('/modify_info', auth.loginRequired, async (ctx, next) => {
     ctx.state.flash.success = '资料修改成功';
     await ctx.redirect('back');
 });
+//修改快递信息
+router.post('/modify_express', auth.loginRequired, async (ctx, next) => {
+    let FIELDS = {
+      receiver: '收件人',
+      phone: '收件人电话',
+      prov: '省',
+      city: '市',
+      county: '县',
+      addr: '详细地址',
+      school: '学校',
+    };
+
+    for(const v in FIELDS)
+        ctx.request.body[v].should.be.a.String().and.not.eql("", `${FIELDS[v]}不能为空`);
+
+    _.assign(ctx.state.user.express_info, _.pick(ctx.request.body, Object.keys(FIELDS)));
+    console.log(ctx.state.user);
+    await ctx.state.user.save();
+    console.log(ctx.state.user);
+    ctx.state.flash.success = '快递信息修改成功';
+    await ctx.redirect('back');
+});
 // 创建帐号
 router.post('/create_account', auth.loginRequired, async (ctx, next) => {
     ctx.request.body.username.should.be.a.String().and.not.eql("","请填入用户名");

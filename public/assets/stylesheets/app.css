@@ -236,6 +236,14 @@ a:hover {
   line-height: 28px;
 }
 
+.cp-sidenote {
+  font-size: 0.6em;
+  line-height: 16px;
+  font-weight: lighter;
+  color: rgba(0,0,0,.3);
+  display: inline-block;
+}
+
 .cp-footer {
   font-size: 12px;
   text-align: center;
@@ -293,6 +301,14 @@ button.close:hover {
   font-weight: bold;
 }
 
+.cp-input-group-row {
+  display: flex;
+}
+
+.cp-input-group-row > .cp-input-group {
+  flex: 1;
+}
+
 .cp-input-group:last-child {
   margin-bottom: 0;
 }
@@ -316,6 +332,14 @@ button.close:hover {
 
 .cp-edit.editing .hide-on-edit {
   display: none;
+}
+
+.cp-edit-display:empty {
+  opacity: 0.12;
+}
+
+.cp-edit-display:empty::before {
+  content: '未填';
 }
 
 .cp-edit .edit-btn, .cp-edit .done-btn {

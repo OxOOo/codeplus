@@ -23,7 +23,7 @@
     <div class='panel-body'>
       <div class="cp-input-group">
         <label>昵称</label>
-        <div class="hide-on-edit"><%= user.nickname %></div>
+        <div class="hide-on-edit cp-edit-display"><%= user.nickname %></div>
         <input type="text" class="show-on-edit" name="nickname" value="<%= user.nickname %>">
       </div>
     </div>
@@ -46,7 +46,7 @@
       </div>
       <div class="cp-input-group">
         <label>密码</label>
-        <div class="hide-on-edit">[DELETED]</div>
+        <div class="hide-on-edit cp-edit-display">[DELETED]</div>
         <input type="password" class="show-on-edit" name="password" id="password">
       </div>
       <div class="cp-input-group show-on-edit">
@@ -122,7 +122,7 @@
     <div class='panel-body'>
       <div class="cp-input-group">
         <label>关联邮箱</label>
-        <div class="hide-on-edit"><%= user.email || "暂无" %></div>
+        <div class="hide-on-edit cp-edit-display"><%= user.email || "暂无" %></div>
         <input type="text" class="show-on-edit" name="email" value="<%= user.email %>">
       </div>
     </div>
@@ -139,17 +139,17 @@
     <div class='panel-body'>
       <div class="cp-input-group">
         <label>真实姓名</label>
-        <div class="hide-on-edit"><%= user.real_name || "不愿透露姓名的侠客" %></div>
+        <div class="hide-on-edit cp-edit-display"><%= user.real_name || "不愿透露姓名的侠客" %></div>
         <input type="text" class="show-on-edit" name="real_name" value="<%= user.real_name %>">
       </div>
       <div class="cp-input-group">
         <label>学校</label>
-        <div class="hide-on-edit"><%= user.school || "家里蹲" %></div>
+        <div class="hide-on-edit cp-edit-display"><%= user.school || "家里蹲" %></div>
         <input type="text" class="show-on-edit" name="school" value="<%= user.school %>">
       </div>
       <div class="cp-input-group">
         <label>性别</label>
-        <div class="hide-on-edit"><%= user.sex || "未知" %></div>
+        <div class="hide-on-edit cp-edit-display"><%= user.sex || "未知" %></div>
         <select class="show-on-edit" name="sex" value="<%= user.sex %>">
           <option value="保密">保密</option>
           <option value="男">男</option>
@@ -159,17 +159,17 @@
       </div>
       <div class="cp-input-group">
         <label>电话号码</label>
-        <div class="hide-on-edit"><%= user.phone_number || "369958" %></div>
+        <div class="hide-on-edit cp-edit-display"><%= user.phone_number || "369958" %></div>
         <input type="text" class="show-on-edit" name="phone_number" value="<%= user.phone_number %>">
       </div>
       <div class="cp-input-group">
-        <label>联系地址(用于发放奖品)</label>
-        <div class="hide-on-edit"><%= user.address || "幻想乡" %></div>
+        <label>联系地址</label>
+        <div class="hide-on-edit cp-edit-display"><%= user.address || "幻想乡" %></div>
         <input type="text" class="show-on-edit" name="address" value="<%= user.address %>">
       </div>
       <div class="cp-input-group">
         <label>衣服尺寸</label>
-        <div class="hide-on-edit"><%= user.tshirt_size || "童装" %></div>
+        <div class="hide-on-edit cp-edit-display"><%= user.tshirt_size || "童装" %></div>
         <select class="show-on-edit" name="tshirt_size" value="<%= user.tshirt_size %>">
           <option value="S">S</option>
           <option value="M">M</option>
@@ -177,6 +177,57 @@
           <option value="XL">XL</option>
           <option value="XXL">XXL</option>
         </select>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class='panel panel-default cp-edit'>
+  <form id="form-info" method="post" action="/modify_express">
+    <div class='panel-heading'>
+      快递信息
+      <div class="cp-sidenote">用于奖品</div>
+      <i class="hide-on-edit edit-btn fa fa-pencil"></i>
+      <button class="invisible show-on-edit done-btn" type="submit"><i class="fa fa-check"></i></button>
+    </div>
+    <div class='panel-body'>
+      <div class="cp-input-group">
+        <label>收件人</label>
+        <div class="hide-on-edit cp-edit-display"><%= user.express_info.receiver %></div>
+        <input type="text" class="show-on-edit" name="receiver" value="<%= user.express_info.receiver %>">
+      </div>
+      <div class="cp-input-group">
+        <label>收件人电话</label>
+        <div class="hide-on-edit cp-edit-display"><%= user.express_info.phone %></div>
+        <input type="text" class="show-on-edit" name="phone" value="<%= user.express_info.phone %>">
+      </div>
+      <div class="cp-input-group">
+        <label>学校</label>
+        <div class="hide-on-edit cp-edit-display"><%= user.express_info.school %></div>
+        <input type="text" class="show-on-edit" name="school" value="<%= user.express_info.school %>">
+        <div class="cp-sidenote">发往同一学校就读同学的快递将被合并</div>
+      </div>
+      <div class="cp-input-group-row">
+        <div class="cp-input-group">
+          <label>省</label>
+          <div class="hide-on-edit cp-edit-display"><%= user.express_info.prov %></div>
+          <input type="text" class="show-on-edit" name="prov" value="<%= user.express_info.prov %>">
+        </div>
+        <div class="cp-input-group">
+          <label>市</label>
+          <div class="hide-on-edit cp-edit-display"><%= user.express_info.city %></div>
+          <input type="text" class="show-on-edit" name="city" value="<%= user.express_info.city %>">
+        </div>
+        <div class="cp-input-group">
+          <label>县</label>
+          <div class="hide-on-edit cp-edit-display"><%= user.express_info.county %></div>
+          <input type="text" class="show-on-edit" name="county" value="<%= user.express_info.county %>">
+        </div>
+      </div>
+      <div class="cp-input-group">
+        <label>详细地址</label>
+        <div class="hide-on-edit cp-edit-display"><%= user.express_info.addr %></div>
+        <input type="text" class="show-on-edit" name="addr" value="<%= user.express_info.addr %>">
       </div>
     </div>
   </form>

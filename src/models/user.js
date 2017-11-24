@@ -61,6 +61,21 @@ let userSchema = new mongoose.Schema({
 		minlength: 1
 	},
 
+    express_info: {
+      type: new mongoose.Schema({
+        // Address
+        prov: String,
+        city: String,
+        county: String,
+        addr: String,
+
+        receiver: String,
+        phone: String,
+        school: String,
+      }),
+      default: {},
+    },
+
 	created_date: { type: Date, default: Date.now },
 });
 
