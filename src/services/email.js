@@ -58,7 +58,7 @@ exports.sendForgotEmail = (user) => {
             server.send({
                 text: h2t.fromString(mailContent, { wordwrap: 80 }),
                 from: `Code+ <${EMAIL.USER}>`,
-                to: `${tools.emailName(user.email_will)} <${user.email_will}>`,
+                to: `${tools.emailName(user.email)} <${user.email}>`,
                 subject: "Code+ 密码找回",
                 attachment: [
                   { data: juice(mailContent), alternative: true },
