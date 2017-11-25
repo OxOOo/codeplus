@@ -44,6 +44,10 @@ let assert = exports.assert = function (condition, msg) {
 	}
 }
 
+exports.login = async function(ctx, user_id) {
+    ctx.session.user_id = user_id;
+}
+
 // 正常登录
 exports.normal_login = async function (ctx, username, password) {
     let login = await NormalLogin.findOne({username: username});
@@ -142,5 +146,12 @@ exports.logout = async function (ctx) {
 /// 需用户登录
 exports.loginRequired = async function (ctx, next) {
     assert(ctx.state.user, '尚未登录');
+	await next();
+}
+
+/// 需管理员权限
+exports.adminRequired = async function (ctx, next) {
+    assert(ctx.state.user, '尚未登录');
+    assert(ctx.state.user.is_admin, '没有管理员权限');
 	await next();
 }

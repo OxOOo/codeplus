@@ -53,6 +53,7 @@ app.use(auth.userM);
 app.use(require('./controllers/index').routes());
 app.use(require('./controllers/contest').routes());
 app.use(require('./controllers/users').routes());
+app.use(require('./controllers/admin').routes());
 app.use(require('koa-static')('public'));
 app.use(async (ctx, next) => {
     await ctx.render('404');
