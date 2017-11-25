@@ -74,7 +74,14 @@ let userSchema = new mongoose.Schema({
         school: String,
       }),
       default: {},
-    },
+	},
+	
+	T1_code: String,
+	T2_code: String,
+	T3_code: String,
+	T4_code: String,
+	T5_code: String,
+	T6_code: String,
 
 	created_date: { type: Date, default: Date.now },
 });

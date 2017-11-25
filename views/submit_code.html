@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+    <head>
+        <title>临时提交代码</title>
+        <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <div class="container">
+            <form enctype="application/x-www-form-urlencoded" method="post" action="/submit_code">
+                <div class="form-group">
+                    <label>晨跑</label>
+                    <textarea class="form-control" name="T1_code" rows=5></textarea>
+                </div>
+                <div class="form-group">
+                    <label>汀博尔</label>
+                    <textarea class="form-control" name="T2_code" rows=5></textarea>
+                </div>
+                <div class="form-group">
+                    <label>找爸爸</label>
+                    <textarea class="form-control" name="T3_code" rows=5></textarea>
+                </div>
+                <div class="form-group">
+                    <label>可做题</label>
+                    <textarea class="form-control" name="T4_code" rows=5></textarea>
+                </div>
+                <div class="form-group">
+                    <label>大吉大利，晚上吃鸡！</label>
+                    <textarea class="form-control" name="T5_code" rows=5></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Yazid的新生舞会</label>
+                    <textarea class="form-control" name="T6_code" rows=5></textarea>
+                </div>
+                <br/>
+                <button type="submit" class="btn btn-default">提交</button>
+            </form>
+            <h3>晨跑</h3>
+            <pre><%= user.T1_code %></pre>
+            <h3>汀博尔</h3>
+            <pre><%= user.T2_code %></pre>
+            <h3>找爸爸</h3>
+            <pre><%= user.T3_code %></pre>
+            <h3>可做题</h3>
+            <pre><%= user.T4_code %></pre>
+            <h3>大吉大利，晚上吃鸡！</h3>
+            <pre><%= user.T5_code %></pre>
+            <h3>Yazid的新生舞会</h3>
+            <pre><%= user.T6_code %></pre>
+        </div>
+    </body>
+</html>

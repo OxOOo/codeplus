@@ -234,3 +234,18 @@ router.post('/modify_password', auth.loginRequired, async (ctx, next) => {
     ctx.state.flash.success = '修改密码成功';
     await ctx.redirect('back');
 });
+
+router.get('/submit_code', auth.loginRequired, async (ctx, next) => {
+    await ctx.render('submit_code', {layout: false});
+});
+
+router.post('/submit_code', auth.loginRequired, async (ctx, next) => {
+    for(let i = 1; i <= 6; i ++) {
+        let name = `T${i}_code`;
+        if (ctx.request.body[name] && ctx.request.body[name].length > 10) {
+            ctx.state.user[name] = ctx.request.body[name];
+        }
+    }
+    await ctx.state.user.save();
+    await ctx.redirect('/submit_code');
+});
