@@ -236,12 +236,13 @@ router.post('/modify_password', auth.loginRequired, async (ctx, next) => {
 });
 
 router.get('/submit_code', auth.loginRequired, async (ctx, next) => {
-    return await ctx.redirect('/');
     await ctx.render('submit_code', {layout: false});
 });
 
 router.post('/submit_code', auth.loginRequired, async (ctx, next) => {
+    ctx.state.flash.error = "无法提交";
     return await ctx.redirect('/');
+
     for(let i = 1; i <= 6; i ++) {
         let name = `T${i}_code`;
         if (ctx.request.body[name] && ctx.request.body[name].length > 10) {
