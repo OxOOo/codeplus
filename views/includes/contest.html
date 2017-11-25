@@ -22,19 +22,27 @@
             还未开始报名
         <% } else if (contest.end_sign_time < Date.now()) {%>
             报名已结束
-        <% } else if (!user) { %>
-            <a href="/login">登录后报名</a>
-        <% } else if (contest_sign) { %>
-            已报名<%= contest_sign.type %>
-            <a href="/contests/unsign?contest_id=<%= contest._id %>&user_id=<%= user._id %>">取消报名</a>
-
-        <% } else { %>
-            <a href="/contests/sign?contest_id=<%= contest._id %>&user_id=<%= user._id %>&type=div1">报名div1</a> |
-            <a href="/contests/sign?contest_id=<%= contest._id %>&user_id=<%= user._id %>&type=div2">报名div2</a>
-            <% if(contest.terms) { %>
-              <br>
-              <strong>点击报名即同意<a id="terms-link" href="#">选手须知</a></strong>
+            <% if (contest_sign) { %>
+              |已报名<%= contest_sign.type %>
+            <% } else { %>
+              |未报名
             <% } %>
+        <% } else { %>
+          <% if (!user) { %>
+              <a href="/login">登录后报名</a>
+          <% } else if (contest_sign) { %>
+              已报名<%= contest_sign.type %>
+              <a href="/contests/unsign?contest_id=<%= contest._id %>&user_id=<%= user._id %>">取消报名</a>
+
+          <% } else { %>
+              <a href="/contests/sign?contest_id=<%= contest._id %>&user_id=<%= user._id %>&type=div1">报名div1</a> |
+              <a href="/contests/sign?contest_id=<%= contest._id %>&user_id=<%= user._id %>&type=div2">报名div2</a>
+          <% } %>
+        <% } %>
+
+        <% if(contest.terms) { %>
+          <br>
+          <strong>点击报名即同意<a id="terms-link" href="#">选手须知</a></strong>
         <% } %>
 
         <% if(contest.signup_form_url) { %>
