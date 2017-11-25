@@ -119,7 +119,7 @@ exports.modifyPassword = async function (ctx, password) {
 // 忘记密码的情况下重置密码
 exports.resetPassword = async function (ctx, user, password) {
     let login = await NormalLogin.findOne({userID: user._id});
-    assert(login); // 要求有帐号才能找回密码
+    assert(login, '未知错误'); // 要求有帐号才能找回密码
     // if (!login) {
     //     login = new NormalLogin();
     //     login.userID = user._id;
