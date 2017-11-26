@@ -56,6 +56,30 @@ router.get('/admin/contests/:contest_id/preview', auth.adminRequired, async (ctx
 
     await ctx.render('admin_contest_preview', {layout: 'admin_layout', contest: contest});
 });
+router.post('/admin/contests/:contest_id/update_award', auth.adminRequired, async (ctx, next) => {
+    ctx.params.contest_id.should.be.a.String().and.not.empty();
+    ctx.request.body.userlist.should.be.a.String().and.not.empty();
+
+    let contest = await Contest.findById(ctx.params.contest_id);
+    auth.assert(contest, '比赛不存在');
+
+    await ContestSign.update({contestID: contest._id}, {$set: {has_award: false}}, {multi: true});
+    let names = ctx.request.body.userlist.split('\n');
+    let count = 0;
+    for(let name of names) {
+        name = _.trim(name);
+        let login = await NormalLogin.findOne({username: name});
+        if (!login) continue;
+        let sign = await ContestSign.findOne({userID: login.userID, contestID: contest._id});
+        if (!sign) continue;
+        sign.has_award = true;
+        await sign.save();
+        count ++;
+    }
+
+    ctx.state.flash.success = `有${count}人获奖`;
+    await ctx.redirect('back');
+});
 
 // su
 router.post('/su', auth.adminRequired, async (ctx, next) => {

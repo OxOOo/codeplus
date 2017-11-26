@@ -8,7 +8,7 @@ let request = require('superagent');
 require('should');
 
 let config = require('../config');
-let { User } = require('../models');
+let { User, Contest, ContestSign } = require('../models');
 let auth = require('../services/auth');
 let tools = require('../services/tools');
 let email = require('../services/email');
@@ -106,7 +106,12 @@ router.post('/forgot_password_reset', async (ctx, next) => {
 
 // 修改资料
 router.get('/modify', auth.loginRequired, async (ctx, next) => {
-    await ctx.render('modify', {current_page: 'modify', title: "修改资料"});
+    let contest = await Contest.findOne({public: true}).sort('-no');
+    let contest_sign = null;
+    if (ctx.state.user) {
+        contest_sign = await ContestSign.findOne({userID: ctx.state.user._id, contestID: contest._id});
+    }
+    await ctx.render('modify', {current_page: 'modify', title: "修改资料", contest: contest, contest_sign: contest_sign});
 });
 // 修改昵称
 router.post('/modify_nickname', auth.loginRequired, async (ctx, next) => {
@@ -211,11 +216,18 @@ router.post('/modify_express', auth.loginRequired, async (ctx, next) => {
 
     for(const v in FIELDS)
         ctx.request.body[v].should.be.a.String().and.not.eql("", `${FIELDS[v]}不能为空`);
+    
+    let contest = await Contest.findOne({public: true}).sort('-no');
+    let contest_sign = null;
+    if (ctx.state.user) {
+        contest_sign = await ContestSign.findOne({userID: ctx.state.user._id, contestID: contest._id});
+    }
+    auth.assert(contest_sign && contest_sign.has_award, '你没有获奖');
 
-    _.assign(ctx.state.user.express_info, _.pick(ctx.request.body, Object.keys(FIELDS)));
-    console.log(ctx.state.user);
-    await ctx.state.user.save();
-    console.log(ctx.state.user);
+    _.assign(contest_sign, _.pick(ctx.request.body, Object.keys(FIELDS)));
+    contest_sign.express_info_filled = true;
+    await contest_sign.save();
+    
     ctx.state.flash.success = '快递信息修改成功';
     await ctx.redirect('back');
 });

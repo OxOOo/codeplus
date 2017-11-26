@@ -182,10 +182,12 @@
   </form>
 </div>
 
+<% if(contest_sign && contest_sign.has_award) { %>
+
 <div class='panel panel-default cp-edit'>
   <form id="form-info" method="post" action="/modify_express">
     <div class='panel-heading'>
-      快递信息
+      比赛《<%= contest.title %>》的快递信息
       <div class="cp-sidenote">用于奖品</div>
       <i class="hide-on-edit edit-btn fa fa-pencil"></i>
       <button class="invisible show-on-edit done-btn" type="submit"><i class="fa fa-check"></i></button>
@@ -193,45 +195,47 @@
     <div class='panel-body'>
       <div class="cp-input-group">
         <label>收件人</label>
-        <div class="hide-on-edit cp-edit-display"><%= user.express_info.receiver %></div>
-        <input type="text" class="show-on-edit" name="receiver" value="<%= user.express_info.receiver %>">
+        <div class="hide-on-edit cp-edit-display"><%= contest_sign.receiver %></div>
+        <input type="text" class="show-on-edit" name="receiver" value="<%= contest_sign.receiver %>">
       </div>
       <div class="cp-input-group">
         <label>收件人电话</label>
-        <div class="hide-on-edit cp-edit-display"><%= user.express_info.phone %></div>
-        <input type="text" class="show-on-edit" name="phone" value="<%= user.express_info.phone %>">
+        <div class="hide-on-edit cp-edit-display"><%= contest_sign.phone %></div>
+        <input type="text" class="show-on-edit" name="phone" value="<%= contest_sign.phone %>">
       </div>
       <div class="cp-input-group">
         <label>学校</label>
-        <div class="hide-on-edit cp-edit-display"><%= user.express_info.school %></div>
-        <input type="text" class="show-on-edit" name="school" value="<%= user.express_info.school %>">
-        <div class="cp-sidenote">发往同一学校就读同学的快递将被合并</div>
+        <div class="hide-on-edit cp-edit-display"><%= contest_sign.school %></div>
+        <input type="text" class="show-on-edit" name="school" value="<%= contest_sign.school %>">
+        <div class="cp-sidenote">发往同一学校就读同学的快递将被合并,如果不想被合并请联系工作人员</div>
       </div>
       <div class="cp-input-group-row">
         <div class="cp-input-group">
           <label>省</label>
-          <div class="hide-on-edit cp-edit-display"><%= user.express_info.prov %></div>
-          <input type="text" class="show-on-edit" name="prov" value="<%= user.express_info.prov %>">
+          <div class="hide-on-edit cp-edit-display"><%= contest_sign.prov %></div>
+          <input type="text" class="show-on-edit" name="prov" value="<%= contest_sign.prov %>">
         </div>
         <div class="cp-input-group">
           <label>市</label>
-          <div class="hide-on-edit cp-edit-display"><%= user.express_info.city %></div>
-          <input type="text" class="show-on-edit" name="city" value="<%= user.express_info.city %>">
+          <div class="hide-on-edit cp-edit-display"><%= contest_sign.city %></div>
+          <input type="text" class="show-on-edit" name="city" value="<%= contest_sign.city %>">
         </div>
         <div class="cp-input-group">
-          <label>县</label>
-          <div class="hide-on-edit cp-edit-display"><%= user.express_info.county %></div>
-          <input type="text" class="show-on-edit" name="county" value="<%= user.express_info.county %>">
+          <label>县(区)</label>
+          <div class="hide-on-edit cp-edit-display"><%= contest_sign.county %></div>
+          <input type="text" class="show-on-edit" name="county" value="<%= contest_sign.county %>">
         </div>
       </div>
       <div class="cp-input-group">
         <label>详细地址</label>
-        <div class="hide-on-edit cp-edit-display"><%= user.express_info.addr %></div>
-        <input type="text" class="show-on-edit" name="addr" value="<%= user.express_info.addr %>">
+        <div class="hide-on-edit cp-edit-display"><%= contest_sign.addr %></div>
+        <input type="text" class="show-on-edit" name="addr" value="<%= contest_sign.addr %>">
       </div>
     </div>
   </form>
 </div>
+
+<% } %>
 
 <script>
   $(function() {

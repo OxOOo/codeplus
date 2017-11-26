@@ -22,6 +22,20 @@ let contestSignSchema = new mongoose.Schema({
         required: true
     },
 
+    has_award: Boolean, // 是否获奖
+
+    // 快递信息
+    express_info_filled: Boolean,
+    // Address
+    prov: String,
+    city: String,
+    county: String,
+    addr: String,
+
+    receiver: String,
+    phone: String,
+    school: String,
+
 	created_date: { type: Date, default: Date.now },
 });
 

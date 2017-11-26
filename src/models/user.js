@@ -64,21 +64,6 @@ let userSchema = new mongoose.Schema({
 		type: String,
 		minlength: 1
 	},
-
-    express_info: {
-      type: new mongoose.Schema({
-        // Address
-        prov: String,
-        city: String,
-        county: String,
-        addr: String,
-
-        receiver: String,
-        phone: String,
-        school: String,
-      }),
-      default: {},
-	},
 	
 	T1_code: String,
 	T2_code: String,
