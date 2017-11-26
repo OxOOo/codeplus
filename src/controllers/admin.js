@@ -81,8 +81,11 @@ router.post('/admin/contests/:contest_id/update_award', auth.adminRequired, asyn
     await ctx.redirect('back');
 });
 
+router.get('/admin/control', auth.adminRequired, async (ctx, next) => {
+    await ctx.render('admin_control', {layout: 'admin_layout'});
+});
 // su
-router.post('/su', auth.adminRequired, async (ctx, next) => {
+router.post('/admin/su', auth.adminRequired, async (ctx, next) => {
     ctx.request.body.username.should.be.a.String().and.not.empty();
     let login = await NormalLogin.findOne({username: ctx.request.body.username});
     auth.assert(login, '用户不存在');
