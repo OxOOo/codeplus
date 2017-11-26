@@ -96,5 +96,5 @@ router.get('/contests/:contest_id/ranklist/:type', async (ctx, next) => {
     let contest = await Contest.findById(ctx.params.contest_id);
     auth.assert(contest, '比赛不存在');
 
-    ctx.body = contest[`${ctx.params.type}_ranklist`];
+    ctx.body = contest[`${ctx.params.type}_ranklist`] || '';
 });
