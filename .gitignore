@@ -3,6 +3,7 @@ node_modules
 hierapolis-gh-pages
 npm-debug.log
 data
+repositories
 
 # Of course, vim
 .*.sw[a-p]

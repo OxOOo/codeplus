@@ -70,4 +70,31 @@ router.get('/contests/unsign', auth.loginRequired, async (ctx, next) => {
     await ctx.redirect('back');
 });
 
-// TODO: administrative interface
+router.get('/contests', async (ctx, next) => {
+    let contests = await Contest.find({public: true}).sort('-no');
+    await ctx.render('contests', {current_page: 'contests', title: "比赛列表", contests: contests});
+});
+
+router.get('/contests/:contest_id', async (ctx, next) => {
+    ctx.params.contest_id.should.be.a.String().and.not.empty();
+
+    let contest = await Contest.findById(ctx.params.contest_id);
+    auth.assert(contest, '比赛不存在');
+    let contest_sign = null;
+    if (ctx.state.user) {
+        contest_sign = await ContestSign.findOne({userID: ctx.state.user._id, contestID: contest._id});
+    }
+
+    await ctx.render('contest', {current_page: 'contests', title: contest.title, contest: contest, contest_sign: contest_sign});
+});
+
+router.get('/contests/:contest_id/ranklist/:type', async (ctx, next) => {
+    ctx.params.contest_id.should.be.a.String().and.not.empty();
+    ctx.params.type.should.be.a.String().and.not.empty();
+    auth.assert(['div1', 'div2'].indexOf(ctx.params.type) != -1, '参数非法');
+
+    let contest = await Contest.findById(ctx.params.contest_id);
+    auth.assert(contest, '比赛不存在');
+
+    ctx.body = contest[`${ctx.params.type}_ranklist`];
+});

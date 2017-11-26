@@ -9,15 +9,11 @@
 </style>
 
 <div class='panel panel-default'>
-    <div class="panel-heading" id="contest-heading"></div>
+    <div class="panel-heading" id="contest-heading"><%= contest.title %></div>
     <div class='panel-body'>
-        <div id="contest-desc">
-          <%- md.render(contest.description); %>
-        </div>
         <div>报名开始时间: <%= moment_format(contest.begin_sign_time) %></div>
         <div>报名结束时间: <%= moment_format(contest.end_sign_time) %></div>
-    </div>
-    <div class="panel-footer">
+        <br/>
         <% if (Date.now() < contest.begin_sign_time ) { %>
             还未开始报名
         <% } else if (contest.end_sign_time < Date.now()) {%>
@@ -33,26 +29,30 @@
           <% } else if (contest_sign) { %>
               已报名<%= contest_sign.type %>
               <a href="/contests/unsign?contest_id=<%= contest._id %>&user_id=<%= user._id %>">取消报名</a>
-
+        
           <% } else { %>
               <a href="/contests/sign?contest_id=<%= contest._id %>&user_id=<%= user._id %>&type=div1">报名div1</a> |
               <a href="/contests/sign?contest_id=<%= contest._id %>&user_id=<%= user._id %>&type=div2">报名div2</a>
           <% } %>
         <% } %>
-
+        
         <% if(contest.terms) { %>
           <br>
           <strong>点击报名即同意<a id="terms-link" href="#">选手须知</a></strong>
         <% } %>
-
+        
         <% if(contest.signup_form_url) { %>
             | <a>报名表</a>
         <% } %>
-
+        
         <% if(contest_sign) { %>
             <br><br>
             比赛网站为<a href="https://oj.thusaac.org" target="_blank">https://oj.thusaac.org</a>，可以在<a href="/modify">个人资料</a>页面查看登录密码，比赛开始前1个小时可以登录比赛网站。
         <% } %>
+        <hr/>
+        <div id="contest-desc">
+          <%- md.render(contest.description); %>
+        </div>
     </div>
 </div>
 
@@ -69,9 +69,9 @@
 
 <script>
 $(function() {
-  var firstHeader = $("#contest-desc").find("h1").first();
-  $("#contest-heading").text(firstHeader.text());
-  if(firstHeader.is(":first-child")) firstHeader.remove();
+  // var firstHeader = $("#contest-desc").find("h1").first();
+  // $("#contest-heading").text(firstHeader.text());
+  // if(firstHeader.is(":first-child")) firstHeader.remove();
 
   $(".overlap-wrapper").click(function(e) {
     $(this).fadeOut(200);

@@ -1,0 +1,76 @@
+<div class='panel panel-default'>
+  <div class='panel-body'>
+    <a href="/admin/contests/<%= contest._id %>">返回编辑</a>
+    <table class="table">
+      <tr>
+        <th>标题</th>
+        <td><%= contest.title %></td>
+      </tr>
+      <tr>
+        <th>开始报名时间</th>
+        <td><%= moment_format(contest.begin_sign_time) %></td>
+      </tr>
+      <tr>
+        <th>结束报名时间</th>
+        <td><%= moment_format(contest.end_sign_time) %></td>
+      </tr>
+      <tr>
+        <th>本地仓库名称</th>
+        <td><%= contest.repository_local_name %></td>
+      </tr>
+      <tr>
+        <th>no</th>
+        <td><%= contest.no %></td>
+      </tr>
+      <tr>
+        <th>公开</th>
+        <td><%= contest.public ? '是' : '否' %></td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<div class='panel panel-default'>
+  <div class='panel-heading'>
+    比赛描述
+  </div>
+  <div class='panel-body'>
+    <%- md.render(contest.description) %>
+  </div>
+</div>
+
+<div class='panel panel-default'>
+  <div class='panel-heading'>
+    比赛须知
+  </div>
+  <div class='panel-body'>
+    <%- md.render(contest.terms) %>
+  </div>
+</div>
+
+<div class='panel panel-default'>
+  <div class='panel-heading'>
+    排名说明
+  </div>
+  <div class='panel-body'>
+    <%- md.render(contest.rank_msg) %>
+  </div>
+</div>
+
+<div class='panel panel-default'>
+  <div class='panel-heading'>
+    div1排名
+  </div>
+  <div class='panel-body'>
+    <%- contest.div1_ranklist %>
+  </div>
+</div>
+
+<div class='panel panel-default'>
+  <div class='panel-heading'>
+    div2排名
+  </div>
+  <div class='panel-body'>
+    <%- contest.div1_ranklist %>
+  </div>
+</div>

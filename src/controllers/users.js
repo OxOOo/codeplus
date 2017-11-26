@@ -69,9 +69,11 @@ router.get('/forgot_password_sendemail', async (ctx, next) => {
 
     let user = await User.findOne({email: ctx.request.query.email});
     auth.assert(user, "不存在与该邮箱关联的用户");
+    auth.assert(!user.forgot_password_last_send_time || user.forgot_password_last_send_time < Date.now() - 60*1000, '请1分钟之后再发送邮件');
 
+    user.forgot_password_last_send_time = Date.now();
     user.forgot_password_code = utils.randomString(10, '1234567890');
-    user.forgot_password_code_expire = Date.now() + 10*60*1000;
+    user.forgot_password_code_expire = Date.now() + 10*60*1000; // 10分钟
     await user.save();
 
     await email.sendForgotEmail(user);
@@ -125,20 +127,15 @@ router.post('/modify_email', auth.loginRequired, async (ctx, next) => {
     tools.emailFormatCheck(ctx.request.body.email);
     let already_user = await User.findOne({email: ctx.request.body.email});
     auth.assert(!already_user || already_user._id.equals(ctx.state.user._id), '该邮箱已关联其他用户');
-    // user.email_will = ctx.request.body.email;
-    // user.email_code = utils.randomString(10, '1234567890');
-    // user.email_code_expire = Date.now() + 10 * 60 * 1000; // 10分钟后过期
-    // await user.save();
-
-    // await email.sendActiveEmail(user);
-    // await ctx.redirect('/email_sended');
-    user.email = ctx.request.body.email;
-    user.email_passed = true;
-    user.email_code = undefined;
+    auth.assert(!user.email_last_send_time || user.email_last_send_time < Date.now() - 60 * 1000, '请1分钟之后再发送邮件');
+    user.email_will = ctx.request.body.email;
+    user.email_code = utils.randomString(10, '1234567890');
+    user.email_code_expire = Date.now() + 10 * 60 * 1000; // 10分钟后过期
+    user.email_last_send_time = Date.now();
     await user.save();
 
-    ctx.state.flash.success = "邮箱激活成功";
-    await ctx.redirect("/");
+    await email.sendActiveEmail(user);
+    await ctx.redirect('/email_sent');
 });
 
 router.get('/email_sent', auth.loginRequired, async (ctx, next) => {
@@ -148,8 +145,11 @@ router.get('/email_sent', auth.loginRequired, async (ctx, next) => {
 router.get('/resend_email', auth.loginRequired, async (ctx, next) => {
     let user = ctx.state.user;
 
+    auth.assert(!user.email_last_send_time || user.email_last_send_time < Date.now() - 60 * 1000, '请1分钟之后再发送邮件');
+
     user.email_code = utils.randomString(10, '1234567890');
     user.email_code_expire = Date.now() + 10 * 60 * 1000; // 10分钟后过期
+    user.email_last_send_time = Date.now();
     await user.save();
 
     await email.sendActiveEmail(user);

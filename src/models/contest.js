@@ -26,6 +26,8 @@ let contestSchema = new mongoose.Schema({
         required: true,
     },
 
+    repository_local_name: String, // 本地仓库名称
+
     title: {
         type: String,
         required: true,
@@ -46,6 +48,10 @@ let contestSchema = new mongoose.Schema({
     terms: { // 报名协议
         type: String,
     },
+
+    rank_msg: String, // 排名说明
+    div1_ranklist: String,
+    div2_ranklist: String,
 
 	created_date: { type: Date, default: Date.now },
 });

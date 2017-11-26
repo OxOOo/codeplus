@@ -14,6 +14,7 @@
 
 ```sh
 > mkdir -p data/logs
+> mkdir -p repositories
 > cp config.example.yml config.yml
 ```
 

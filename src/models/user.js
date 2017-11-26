@@ -26,9 +26,11 @@ let userSchema = new mongoose.Schema({
 	},
 	email_will: String, // 将要设置的邮箱
 	email_code: String,
+	email_last_send_time: Date,
 	email_code_expire: Date,
 
 	// 通过邮箱找回密码
+	forgot_password_last_send_time: Date,
 	forgot_password_code: String,
 	forgot_password_code_expire: Date,
 
