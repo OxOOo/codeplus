@@ -26,7 +26,11 @@ router.get('/admin/contests/:contest_id', auth.adminRequired, async (ctx, next) 
     let contest = await Contest.findById(ctx.params.contest_id);
     auth.assert(contest, '比赛不存在');
 
-    await ctx.render('admin_contest', {layout: 'admin_layout', contest: contest});
+    let award_signs = await ContestSign.find({has_award: true});
+    let award_logins = await NormalLogin.find({userID: award_signs.map(x => {return x.userID;})});
+    let award_names = award_logins.map(x => {return x.username;});
+
+    await ctx.render('admin_contest', {layout: 'admin_layout', contest: contest, award_names: award_names});
 });
 router.post('/admin/contests/:contest_id', auth.adminRequired, async (ctx, next) => {
     ctx.params.contest_id.should.be.a.String().and.not.empty();
@@ -65,19 +69,10 @@ router.post('/admin/contests/:contest_id/update_award', auth.adminRequired, asyn
 
     await ContestSign.update({contestID: contest._id}, {$set: {has_award: false}}, {multi: true});
     let names = ctx.request.body.userlist.split('\n');
-    let count = 0;
-    for(let name of names) {
-        name = _.trim(name);
-        let login = await NormalLogin.findOne({username: name});
-        if (!login) continue;
-        let sign = await ContestSign.findOne({userID: login.userID, contestID: contest._id});
-        if (!sign) continue;
-        sign.has_award = true;
-        await sign.save();
-        count ++;
-    }
+    let logins = await NormalLogin.find({username: names});
+    await ContestSign.update({userID: logins.map(x => {return x.userID})}, {$set: {has_award: true}}, {multi: true});
 
-    ctx.state.flash.success = `有${count}人获奖`;
+    ctx.state.flash.success = `有${logins.length}人获奖`;
     await ctx.redirect('back');
 });
 
