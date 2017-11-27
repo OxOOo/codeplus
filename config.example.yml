@@ -24,3 +24,6 @@ OAUTH:
   GITHUB:
     CLIENT_ID: xxxxxxxxxxxxxxx
     CLIENT_SECRET: xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+STORAGE: # 储存
+  REPO: repositories

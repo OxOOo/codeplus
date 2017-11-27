@@ -3,11 +3,14 @@ let Router = require('koa-router');
 let _ = require('lodash');
 let path = require('path');
 let utils = require('utility');
+let mzfs = require('mz/fs');
+let send = require('koa-send');
 require('should');
 
 let config = require('../config');
 let { User, Contest, ContestSign } = require('../models');
 let auth = require('../services/auth');
+let problem = require('../services/problem');
 
 const router = module.exports = new Router();
 
@@ -85,9 +88,28 @@ router.get('/contests/:contest_id', async (ctx, next) => {
         contest_sign = await ContestSign.findOne({userID: ctx.state.user._id, contestID: contest._id});
     }
 
-    await ctx.render('contest', {current_page: 'contests', title: contest.title, contest: contest, contest_sign: contest_sign});
+    let contest_links = {};
+    if (contest.end_sign_time < Date.now()) {
+        try {
+            contest_links.zip = await problem.FetchZIP(contest);
+        } catch(e) {
+        }
+        for(let type of ['div1', 'div2']) {
+            try {
+                contest_links[type] = await problem.FetchProblems(contest, type);
+            } catch(e) {
+            }
+        }
+    }
+
+    await ctx.render('contest', {
+        current_page: 'contests', title: contest.title,
+        contest: contest, contest_sign: contest_sign,
+        contest_links: contest_links,
+    });
 });
 
+// 排名榜
 router.get('/contests/:contest_id/ranklist/:type', async (ctx, next) => {
     ctx.params.contest_id.should.be.a.String().and.not.empty();
     ctx.params.type.should.be.a.String().and.not.empty();
@@ -95,6 +117,53 @@ router.get('/contests/:contest_id/ranklist/:type', async (ctx, next) => {
 
     let contest = await Contest.findById(ctx.params.contest_id);
     auth.assert(contest, '比赛不存在');
+    auth.assert(contest.end_sign_time < Date.now(), '比赛未结束');
 
     ctx.body = contest[`${ctx.params.type}_ranklist`] || '';
+});
+
+router.get('/contests/:contest_id/download', async (ctx, next) => {
+    ctx.params.contest_id.should.be.a.String().and.not.empty();
+
+    let contest = await Contest.findById(ctx.params.contest_id);
+    auth.assert(contest, '比赛不存在');
+    auth.assert(contest.end_sign_time < Date.now(), '比赛未结束');
+
+    let zip = await problem.FetchZIP(contest);
+    ctx.set("Content-Disposition", "attachment; filename=" + path.basename(zip));
+    await send(ctx, zip);
+});
+
+router.get('/contests/:contest_id/problem/:type/:idx', async (ctx, next) => {
+    ctx.params.contest_id.should.be.a.String().and.not.empty();
+    ctx.params.type.should.be.a.String().and.not.empty();
+    auth.assert(['div1', 'div2'].indexOf(ctx.params.type) != -1, '参数非法');
+    ctx.params.idx.should.be.a.String().and.not.empty();
+
+    let contest = await Contest.findById(ctx.params.contest_id);
+    auth.assert(contest, '比赛不存在');
+    auth.assert(contest.end_sign_time < Date.now(), '比赛未结束');
+
+    let p = await problem.FetchProblemInfo(contest, ctx.params.type, ctx.params.idx);
+
+    await ctx.render('contest_problem', {
+        current_page: 'contests', title: p.title + ' | ' + contest.title,
+        contest: contest, problem: p
+    });
+});
+
+router.get('/contests/:contest_id/solution/:type/:idx', async (ctx, next) => {
+    ctx.params.contest_id.should.be.a.String().and.not.empty();
+    ctx.params.type.should.be.a.String().and.not.empty();
+    auth.assert(['div1', 'div2'].indexOf(ctx.params.type) != -1, '参数非法');
+    ctx.params.idx.should.be.a.String().and.not.empty();
+
+    let contest = await Contest.findById(ctx.params.contest_id);
+    auth.assert(contest, '比赛不存在');
+    auth.assert(contest.end_sign_time < Date.now(), '比赛未结束');
+
+    let p = await problem.FetchProblemInfo(contest, ctx.params.type, ctx.params.idx);
+
+    ctx.set("Content-Disposition", "attachment; filename=" + p.name + '_' + path.basename(p.solution));
+    await send(ctx, p.solution);
 });

@@ -1,0 +1,14 @@
+
+<div class='panel panel-default'>
+    <div class="panel-heading" id="contest-heading">
+        <%= problem.title %>
+        <small style="color: gray">
+            <a href="/contests/<%= contest._id %>"><%= contest.title %></a>
+        </small>
+    </div>
+    <div class='panel-body'>
+        <div id="contest-desc">
+          <%- md.render(problem.content); %>
+        </div>
+    </div>
+</div>
