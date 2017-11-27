@@ -1,0 +1,8 @@
+<% if (contest_sign && contest_sign.has_award && !contest_sign.express_info_filled) { %>
+    
+<div class="alert alert-warning alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+    恭喜获奖，请前往<a href="/modify">个人资料</a>页面填写快递信息。
+</div>
+
+<% } %>
