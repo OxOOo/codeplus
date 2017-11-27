@@ -13,57 +13,53 @@ table
 
 <div class='panel panel-default'>
     <div class='panel-body'>
-        <% if(Object.keys(contest_links).length > 0) { %>
-            <% if(contest_links.zip) { %>
-                <a href="/contests/<%= contest._id %>/download">下载</a><br/>
-            <% } %>
-            <% for(let type of ['div1', 'div2']) { %>
-                <% if (!contest_links[type]) continue; %>
-                <table class="table" width="100%">
-                    <thead>
-                        <tr>
-                            <th class="text-center" colspan="<%= contest_links[type].length %>"><%= type %></th>
-                        </tr>
-                        <tr>
-                            <% for(let problem of contest_links[type]) { %>
-                                <th class="text-center"><%= problem.title %></th>
-                            <% } %>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <% for(let i in contest_links[type]) { %>
-                                <% let problem = contest_links[type][i]; %>
-                                <td style="text-align:center;">
-                                    <a href="/contests/<%= contest._id %>/problem/<%= type %>/<%= i %>">题目</a>
-                                </td>
-                            <% } %>
-                        </tr>
-                        <tr>
-                            <% for(let i in contest_links[type]) { %>
-                                <% let problem = contest_links[type][i]; %>
-                                <td style="text-align:center;">
-                                    <% if (problem.solution) {%>
-                                        <a href="/contests/<%= contest._id %>/solution/<%= type %>/<%= i %>">题解</a>
-                                    <% } %>
-                                </td>
-                            <% } %>
-                        </tr>
-                        <tr>
-                            <% for(let i in contest_links[type]) { %>
-                                <% let problem = contest_links[type][i]; %>
-                                <td style="text-align:center;">
-                                    <% if (problem.link) {%>
-                                        <a target="_blank" href="<%- problem.link %>">提交链接</a>
-                                    <% } %>
-                                </td>
-                            <% } %>
-                        </tr>
-                    </tbody>
-                </table>
-            <% } %>
-        <% } else { %>
-            暂时没有链接
+        <% if(contest_links.zip) { %>
+            <a href="/contests/<%= contest._id %>/download">下载</a><br/>
+        <% } %>
+        <% for(let type of ['div1', 'div2']) { %>
+            <% if (!contest_links[type]) continue; %>
+            <table class="table" width="100%">
+                <thead>
+                    <tr>
+                        <th class="text-center" colspan="<%= contest_links[type].length %>"><%= type %></th>
+                    </tr>
+                    <tr>
+                        <% for(let problem of contest_links[type]) { %>
+                            <th class="text-center"><%= problem.title %></th>
+                        <% } %>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <% for(let i in contest_links[type]) { %>
+                            <% let problem = contest_links[type][i]; %>
+                            <td style="text-align:center;">
+                                <a href="/contests/<%= contest._id %>/problem/<%= type %>/<%= i %>">题目</a>
+                            </td>
+                        <% } %>
+                    </tr>
+                    <tr>
+                        <% for(let i in contest_links[type]) { %>
+                            <% let problem = contest_links[type][i]; %>
+                            <td style="text-align:center;">
+                                <% if (problem.solution) {%>
+                                    <a href="/contests/<%= contest._id %>/solution/<%= type %>/<%= i %>">题解</a>
+                                <% } %>
+                            </td>
+                        <% } %>
+                    </tr>
+                    <tr>
+                        <% for(let i in contest_links[type]) { %>
+                            <% let problem = contest_links[type][i]; %>
+                            <td style="text-align:center;">
+                                <% if (problem.link) {%>
+                                    <a target="_blank" href="<%- problem.link %>">提交链接</a>
+                                <% } %>
+                            </td>
+                        <% } %>
+                    </tr>
+                </tbody>
+            </table>
         <% } %>
     </div>
 </div>
