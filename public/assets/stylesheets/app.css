@@ -379,3 +379,14 @@ button.realbtn.login-with-github {
 .login-with-github .fa {
   margin-right: 6px;
 }
+
+table, th, td
+{
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+table
+{
+    border-collapse: collapse;
+    margin: 10px 0px;
+}

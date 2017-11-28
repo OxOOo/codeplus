@@ -28,7 +28,6 @@
     "lodash": "^4.17.4",
     "log": "^1.4.0",
     "markdown-it": "^8.4.0",
-    "markdown-it-katex": "^2.0.3",
     "moment": "^2.19.2",
     "mongoose": "^4.12.5",
     "mz": "^2.7.0",
