@@ -196,10 +196,14 @@ a:hover {
   align-items: center;
   justify-content: center;
   padding: 40px;
+
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .overlap-content {
   max-width: 500px;
+  max-height: 100%;
 }
 
 .panel {
