@@ -27,7 +27,6 @@ let forgotTmpl = ejs.compile(fs.readFileSync(path.resolve(__dirname, "../../view
 exports.sendActiveEmail = (user) => {
     return new Promise(async (resolve, reject) => {
         try {
-          console.log(user);
             let url = SERVER.URL_PREFIX + '/check_email_code?' + qs.stringify({code: user.email_code, user_id: user._id.toString()});
             let logo = SERVER.URL_PREFIX + '/assets/images/cplogo.svg';
             let mailContent = activeTmpl({ name: user.nickname, link: url, logo: logo });

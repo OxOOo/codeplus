@@ -12,6 +12,7 @@ let { User, Contest, ContestSign } = require('../models');
 let auth = require('../services/auth');
 let tools = require('../services/tools');
 let email = require('../services/email');
+let chelper = require('../services/chelper');
 
 const router = module.exports = new Router();
 
@@ -94,9 +95,8 @@ router.post('/forgot_password_reset', async (ctx, next) => {
     let user = await User.findOne({email: ctx.request.body.email});
     auth.assert(user, "用户不存在");
     auth.assert(user.forgot_password_code_expire > Date.now(), "验证码已过期");
-    auth.assert(user.forgot_password_code == ctx.request.body.code, "验证码不正确");
+    auth.assert(user.forgot_password_code == ctx.request.body.code, "验证码不正确"); // 允许多次尝试
 
-    user.forgot_password_code = undefined;
     await user.save();
 
     await auth.resetPassword(ctx, user, ctx.request.body.password);
@@ -106,16 +106,14 @@ router.post('/forgot_password_reset', async (ctx, next) => {
 
 // 修改资料
 router.get('/modify', auth.loginRequired, async (ctx, next) => {
-    let contest = await Contest.findOne({public: true}).sort('-no');
-    let contest_sign = null;
-    if (ctx.state.user) {
-        contest_sign = await ContestSign.findOne({userID: ctx.state.user._id, contestID: contest._id});
-    }
-    await ctx.render('modify', {current_page: 'modify', title: "修改资料", contest: contest, contest_sign: contest_sign});
+    await ctx.render('modify', {current_page: 'modify', title: "修改资料"});
 });
 // 修改昵称
 router.post('/modify_nickname', auth.loginRequired, async (ctx, next) => {
     ctx.request.body.nickname.should.be.a.String().and.not.eql("","昵称不能为空");
+
+    let already_one = await User.findOne({nickname: ctx.request.body.nickname});
+    auth.assert(!already_one || already_one._id.equals(ctx.state.user._id), '昵称已存在');
 
     ctx.state.user.nickname = ctx.request.body.nickname;
     await ctx.state.user.save();
@@ -149,6 +147,8 @@ router.get('/email_sent', auth.loginRequired, async (ctx, next) => {
 
 router.get('/resend_email', auth.loginRequired, async (ctx, next) => {
     let user = ctx.state.user;
+    auth.assert(ctx.state.normal_login, "请先创建帐号密码");
+    auth.assert(user.email_will, '坏心眼的小不点');
 
     auth.assert(!user.email_last_send_time || user.email_last_send_time < Date.now() - 60 * 1000, '请1分钟之后再发送邮件');
 
@@ -176,7 +176,6 @@ router.get('/check_email_code', async (ctx, next) => {
 
     user.email = user.email_will;
     user.email_passed = true;
-    user.email_code = undefined;
     await user.save();
 
     ctx.state.flash.success = "邮箱激活成功";
@@ -217,11 +216,7 @@ router.post('/modify_express', auth.loginRequired, async (ctx, next) => {
     for(const v in FIELDS)
         ctx.request.body[v].should.be.a.String().and.not.eql("", `${FIELDS[v]}不能为空`);
     
-    let contest = await Contest.findOne({public: true}).sort('-no');
-    let contest_sign = null;
-    if (ctx.state.user) {
-        contest_sign = await ContestSign.findOne({userID: ctx.state.user._id, contestID: contest._id});
-    }
+    let {contest, contest_sign} = await chelper.fetchDefaultContest(ctx);
     auth.assert(contest_sign && contest_sign.has_award, '你没有获奖');
 
     _.assign(contest_sign, _.pick(ctx.request.body, Object.keys(FIELDS)));
@@ -236,7 +231,7 @@ router.post('/create_account', auth.loginRequired, async (ctx, next) => {
     ctx.request.body.username.should.be.a.String().and.not.eql("","请填入用户名");
     ctx.request.body.password.should.be.a.String().and.not.eql("","请填入密码");
     await auth.createAccount(ctx, ctx.request.body.username, ctx.request.body.password);
-    ctx.state.flash.success = '修改帐号成功';
+    ctx.state.flash.success = '创建帐号成功';
     await ctx.redirect('back');
 });
 // 修改密码

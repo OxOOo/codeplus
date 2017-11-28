@@ -1,17 +1,3 @@
-<style>
-  .switch_on_click {
-    cursor: pointer;
-  }
-
-  .switch_on_click_mark {
-    color: rgba(0, 0, 0, .3);
-  }
-
-  .switch_on_click_copy {
-    cursor: pointer;
-    color: rgba(0, 0, 0, .3);
-  }
-</style>
 
 <div class='panel panel-default cp-edit'>
   <form method="post" action="/modify_nickname">
@@ -53,27 +39,9 @@
         <label>确认密码</label>
         <input type="password" class="show-on-edit" id="confirm_password">
       </div>
-      <div class="cp-input-group hide-on-edit">
-        <label>OJ帐号</label>
-        <div><%= normal_login.oj_username %></div>
-      </div>
-      <div class="cp-input-group hide-on-edit">
-        <label>OJ密码</label>
-        <div>
-          <spin class="switch_on_click switch_on_click_mark">[点击显示]</spin>
-          <spin class="switch_on_click" style="display: none"><%= normal_login.oj_password %></spin>
-        </div>
-      </div>
     </div>
     </form>
   </div>
-  <script>
-    $(function() {
-      $('.switch_on_click').click(function() {
-        $('.switch_on_click').toggle();
-      });
-    });
-  </script>
 <% } else {%>
   <div class='panel panel-default cp-edit'>
     <form id="form-account" method="post" action="/create_account">
@@ -182,12 +150,12 @@
   </form>
 </div>
 
-<% if(contest_sign && contest_sign.has_award) { %>
+<% if(latest_contest_sign && latest_contest_sign.has_award) { %>
 
 <div class='panel panel-default cp-edit'>
   <form id="form-info" method="post" action="/modify_express">
     <div class='panel-heading'>
-      比赛《<%= contest.title %>》的快递信息
+      比赛《<%= latest_contest.title %>》的快递信息
       <div class="cp-sidenote">用于奖品</div>
       <i class="hide-on-edit edit-btn fa fa-pencil"></i>
       <button class="invisible show-on-edit done-btn" type="submit"><i class="fa fa-check"></i></button>
@@ -195,41 +163,41 @@
     <div class='panel-body'>
       <div class="cp-input-group">
         <label>收件人</label>
-        <div class="hide-on-edit cp-edit-display"><%= contest_sign.receiver %></div>
-        <input type="text" class="show-on-edit" name="receiver" value="<%= contest_sign.receiver %>">
+        <div class="hide-on-edit cp-edit-display"><%= latest_contest_sign.receiver %></div>
+        <input type="text" class="show-on-edit" name="receiver" value="<%= latest_contest_sign.receiver %>">
       </div>
       <div class="cp-input-group">
         <label>收件人电话</label>
-        <div class="hide-on-edit cp-edit-display"><%= contest_sign.phone %></div>
-        <input type="text" class="show-on-edit" name="phone" value="<%= contest_sign.phone %>">
+        <div class="hide-on-edit cp-edit-display"><%= latest_contest_sign.phone %></div>
+        <input type="text" class="show-on-edit" name="phone" value="<%= latest_contest_sign.phone %>">
       </div>
       <div class="cp-input-group">
         <label>学校</label>
-        <div class="hide-on-edit cp-edit-display"><%= contest_sign.school %></div>
-        <input type="text" class="show-on-edit" name="school" value="<%= contest_sign.school %>">
+        <div class="hide-on-edit cp-edit-display"><%= latest_contest_sign.school %></div>
+        <input type="text" class="show-on-edit" name="school" value="<%= latest_contest_sign.school %>">
         <div class="cp-sidenote">发往同一学校就读同学的快递将被合并,如果不想被合并请联系工作人员</div>
       </div>
       <div class="cp-input-group-row">
         <div class="cp-input-group">
           <label>省</label>
-          <div class="hide-on-edit cp-edit-display"><%= contest_sign.prov %></div>
-          <input type="text" class="show-on-edit" name="prov" value="<%= contest_sign.prov %>">
+          <div class="hide-on-edit cp-edit-display"><%= latest_contest_sign.prov %></div>
+          <input type="text" class="show-on-edit" name="prov" value="<%= latest_contest_sign.prov %>">
         </div>
         <div class="cp-input-group">
           <label>市</label>
-          <div class="hide-on-edit cp-edit-display"><%= contest_sign.city %></div>
-          <input type="text" class="show-on-edit" name="city" value="<%= contest_sign.city %>">
+          <div class="hide-on-edit cp-edit-display"><%= latest_contest_sign.city %></div>
+          <input type="text" class="show-on-edit" name="city" value="<%= latest_contest_sign.city %>">
         </div>
         <div class="cp-input-group">
           <label>县(区)</label>
-          <div class="hide-on-edit cp-edit-display"><%= contest_sign.county %></div>
-          <input type="text" class="show-on-edit" name="county" value="<%= contest_sign.county %>">
+          <div class="hide-on-edit cp-edit-display"><%= latest_contest_sign.county %></div>
+          <input type="text" class="show-on-edit" name="county" value="<%= latest_contest_sign.county %>">
         </div>
       </div>
       <div class="cp-input-group">
         <label>详细地址</label>
-        <div class="hide-on-edit cp-edit-display"><%= contest_sign.addr %></div>
-        <input type="text" class="show-on-edit" name="addr" value="<%= contest_sign.addr %>">
+        <div class="hide-on-edit cp-edit-display"><%= latest_contest_sign.addr %></div>
+        <input type="text" class="show-on-edit" name="addr" value="<%= latest_contest_sign.addr %>">
       </div>
     </div>
   </form>

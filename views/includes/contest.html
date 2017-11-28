@@ -1,13 +1,3 @@
-<style>
-.contest_sign_password_switch {
-  cursor: pointer;
-}
-
-.contest_sign_password_mark {
-  color: rgba(0,0,0,.3);
-}
-</style>
-
 <div class='panel panel-default'>
     <div class="panel-heading" id="contest-heading"><%= contest.title %></div>
     <div class='panel-body'>
@@ -47,7 +37,7 @@
         
         <% if(contest_sign) { %>
             <br><br>
-            比赛网站为<a href="https://oj.thusaac.org" target="_blank">https://oj.thusaac.org</a>，可以在<a href="/modify">个人资料</a>页面查看登录密码，比赛开始前1个小时可以登录比赛网站。
+            比赛网站为<a href="https://oj.thusaac.org" target="_blank">https://oj.thusaac.org</a>。
         <% } %>
         <hr/>
         <div id="contest-desc">

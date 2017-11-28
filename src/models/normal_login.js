@@ -8,7 +8,8 @@ let normalLoginSchema = new mongoose.Schema({
 	username: {
 		type: String,
 		required: true,
-		unique: true
+		unique: true,
+		match: /^[\S]+$/,
 	},
 	password: { // 加密后的密码
 		type: String,
@@ -22,6 +23,8 @@ let normalLoginSchema = new mongoose.Schema({
 	oj_username: {
 		type: String,
 		required: true,
+		unique: true,
+		match: /^[\S]+$/,
 	},
 	oj_password: {
 		type: String,

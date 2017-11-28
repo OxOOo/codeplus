@@ -9,8 +9,20 @@
         <% contests.forEach((c) => { %>
           <tr>
             <td><a href="/contests/<%= c._id %>"><%= c.title %></a></td>
-            <td><a class="msg-link" data-for="<%= c._id %>" href="#">排名</a></td>
-            <td><a class="problem-link" href="/contests/<%= c._id %>">题目</a></td>
+            <td>
+              <% if (c.end_contest_time < Date.now() && c.div1_ranklist && c.div2_ranklist) { %>
+                <a class="msg-link" data-for="<%= c._id %>" href="#">排名</a>
+              <% } else { %>
+                <del>排名</del>
+              <% } %>
+            </td>
+            <td>
+              <% if (c.end_contest_time < Date.now() && c.repository_local_name) { %>
+                <a class="problem-link" href="/contests/<%= c._id %>">题目</a>
+              <% } else { %>
+                <del>题目</del>
+              <% } %>
+            </td>
           </tr>
         <% }) %>
       </tbody>

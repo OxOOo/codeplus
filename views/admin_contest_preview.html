@@ -15,6 +15,14 @@
         <td><%= moment_format(contest.end_sign_time) %></td>
       </tr>
       <tr>
+        <th>比赛开始时间</th>
+        <td><%= moment_format(contest.begin_contest_time) %></td>
+      </tr>
+      <tr>
+        <th>比赛结束时间</th>
+        <td><%= moment_format(contest.end_contest_time) %></td>
+      </tr>
+      <tr>
         <th>本地仓库名称</th>
         <td><%= contest.repository_local_name %></td>
       </tr>

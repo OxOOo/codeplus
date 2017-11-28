@@ -5,6 +5,7 @@ let _ = require('lodash');
 // github登录
 let githubLoginSchema = new mongoose.Schema({
 
+	// github信息
 	id: {
 		type: Number,
 		required: true,

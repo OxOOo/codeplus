@@ -11,26 +11,38 @@ let contestSchema = new mongoose.Schema({
         default: -1
     },
 
-    public: {
+    public: { // 是否公开
         type: Boolean,
         required: true,
         default: false,
     },
 
-    begin_sign_time: {
+    begin_sign_time: { // 注册开放时间
         type: Date,
         required: true,
     },
-    end_sign_time: {
+    end_sign_time: { // 注册结束时间
+        type: Date,
+        required: true,
+    },
+    begin_contest_time: { // 比赛开放时间
+        type: Date,
+        required: true,
+    },
+    end_contest_time: { // 比赛结束时间
         type: Date,
         required: true,
     },
 
-    repository_local_name: String, // 本地仓库名称
+    repository_local_name: { // 本地仓库名称
+        type: String,
+        match: /^[\S]+$/,
+    },
 
     title: {
         type: String,
         required: true,
+        match: /^[\S]+$/,
         default: '这里是比赛标题'
     },
 

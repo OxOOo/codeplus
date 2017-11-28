@@ -7,7 +7,9 @@ let userSchema = new mongoose.Schema({
 
 	nickname: {
 		type: String,
-		required: true
+		required: true,
+		unique: true,
+		match: /^[\S]+$/,
 	},
 
 	is_admin: Boolean, // 是否管理员
@@ -26,13 +28,13 @@ let userSchema = new mongoose.Schema({
 	},
 	email_will: String, // 将要设置的邮箱
 	email_code: String,
-	email_last_send_time: Date,
-	email_code_expire: Date,
+	email_last_send_time: Date, // 上次发送的时间
+	email_code_expire: Date, // 验证码过期时间
 
 	// 通过邮箱找回密码
-	forgot_password_last_send_time: Date,
+	forgot_password_last_send_time: Date, // 上次发送的时间
 	forgot_password_code: String,
-	forgot_password_code_expire: Date,
+	forgot_password_code_expire: Date, // 验证码过期时间
 
 	// 基本信息
 	info_filled: { // 是否已填基本信息

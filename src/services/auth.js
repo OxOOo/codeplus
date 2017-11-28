@@ -99,6 +99,7 @@ exports.register = async function (ctx, username, password) {
 
 exports.createAccount = async function (ctx, username, password) {
     assert(!await NormalLogin.findOne({username: username}), '用户名已存在');
+    assert(!ctx.normal_login, '已经存在帐号');
     
     let login = new NormalLogin();
     login.username = username;
@@ -115,6 +116,7 @@ exports.createAccount = async function (ctx, username, password) {
 // 登录的情况下修改密码
 exports.modifyPassword = async function (ctx, password) {
     let login = ctx.state.normal_login;
+    assert(login, '没有帐号');
     login.password = utils.sha256(password + login.random_salt);
 
     await login.save();
