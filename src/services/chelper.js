@@ -37,7 +37,7 @@ let fetchContestExpressInfoCSV = exports.fetchContestExpressInfoCSV = async func
     tools.bindFindByXX(logins, 'userID');
 
     let lines = [];
-    lines.push(["ID", "姓名", "比赛", "电话", "邮箱", "是否已填", "学校", "收件人姓名", "收件人联系电话", "省", "市", "区", "详细地址"]);
+    lines.push(["ID", "姓名", "比赛", "电话", "邮箱", "原学校", "性别", "衣服大小", "是否已填", "收件学校", "收件人姓名", "收件人联系电话", "省", "市", "区", "详细地址"]);
     signs.forEach((s) => {
         let line = [];
         line.push(logins.findByuserID(s.userID).username);
@@ -45,6 +45,9 @@ let fetchContestExpressInfoCSV = exports.fetchContestExpressInfoCSV = async func
         line.push(s.type);
         line.push(users.findBy_id(s.userID).phone_number);
         line.push(users.findBy_id(s.userID).email);
+        line.push(users.findBy_id(s.userID).school);
+        line.push(users.findBy_id(s.userID).sex);
+        line.push(users.findBy_id(s.userID).tshirt_size);
         line.push(s.express_info_filled ? '是' : '否');
         line.push(s.school);
         line.push(s.receiver);
@@ -53,6 +56,10 @@ let fetchContestExpressInfoCSV = exports.fetchContestExpressInfoCSV = async func
         line.push(s.city);
         line.push(s.county);
         line.push(s.addr);
+
+        for(let i = 0; i < line.length; i ++)
+            line[i] = line[i] || '未填';
+
         lines.push(line);
     });
 

@@ -17,8 +17,11 @@
           <th>比赛</th>
           <th>电话</th>
           <th>邮箱</th>
+          <th>原学校</th>
+          <th>性别</th>
+          <th>衣服尺寸</th>
           <th>是否已填</th>
-          <th>学校</th>
+          <th>收件学校</th>
           <th>收件人</th>
           <th>收件人联系电话</th>
           <th>省</th>
@@ -35,6 +38,9 @@
             <td><%= s.type %></td>
             <td><%= users.findBy_id(s.userID).phone_number %></td>
             <td><%= users.findBy_id(s.userID).email %></td>
+            <td><%= users.findBy_id(s.userID).school %></td>
+            <td><%= users.findBy_id(s.userID).sex %></td>
+            <td><%= users.findBy_id(s.userID).tshirt_size %></td>
             <td><%= s.express_info_filled ? '是' : '否' %></td>
             <td><%= s.school %></td>
             <td><%= s.receiver %></td>
