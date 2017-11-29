@@ -6,7 +6,7 @@
   <div class='panel-body'>
     <form class="form-horizontal" action="/admin/contests/<%= contest._id %>" method="post">
       <div class="form-group">
-        <label class="col-sm-2 control-label">标题</label>
+        <label class="col-sm-2 control-label">标题(不能有空白字符)</label>
         <div class="col-sm-10">
           <input type="text" class="form-control" name="title" placeholder="标题" value="<%= contest.title %>">
         </div>
@@ -36,7 +36,7 @@
         </div>
       </div>
       <div class="form-group">
-        <label class="col-sm-2 control-label">本地仓库名称</label>
+        <label class="col-sm-2 control-label">本地仓库名称(不能有空白字符)</label>
         <div class="col-sm-10">
           <input type="text" class="form-control" name="repository_local_name" placeholder="本地仓库名称" value="<%= contest.repository_local_name %>">
         </div>
