@@ -1,12 +1,14 @@
 // contest helper
 
 let { STORAGE } = require('../config');
-let { User, Contest, ContestSign } = require('../models');
+let { User, Contest, ContestSign, NormalLogin } = require('../models');
 let path = require('path');
 let mzfs = require('mz/fs');
 
 let auth = require('./auth');
+let tools = require('./tools');
 
+// 获取默认比赛信息
 let fetchDefaultContest = exports.fetchDefaultContest = async function(ctx) {
     let contest = await Contest.findOne({public: true}).sort('-no');
     let contest_sign = null;
@@ -24,6 +26,37 @@ let contestSignCheck = exports.contestSignCheck = async function (contest_id) {
     auth.assert(contest.public, '比赛未公开');
 
     return contest;
+}
+
+// 下载比赛快递信息
+let fetchContestExpressInfoCSV = exports.fetchContestExpressInfoCSV = async function (contest) {
+    let signs = await ContestSign.find({contestID: contest._id, has_award: true});
+    let users = await User.find();
+    let logins = await NormalLogin.find();
+    tools.bindFindByXX(users, '_id');
+    tools.bindFindByXX(logins, 'userID');
+
+    let lines = [];
+    lines.push(["ID", "姓名", "比赛", "电话", "邮箱", "是否已填", "学校", "收件人姓名", "收件人联系电话", "省", "市", "区", "详细地址"]);
+    signs.forEach((s) => {
+        let line = [];
+        line.push(logins.findByuserID(s.userID).username);
+        line.push(users.findBy_id(s.userID).real_name);
+        line.push(s.type);
+        line.push(users.findBy_id(s.userID).phone_number);
+        line.push(users.findBy_id(s.userID).email);
+        line.push(s.express_info_filled ? '是' : '否');
+        line.push(s.school);
+        line.push(s.receiver);
+        line.push(s.phone);
+        line.push(s.prov);
+        line.push(s.city);
+        line.push(s.county);
+        line.push(s.addr);
+        lines.push(line);
+    });
+
+    return lines.map((x) => {return x.join(',');}).join('\n');
 }
 
 let fetchZIPPath = exports.fetchZIPPath = async function(contest) {

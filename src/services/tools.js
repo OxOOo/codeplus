@@ -15,17 +15,21 @@ exports.emailName = (email) => {
     return email_reg.exec(email)[1];
 }
 
-exports.buildFindById = (objs) => {
+exports.bindFindByXX = (objs, XX) => {
     objs.should.be.instanceOf(Array);
+    XX.should.be.a.String();
 
-    objs._id_index = {};
+    const index_name = `${XX}_indxes`;
+    const func_name = `findBy${XX}`;
+
+    objs[index_name] = {};
     objs.forEach(x => {
-        objs._id_index[String(x._id)] = x;
+        objs[index_name][String(x[XX])] = x;
     });
 
-    objs.findById = (id) => {
+    objs[func_name] = (id) => {
         id = String(id);
-        if (id in objs._id_index) return objs._id_index[id];
+        if (id in objs[index_name]) return objs[index_name][id];
         else return null;
     }
 }

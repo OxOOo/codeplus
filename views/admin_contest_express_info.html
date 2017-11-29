@@ -1,0 +1,51 @@
+<div class='panel panel-default'>
+  <div class='panel-heading'>
+    <i class='icon-edit icon-large'></i>
+    比赛《<%= contest.title %>》的快递信息
+  </div>
+  <div class='panel-body'>
+    <h4>总数：<small><%= total_count %></small></h4>
+    <h4>已填：<small><%= filled_count %></small></h4>
+    <h4>未填：<small><%= unfilled_count %></small></h4>
+    <a href="/admin/contests/<%= contest._id %>/express_info_download?encoding=utf-8">下载(UTF-8)</a>
+    <a href="/admin/contests/<%= contest._id %>/express_info_download?encoding=gbk">下载(GBK)</a>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>姓名</th>
+          <th>比赛</th>
+          <th>电话</th>
+          <th>邮箱</th>
+          <th>是否已填</th>
+          <th>学校</th>
+          <th>收件人</th>
+          <th>收件人联系电话</th>
+          <th>省</th>
+          <th>市</th>
+          <th>县（区）</th>
+          <th>详细地址</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% signs.forEach((s) => { %>
+          <tr>
+            <td><%= logins.findByuserID(s.userID).username %></td>
+            <td><%= users.findBy_id(s.userID).real_name %></td>
+            <td><%= s.type %></td>
+            <td><%= users.findBy_id(s.userID).phone_number %></td>
+            <td><%= users.findBy_id(s.userID).email %></td>
+            <td><%= s.express_info_filled ? '是' : '否' %></td>
+            <td><%= s.school %></td>
+            <td><%= s.receiver %></td>
+            <td><%= s.phone %></td>
+            <td><%= s.prov %></td>
+            <td><%= s.city %></td>
+            <td><%= s.county %></td>
+            <td><%= s.addr %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>

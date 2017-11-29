@@ -6,6 +6,7 @@ let utils = require('utility');
 let qs = require('querystring');
 let request = require('superagent');
 let moment = require('moment');
+let iconv = require('iconv-lite');
 require('should');
 
 let config = require('../config');
@@ -13,6 +14,7 @@ let { User, NormalLogin, Contest, ContestSign } = require('../models');
 let auth = require('../services/auth');
 let tools = require('../services/tools');
 let email = require('../services/email');
+let chelper = require('../services/chelper');
 
 const router = module.exports = new Router();
 
@@ -73,6 +75,40 @@ router.post('/admin/contests/:contest_id/update_award', auth.adminRequired, asyn
 
     ctx.state.flash.success = `有${logins.length}人获奖`;
     await ctx.redirect('back');
+});
+router.get('/admin/contests/:contest_id/express_info', auth.adminRequired, async (ctx, next) => {
+    ctx.params.contest_id.should.be.a.String().and.not.empty();
+
+    let contest = await Contest.findById(ctx.params.contest_id);
+    auth.assert(contest, '比赛不存在');
+
+    let signs = await ContestSign.find({contestID: contest._id, has_award: true});
+    let users = await User.find();
+    let logins = await NormalLogin.find();
+    tools.bindFindByXX(users, '_id');
+    tools.bindFindByXX(logins, 'userID');
+
+    let total_count = signs.length;
+    let filled_count = await ContestSign.find({contestID: contest._id, has_award: true, express_info_filled: true}).count();
+    let unfilled_count = total_count - filled_count;
+
+    await ctx.render('admin_contest_express_info', {layout: 'admin_layout',
+        contest: contest, signs: signs, users: users, logins: logins,
+        total_count: total_count, filled_count: filled_count, unfilled_count: unfilled_count
+    });
+});
+router.get('/admin/contests/:contest_id/express_info_download', auth.adminRequired, async (ctx, next) => {
+    ctx.params.contest_id.should.be.a.String().and.not.empty();
+
+    let contest = await Contest.findById(ctx.params.contest_id);
+    auth.assert(contest, '比赛不存在');
+
+    ctx.set("Content-Disposition", "attachment; filename=" + qs.escape(contest.title) + ".csv" );
+    let content = await chelper.fetchContestExpressInfoCSV(contest);
+    if (ctx.request.query.encoding) {
+        content = iconv.encode(content, ctx.request.query.encoding);
+    }
+    ctx.body = content;
 });
 
 router.get('/admin/control', auth.adminRequired, async (ctx, next) => {

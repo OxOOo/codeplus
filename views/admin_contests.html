@@ -12,6 +12,7 @@
           <th>结束报名时间</th>
           <th>no</th>
           <th>是否公开</th>
+          <th>获奖快递信息</th>
         </tr>
       </thead>
       <tbody>
@@ -22,6 +23,7 @@
             <td><%= moment_format(c.end_sign_time) %></td>
             <td><%= c.no %></td>
             <td><%= c.public ? '是' : '否' %></td>
+            <td><a href="/admin/contests/<%= c._id %>/express_info">快递信息</a></td>
           </tr>
         <% }) %>
       </tbody>
