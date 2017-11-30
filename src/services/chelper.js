@@ -37,12 +37,13 @@ let fetchContestExpressInfo = exports.fetchContestExpressInfo = async function (
     tools.bindFindByXX(logins, 'userID');
 
     let lines = [];
-    lines.push(["ID", "姓名", "比赛", "电话", "邮箱", "原学校", "性别", "衣服大小", "是否已填", "收件学校", "收件人姓名", "收件人联系电话", "省", "市", "区", "详细地址"]);
+    lines.push(["ID", "姓名", "比赛", "排名", "电话", "邮箱", "原学校", "性别", "衣服大小", "是否已填", "收件学校", "收件人姓名", "收件人联系电话", "省", "市", "区", "详细地址"]);
     signs.forEach((s) => {
         let line = [];
         line.push(logins.findByuserID(s.userID).username);
         line.push(users.findBy_id(s.userID).real_name);
         line.push(s.type);
+        line.push(s.rank || '暂无');
         line.push(users.findBy_id(s.userID).phone_number);
         line.push(users.findBy_id(s.userID).email);
         line.push(users.findBy_id(s.userID).school);
