@@ -4,6 +4,7 @@ hierapolis-gh-pages
 npm-debug.log
 data
 repositories
+backups
 
 # Of course, vim
 .*.sw[a-p]
