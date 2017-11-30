@@ -47,9 +47,40 @@ router.post('/admin/contests/:contest_id', auth.adminRequired, async (ctx, next)
         'title',
         'description', 'terms',
         'repository_local_name',
-        'rank_msg', 'div1_ranklist', 'div2_ranklist',
+        'rank_msg',
     ]));
     await contest.save();
+
+    let ranked_count = {};
+    for(let type of ['div1', 'div2']) {
+        await ContestSign.update({contestID: contest._id, type: type}, {$set: {rank: null}}, {multi: true});
+        ranked_count[type] = -1;
+
+        let ranklist = ctx.request.body[`${type}_ranklist`];
+        if (!ranklist || _.trim(ranklist).length == 0) continue;
+        let lines = _.trim(ranklist).split('\n').map(x => {return _.split(_.trim(x), /\s+/)});
+
+        ranked_count[type] = 0;
+        let rank_index = _.indexOf(lines[0], 'rank');
+        let id_index = _.indexOf(lines[0], 'id');
+        for(let i = 1; i < lines.length; i ++) {
+            auth.assert(lines[i].length == lines[0].length, `${type} ranklist第${i+1}行长度不符`);
+            if (rank_index >= 0 && id_index >= 0) {
+                let rank = Number(lines[i][rank_index]);
+                let username = lines[i][id_index];
+                let login = await NormalLogin.findOne({username: username});
+                if (login) {
+                    let rst = await ContestSign.update({contestID: contest._id, type: type, userID: login.userID}, {$set: {rank}});
+                    ranked_count[type] += rst.nModified;
+                }
+            }
+        }
+
+        contest[`${type}_ranklist`] = lines.map(x => {return x.join('\t')}).join('\n');
+    }
+    await contest.save();
+
+    ctx.state.flash.success = `更新成功,div1有效排名${ranked_count['div1']}个，div2有效排名${ranked_count['div2']}个`;
 
     await ctx.redirect('back');
 });
@@ -82,18 +113,14 @@ router.get('/admin/contests/:contest_id/express_info', auth.adminRequired, async
     let contest = await Contest.findById(ctx.params.contest_id);
     auth.assert(contest, '比赛不存在');
 
-    let signs = await ContestSign.find({contestID: contest._id, has_award: true});
-    let users = await User.find();
-    let logins = await NormalLogin.find();
-    tools.bindFindByXX(users, '_id');
-    tools.bindFindByXX(logins, 'userID');
+    let express_lines = await chelper.fetchContestExpressInfo(contest);
 
-    let total_count = signs.length;
+    let total_count = await ContestSign.find({contestID: contest._id, has_award: true}).count();
     let filled_count = await ContestSign.find({contestID: contest._id, has_award: true, express_info_filled: true}).count();
     let unfilled_count = total_count - filled_count;
 
     await ctx.render('admin_contest_express_info', {layout: 'admin_layout',
-        contest: contest, signs: signs, users: users, logins: logins,
+        contest: contest, express_lines: express_lines,
         total_count: total_count, filled_count: filled_count, unfilled_count: unfilled_count
     });
 });
@@ -104,7 +131,8 @@ router.get('/admin/contests/:contest_id/express_info_download', auth.adminRequir
     auth.assert(contest, '比赛不存在');
 
     ctx.set("Content-Disposition", "attachment; filename=" + qs.escape(contest.title) + ".csv" );
-    let content = await chelper.fetchContestExpressInfoCSV(contest);
+    let lines = await chelper.fetchContestExpressInfo(contest);
+    let content = lines.map(x => {return x.join(',')}).join('\n') + '\n';
     if (ctx.request.query.encoding) {
         content = iconv.encode(content, ctx.request.query.encoding);
     }

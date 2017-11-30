@@ -106,8 +106,17 @@ router.get('/contests/:contest_id/ranklist/:type', async (ctx, next) => {
     auth.assert(contest, '比赛不存在');
     auth.assert(contest.end_contest_time < Date.now(), '比赛未结束');
 
-    ctx.body = contest[`${ctx.params.type}_ranklist`] || '';
-    console.log('==========');
+    let lines = contest[`${ctx.params.type}_ranklist`] ? contest[`${ctx.params.type}_ranklist`].split('\n').map(x => {return x.split('\t')}) : '暂无';
+    let header = lines[0];
+    let ranks = lines.slice(1);
+    if (_.includes(header, 'id')) header[_.indexOf(header, 'id')] = '姓名';
+    if (_.includes(header, 'rank')) header[_.indexOf(header, 'rank')] = '#';
+
+    await ctx.render('contest_ranklist', {
+        layout: false,
+        type: ctx.params.type,
+        contest: contest, header: header, ranks: ranks
+    });
 });
 
 router.get('/contests/:contest_id/download', async (ctx, next) => {
