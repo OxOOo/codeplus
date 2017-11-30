@@ -58,7 +58,7 @@ router.post('/admin/contests/:contest_id', auth.adminRequired, async (ctx, next)
 
         let ranklist = ctx.request.body[`${type}_ranklist`];
         if (!ranklist || _.trim(ranklist).length == 0) continue;
-        let lines = _.trim(ranklist).split('\n').map(x => {return _.split(_.trim(x), /\s+/)});
+        let lines = _.trim(ranklist).split('\n').map(x => {return _.split(_.trim(x), '\t')});
 
         ranked_count[type] = 0;
         let rank_index = _.indexOf(lines[0], 'rank');
