@@ -70,6 +70,7 @@ router.use('', require('./controllers/index').routes());
 router.use('', require('./controllers/contest').routes());
 router.use('', require('./controllers/users').routes());
 router.use('', require('./controllers/admin').routes());
+router.use('', require('./controllers/oauth').routes());
 
 app.use(router.routes());
 app.use(require('koa-static')('public'));

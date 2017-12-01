@@ -1,0 +1,61 @@
+<div class='panel panel-default'>
+  <div class='panel-heading'>
+    <i class='icon-edit icon-large'></i>
+    OAUTH列表
+  </div>
+  <div class='panel-body'>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>APP ID</th>
+          <th>APP SECRET</th>
+          <th>描述</th>
+          <th>是否可以访问比赛信息</th>
+          <th>删除</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% apps.forEach((app) => { %>
+          <tr>
+            <td><%= app.app_id %></td>
+            <td><%= app.app_secret %></td>
+            <td><%= app.description %></td>
+            <td><%= app.contest_info_accessable ? '是' : '否' %></td>
+            <td><a href="/admin/oauth/<%= app._id %>/delete">删除</a></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class='panel panel-default'>
+  <div class='panel-heading'>
+    <i class='icon-edit icon-large'></i>
+    添加OAUTH应用
+  </div>
+  <div class='panel-body'>
+    <form class="form-horizontal" action="/admin/oauth/create" method="post">
+      <div class="form-group">
+        <label class="col-sm-2 control-label">应用描述</label>
+        <div class="col-sm-10">
+          <textarea class="form-control" rows="10" name="description" placeholder="应用描述"></textarea>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" name="contest_info_accessable" >是否可以获取比赛信息
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button type="submit" class="btn btn-default">创建</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

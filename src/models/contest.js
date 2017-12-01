@@ -64,6 +64,8 @@ let contestSchema = new mongoose.Schema({
     rank_msg: String, // 排名说明
     div1_ranklist: String,
     div2_ranklist: String,
+    div1_contest_id: Number, // OJ上的比赛ID
+    div2_contest_id: Number, // OJ上的比赛ID
 
 	created_date: { type: Date, default: Date.now },
 });

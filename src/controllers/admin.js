@@ -10,7 +10,7 @@ let iconv = require('iconv-lite');
 require('should');
 
 let config = require('../config');
-let { User, NormalLogin, Contest, ContestSign } = require('../models');
+let { User, NormalLogin, Contest, ContestSign, OauthAPP } = require('../models');
 let auth = require('../services/auth');
 let tools = require('../services/tools');
 let email = require('../services/email');
@@ -49,6 +49,13 @@ router.post('/admin/contests/:contest_id', auth.adminRequired, async (ctx, next)
         'repository_local_name',
         'rank_msg',
     ]));
+    await contest.save();
+
+    for(let type of ['div1', 'div2']) {
+        let name = `${type}_contest_id`;
+        contest[name] = null;
+        if (info[name] && _.trim(info[name]).length > 0) contest[name] = _.trim(info[name]);
+    }
     await contest.save();
 
     let ranked_count = {};
@@ -137,6 +144,39 @@ router.get('/admin/contests/:contest_id/express_info_download', auth.adminRequir
         content = iconv.encode(content, ctx.request.query.encoding);
     }
     ctx.body = content;
+});
+
+// oauth
+router.get('/admin/oauth', auth.adminRequired, async (ctx, next) => {
+    let apps = await OauthAPP.find();
+    await ctx.render('admin_oauth', {layout: 'admin_layout', apps: apps});
+});
+router.post('/admin/oauth/create', auth.adminRequired, async (ctx, next) => {
+    ctx.request.body.description.should.be.a.String().and.not.empty();
+
+    let app_id = null;
+    while(true) {
+        app_id = utils.randomString(32, '1234567890qwertyuioplkjhgfdsazxcvbnm');
+        if (!await OauthAPP.findOne({app_id})) break;
+    }
+    await OauthAPP.create({
+        app_id: app_id,
+        app_secret: utils.randomString(48, '1234567890qwertyuioplkjhgfdsazxcvbnm'),
+        description: ctx.request.body.description,
+        contest_info_accessable: ctx.request.body.contest_info_accessable,
+    });
+    ctx.state.flash.success = "创建OAUTH应用成功";
+    await ctx.redirect('back');
+});
+router.get('/admin/oauth/:oauth_id/delete', auth.adminRequired, async (ctx, next) => {
+    ctx.params.oauth_id.should.be.a.String().and.not.empty();
+
+    let app = await OauthAPP.findById(ctx.params.oauth_id);
+    auth.assert(app, '应用不存在');
+    await app.remove();
+
+    ctx.state.flash.success = "删除OAUTH应用成功";
+    await ctx.redirect('back');
 });
 
 router.get('/admin/control', auth.adminRequired, async (ctx, next) => {

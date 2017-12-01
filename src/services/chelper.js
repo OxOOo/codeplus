@@ -30,7 +30,7 @@ let contestSignCheck = exports.contestSignCheck = async function (contest_id) {
 
 // 下载比赛快递信息
 let fetchContestExpressInfo = exports.fetchContestExpressInfo = async function (contest) {
-    let signs = await ContestSign.find({contestID: contest._id, has_award: true});
+    let signs = await ContestSign.find({contestID: contest._id, has_award: true}).sort('rank');
     let users = await User.find();
     let logins = await NormalLogin.find();
     tools.bindFindByXX(users, '_id');

@@ -11,6 +11,9 @@ let User = exports.User = require('./user');
 let Contest = exports.Contest = require('./contest');
 let ContestSign = exports.ContestSign = require('./contest_sign');
 
+let OauthAPP = exports.OauthAPP = require('./oauth_app');
+let OauthAccessToken = exports.OauthAccessToken = require('./oauth_access_token');
+
 mongoose.connect(config.MONGODB_URL, {
     useMongoClient: true
 }, function (err) {

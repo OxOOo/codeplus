@@ -5,6 +5,7 @@ let path = require('path');
 let utils = require('utility');
 let qs = require('querystring');
 let request = require('superagent');
+let moment = require('moment');
 require('should');
 
 let config = require('../config');
@@ -38,7 +39,9 @@ router.post('/normal_login', async (ctx, next) => {
     ctx.request.body.password.should.be.a.String().and.not.eql("","请填写密码");
     await auth.normal_login(ctx, ctx.request.body.username, ctx.request.body.password);
     ctx.state.flash.success = '登录成功';
-    await ctx.redirect('/');
+    let login_redirect_url = ctx.session.login_redirect_url;
+    ctx.session.login_redirect_url = null;
+    await ctx.redirect(login_redirect_url || '/');
 });
 router.get('/github_callback', async (ctx, next) => {
     ctx.request.query.code.should.be.a.String().and.not.empty();
@@ -53,7 +56,9 @@ router.get('/github_callback', async (ctx, next) => {
     let info = (await request.get('https://api.github.com/user').query(res)).body;
     await auth.github_login(ctx, info);
     ctx.state.flash.success = '登录成功';
-    await ctx.redirect('/');
+    let login_redirect_url = ctx.session.login_redirect_url;
+    ctx.session.login_redirect_url = null;
+    await ctx.redirect(login_redirect_url || '/');
 });
 router.get('/logout', async (ctx, next) => {
     await auth.logout(ctx);
@@ -70,11 +75,12 @@ router.get('/forgot_password_sendemail', async (ctx, next) => {
 
     let user = await User.findOne({email: ctx.request.query.email});
     auth.assert(user, "不存在与该邮箱关联的用户");
-    auth.assert(!user.forgot_password_last_send_time || user.forgot_password_last_send_time < Date.now() - 60*1000, '请1分钟之后再发送邮件');
+    auth.assert(!user.forgot_password_last_send_time
+            || moment(user.forgot_password_last_send_time).add(moment.duration(1, 'minutes')).toDate() < Date.now(), '请1分钟之后再发送邮件');
 
     user.forgot_password_last_send_time = Date.now();
     user.forgot_password_code = utils.randomString(10, '1234567890');
-    user.forgot_password_code_expire = Date.now() + 10*60*1000; // 10分钟
+    user.forgot_password_code_expire = moment().add(moment.duration(10, 'minutes')).toDate(); // 10分钟
     await user.save();
 
     await email.sendForgotEmail(user);
@@ -130,10 +136,11 @@ router.post('/modify_email', auth.loginRequired, async (ctx, next) => {
     tools.emailFormatCheck(ctx.request.body.email);
     let already_user = await User.findOne({email: ctx.request.body.email});
     auth.assert(!already_user || already_user._id.equals(ctx.state.user._id), '该邮箱已关联其他用户');
-    auth.assert(!user.email_last_send_time || user.email_last_send_time < Date.now() - 60 * 1000, '请1分钟之后再发送邮件');
+    auth.assert(!user.email_last_send_time
+        || moment(user.email_last_send_time).add(moment.duration(1, 'minutes')).toDate() < Date.now(), '请1分钟之后再发送邮件');
     user.email_will = ctx.request.body.email;
     user.email_code = utils.randomString(10, '1234567890');
-    user.email_code_expire = Date.now() + 10 * 60 * 1000; // 10分钟后过期
+    user.email_code_expire = moment().add(moment.duration(10, 'minutes')).toDate(); // 10分钟后过期
     user.email_last_send_time = Date.now();
     await user.save();
 
@@ -150,10 +157,11 @@ router.get('/resend_email', auth.loginRequired, async (ctx, next) => {
     auth.assert(ctx.state.normal_login, "请先创建帐号密码");
     auth.assert(user.email_will, '坏心眼的小不点');
 
-    auth.assert(!user.email_last_send_time || user.email_last_send_time < Date.now() - 60 * 1000, '请1分钟之后再发送邮件');
+    auth.assert(!user.email_last_send_time
+        || moment(user.email_last_send_time).add(moment.duration(1, 'minutes')).toDate() < Date.now(), '请1分钟之后再发送邮件');
 
     user.email_code = utils.randomString(10, '1234567890');
-    user.email_code_expire = Date.now() + 10 * 60 * 1000; // 10分钟后过期
+    user.email_code_expire = moment().add(moment.duration(10, 'minutes')).toDate(); // 10分钟后过期
     user.email_last_send_time = Date.now();
     await user.save();
 
