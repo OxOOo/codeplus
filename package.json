@@ -10,6 +10,7 @@
   "author": "chenyu <believe.chenyu@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "debug": "^3.1.0",
     "ejs": "^2.5.7",
     "emailjs": "^1.0.12",
     "html-to-text": "^3.3.0",
@@ -18,7 +19,6 @@
     "juice": "^4.2.2",
     "koa": "^2.3.0",
     "koa-bodyparser": "^4.2.0",
-    "koa-ejs": "^4.1.0",
     "koa-logger": "^3.1.0",
     "koa-mount": "^3.0.0",
     "koa-redis": "^3.1.1",
