@@ -22,7 +22,9 @@
         <table class="table table-bordered" style="width: 100%; margin-top: 50px">
             <thead>
                 <tr>
-                    <th class="text-center" colspan="<%= header.length %>"><a href="/contests/<%= contest._id %>"><%= contest.title %></a> | 排名</th>
+                    <th class="text-center" colspan="<%= header.length %>">
+                        <a href="/contests/<%= contest._id %>"><%= contest.title %></a> | <%= type %>排名
+                    </th>
                 </tr>
                 <tr>
                     <% header.forEach(x => { %>
