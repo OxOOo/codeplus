@@ -103,6 +103,9 @@ router.post('/oauth/contest_info', auth.jsonFormatError, async ctx => {
         if (_.isNumber(contest_id)) {
             ids.push(contest_id);
         }
+        if (_.isNumber(c.practise_contest_id)) {
+            ids.push(c.practise_contest_id);
+        }
     }
 
     ctx.body = ids;

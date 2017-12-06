@@ -51,7 +51,7 @@ router.post('/admin/contests/:contest_id', auth.adminRequired, async (ctx, next)
     ]));
     await contest.save();
 
-    for(let type of ['div1', 'div2']) {
+    for(let type of ['div1', 'div2', 'practise']) {
         let name = `${type}_contest_id`;
         contest[name] = null;
         if (info[name] && _.trim(info[name]).length > 0) contest[name] = _.trim(info[name]);

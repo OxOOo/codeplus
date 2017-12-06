@@ -49,3 +49,9 @@
 * GET https://cp.thusaac.org/oauth/user
     * 参数: access_token
     * 成功的话返回json格式的用户信息
+
+* POST https://cp.thusaac.org/oauth/contest_info
+    * 参数: app_id
+    * 参数: app_secret
+    * 参数: userID
+    对于特殊应用返回该用户的参赛列表
