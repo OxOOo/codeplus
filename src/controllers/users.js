@@ -9,7 +9,7 @@ let moment = require('moment');
 require('should');
 
 let config = require('../config');
-let { User, Contest, ContestSign } = require('../models');
+let { User, Contest, ContestSign, MDB } = require('../models');
 let auth = require('../services/auth');
 let tools = require('../services/tools');
 let email = require('../services/email');
@@ -225,7 +225,7 @@ router.post('/modify_express', auth.loginRequired, async (ctx, next) => {
         ctx.request.body[v].should.be.a.String().and.not.eql("", `${FIELDS[v]}不能为空`);
     
     let {contest, contest_sign} = await chelper.fetchDefaultContest(ctx);
-    auth.assert(contest_sign && contest_sign.has_award, '你没有获奖');
+    auth.assert(contest_sign && contest_sign.has_award, '抱歉,你没有获奖');
 
     _.assign(contest_sign, _.pick(ctx.request.body, Object.keys(FIELDS)));
     contest_sign.express_info_filled = true;
@@ -233,6 +233,16 @@ router.post('/modify_express', auth.loginRequired, async (ctx, next) => {
     
     ctx.state.flash.success = '快递信息修改成功';
     await ctx.redirect('back');
+});
+// 全国地图信息
+router.get('/express_mdb', async (ctx, next) => {
+    ctx.request.query.level.should.be.a.String().and.not.empty();
+    let cond = {
+        level: ctx.request.query.level
+    };
+    if (ctx.request.query.parentId) cond.parentId = ctx.request.query.parentId;
+    let arr = await MDB.find(cond);
+    ctx.body = arr.map(x => x.toJSON());
 });
 // 创建帐号
 router.post('/create_account', auth.loginRequired, async (ctx, next) => {

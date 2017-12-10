@@ -14,6 +14,8 @@ let ContestSign = exports.ContestSign = require('./contest_sign');
 let OauthAPP = exports.OauthAPP = require('./oauth_app');
 let OauthAccessToken = exports.OauthAccessToken = require('./oauth_access_token');
 
+let MDB = exports.MDB = require('./mdb');
+
 mongoose.connect(config.MONGODB_URL, {
     useMongoClient: true
 }, function (err) {

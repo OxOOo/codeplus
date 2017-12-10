@@ -181,17 +181,20 @@
         <div class="cp-input-group">
           <label>省</label>
           <div class="hide-on-edit cp-edit-display"><%= latest_contest_sign.prov %></div>
-          <input type="text" class="show-on-edit" name="prov" value="<%= latest_contest_sign.prov %>">
+          <select class="show-on-edit" id="express_province" name="prov" value="<%= latest_contest_sign.prov %>">
+          </select>
         </div>
         <div class="cp-input-group">
           <label>市</label>
           <div class="hide-on-edit cp-edit-display"><%= latest_contest_sign.city %></div>
-          <input type="text" class="show-on-edit" name="city" value="<%= latest_contest_sign.city %>">
+          <select class="show-on-edit" id="express_city" name="city" value="<%= latest_contest_sign.prov %>">
+          </select>
         </div>
         <div class="cp-input-group">
           <label>县(区)</label>
           <div class="hide-on-edit cp-edit-display"><%= latest_contest_sign.county %></div>
-          <input type="text" class="show-on-edit" name="county" value="<%= latest_contest_sign.county %>">
+          <select class="show-on-edit" id="express_area" name="county" value="<%= latest_contest_sign.prov %>">
+          </select>
         </div>
       </div>
       <div class="cp-input-group">
@@ -203,12 +206,76 @@
   </form>
 </div>
 
+<script>
+  function flashProvinces() {
+    $.get('/express_mdb?level=province', function(data) {
+      $('#express_province').html('<option></option>');
+      for(var i = 0; i < data.length; i ++) {
+        var x = $('<option>');
+        x.text(data[i].name);
+        x.attr('value', data[i].name);
+        x.attr('data-id', data[i].id);
+        $('#express_province').append(x);
+      }
+      flashCities();
+    });
+  }
+  function flashCities() {
+    $('#express_city').html('<option></option>');
+    $('#express_area').html('<option></option>');
+
+    var value = $('#express_province').val() || $('#express_province').attr('value');
+    console.log(value);
+    if (!value || !value.length) return;
+    var id = $('#express_province').find('option[value="' + value + '"]').attr('data-id');
+
+    $.get('/express_mdb?level=city&parentId='+id, function(data) {
+      console.log(data);
+      for(var i = 0; i < data.length; i ++) {
+        var x = $('<option>');
+        x.text(data[i].name);
+        x.attr('value', data[i].name);
+        x.attr('data-id', data[i].id);
+        $('#express_city').append(x);
+      }
+      flashAreas();
+    });
+  }
+  function flashAreas() {
+    console.log('flashAreas');
+    $('#express_area').html('<option></option>');
+
+    var value = $('#express_city').val() || $('#express_city').attr('value');
+    if (!value || !value.length) return;
+    var id = $('#express_city').find('option[value="' + value + '"]').attr('data-id');
+
+    $.get('/express_mdb?level=area&parentId='+id, function(data) {
+      console.log(data);
+      for(var i = 0; i < data.length; i ++) {
+        var x = $('<option>');
+        x.text(data[i].name);
+        x.attr('value', data[i].name);
+        x.attr('data-id', data[i].id);
+        $('#express_area').append(x);
+      }
+    });
+  }
+  
+  flashProvinces();
+  $('#express_province').change(function() {
+    flashCities();
+  });
+  $('#express_city').change(function() {
+    flashAreas();
+  });
+</script>
+
 <% } %>
 
 <script>
   $(function() {
     $('select').each(function() {
-      let value = $(this).attr('value');
+      var value = $(this).attr('value');
       if (!value) return;
       $(this).find('option[value="' + value + '"]').attr('selected', true);
     });
