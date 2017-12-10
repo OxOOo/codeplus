@@ -38,11 +38,12 @@ router.post('/admin/contests/:contest_id', auth.adminRequired, async (ctx, next)
     ctx.params.contest_id.should.be.a.String().and.not.empty();
     let info = ctx.request.body;
     info.public = info.public ? true : false;
+    info.express_info_end = info.express_info_end ? true : false;
 
     let contest = await Contest.findById(ctx.params.contest_id);
     auth.assert(contest, '比赛不存在');
     _.assign(contest, _.pick(info, [
-        'no', 'public',
+        'no', 'public', 'express_info_end',
         'begin_sign_time', 'end_sign_time', 'begin_contest_time', 'end_contest_time',
         'title',
         'description', 'terms',

@@ -227,6 +227,8 @@ router.post('/modify_express', auth.loginRequired, async (ctx, next) => {
     let {contest, contest_sign} = await chelper.fetchDefaultContest(ctx);
     auth.assert(contest_sign && contest_sign.has_award, '抱歉,你没有获奖');
 
+    auth.assert(!contest.express_info_end, '快递填写已结束，请联系管理员');
+
     _.assign(contest_sign, _.pick(ctx.request.body, Object.keys(FIELDS)));
     contest_sign.express_info_filled = true;
     await contest_sign.save();

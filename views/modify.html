@@ -153,10 +153,14 @@
 <% if(latest_contest_sign && latest_contest_sign.has_award) { %>
 
 <div class='panel panel-default cp-edit'>
-  <form id="form-info" method="post" action="/modify_express">
+  <form id="form-info" method="post" action="/modify_express" <%= latest_contest.express_info_end ? 'disabled' : '' %>>
     <div class='panel-heading'>
       比赛《<%= latest_contest.title %>》的快递信息
-      <div class="cp-sidenote">用于奖品</div>
+      <% if (latest_contest.express_info_end) {%>
+        <div class="cp-sidenote">填写已结束</div>
+      <% } else { %>
+        <div class="cp-sidenote">用于奖品</div>
+      <% } %>
       <i class="hide-on-edit edit-btn fa fa-pencil"></i>
       <button class="invisible show-on-edit done-btn" type="submit"><i class="fa fa-check"></i></button>
     </div>

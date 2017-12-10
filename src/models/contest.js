@@ -66,7 +66,9 @@ let contestSchema = new mongoose.Schema({
     div2_ranklist: String,
     div1_contest_id: Number, // OJ上的比赛ID
     div2_contest_id: Number, // OJ上的比赛ID
-    practise_contest_id: Number, // 联系赛ID
+    practise_contest_id: Number, // 练习赛ID
+
+    express_info_end: Boolean, // 快递填写是否结束
 
 	created_date: { type: Date, default: Date.now },
 });

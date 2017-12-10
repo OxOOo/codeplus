@@ -69,7 +69,16 @@
         <div class="col-sm-offset-2 col-sm-10">
           <div class="checkbox">
             <label>
-              <input type="checkbox" name="public" <%= contest.public ? 'checked' : '' %>>公开
+              <input type="checkbox" name="express_info_end" <%= contest.express_info_end ? 'checked' : '' %>>快递填写结束？
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" name="public" <%= contest.public ? 'checked' : '' %>>公开？
             </label>
           </div>
         </div>
