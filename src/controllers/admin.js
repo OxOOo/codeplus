@@ -32,7 +32,15 @@ router.get('/admin/contests/:contest_id', auth.adminRequired, async (ctx, next) 
     let award_logins = await NormalLogin.find({userID: award_signs.map(x => {return x.userID;})});
     let award_names = award_logins.map(x => {return x.username;});
 
-    await ctx.render('admin_contest', {layout: 'admin_layout', contest: contest, award_names: award_names});
+    tools.bindFindByXX(award_logins, 'userID');
+    let price_info = [];
+    for(let x of award_signs) {
+        if (x.express_no) {
+            price_info.push([award_logins.findByuserID(x.userID).username, x.express_name, x.express_no, x.prize_name]);
+        }
+    }
+
+    await ctx.render('admin_contest', {layout: 'admin_layout', contest: contest, award_names: award_names, price_info: price_info});
 });
 router.post('/admin/contests/:contest_id', auth.adminRequired, async (ctx, next) => {
     ctx.params.contest_id.should.be.a.String().and.not.empty();
@@ -113,6 +121,36 @@ router.post('/admin/contests/:contest_id/update_award', auth.adminRequired, asyn
     await ContestSign.update({userID: logins.map(x => {return x.userID})}, {$set: {has_award: true}}, {multi: true});
 
     ctx.state.flash.success = `有${logins.length}人获奖`;
+    await ctx.redirect('back');
+});
+router.post('/admin/contests/:contest_id/update_price_info', auth.adminRequired, async (ctx, next) => {
+    ctx.params.contest_id.should.be.a.String().and.not.empty();
+    let price_info = ctx.request.body.price_info;
+    price_info.should.be.a.String();
+
+    let contest = await Contest.findById(ctx.params.contest_id);
+    auth.assert(contest, '比赛不存在');
+
+    await ContestSign.update({contestID: contest._id}, {$set: {prize_name: null, express_name: null, express_no: null}}, {multi: true});
+    
+    if (price_info.trim().length != 0) {
+        let lines = price_info.trim().split('\n').map(x => _.trim(x));
+        for(let line of lines) {
+            let tokens = line.split('\t');
+            tokens.should.have.lengthOf(4);
+            let [username, express_name, express_no, prize_name] = tokens;
+            let login = await NormalLogin.findOne({username});
+            auth.assert(login, `用户${username}不存在`);
+            let sign = await ContestSign.findOne({contestID: contest._id, userID: login.userID});
+            auth.assert(sign, `用户${username}未报名`);
+            _.assign(sign, {express_name, express_no, prize_name});
+            await sign.save();
+        }
+        ctx.state.flash.success = `共更新${lines.length}人的获奖信息`;
+    } else {
+        ctx.state.flash.success = `清空获奖信息`;
+    }
+    
     await ctx.redirect('back');
 });
 router.get('/admin/contests/:contest_id/express_info', auth.adminRequired, async (ctx, next) => {

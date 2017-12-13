@@ -139,9 +139,40 @@
   <div class='panel-body'>
     <form class="form-horizontal" action="/admin/contests/<%= contest._id %>/update_award" method="post">
       <div class="form-group">
-        <label class="col-sm-2 control-label">获奖选手(每行一个username)</label>
+        <label class="col-sm-2 control-label">
+          获奖选手
+          <p class="help-block">
+            每行一个username
+          </p>
+        </label>
         <div class="col-sm-10">
           <textarea class="form-control" rows="10" name="userlist" placeholder="获奖选手(每行一个ID)"><%- award_names.join('\n') %></textarea>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button type="submit" class="btn btn-default">提交</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class='panel panel-default'>
+  <div class='panel-heading'>
+    <i class='icon-edit icon-large'></i>
+    比赛《<%= contest.title %>》的奖品信息
+  </div>
+  <div class='panel-body'>
+    <form class="form-horizontal" action="/admin/contests/<%= contest._id %>/update_price_info" method="post">
+      <div class="form-group">
+        <label class="col-sm-2 control-label">
+          奖品信息
+          <p class="help-block">
+            第一列username，第二列快递公司，第三列快递编号，第四列奖品名称
+          </p>
+        </label>
+        <div class="col-sm-10">
+          <textarea class="form-control" rows="10" name="price_info"><%- price_info.map(x => x.join('\t')).join('\n') %></textarea>
         </div>
       </div>
       <div class="form-group">

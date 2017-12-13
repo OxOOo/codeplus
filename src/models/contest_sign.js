@@ -37,6 +37,10 @@ let contestSignSchema = new mongoose.Schema({
     phone: String,
     school: String,
 
+    prize_name: String, // 奖品名称
+    express_name: String, // 什么快递(顺丰)
+    express_no: String, // 快递编号
+
 	created_date: { type: Date, default: Date.now },
 });
 

@@ -11,6 +11,7 @@ let config = require('../config');
 let { User, Contest, ContestSign } = require('../models');
 let auth = require('../services/auth');
 let chelper = require('../services/chelper');
+let tools = require('../services/tools');
 
 const router = module.exports = new Router();
 
@@ -62,7 +63,14 @@ router.get('/contests/unsign', auth.loginRequired, async (ctx, next) => {
 
 router.get('/contests', async (ctx, next) => {
     let contests = await Contest.find({public: true}).sort('-no');
-    await ctx.render('contests', {current_page: 'contests', title: "比赛列表", contests: contests});
+    let my_contests = [];
+    let my_signs = [];
+    if (ctx.state.user) {
+        my_signs = await ContestSign.find({userID: ctx.state.user._id});
+        my_contests = await Contest.find({_id: my_signs.map(x => x.contestID)}).sort('-no');
+        tools.bindFindByXX(my_signs, 'contestID');
+    }
+    await ctx.render('contests', {current_page: 'contests', title: "比赛列表", contests: contests, my_contests: my_contests, my_signs: my_signs});
 });
 
 router.get('/contests/:contest_id', async (ctx, next) => {
