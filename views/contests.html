@@ -53,7 +53,9 @@
               <td><a href="/contests/<%= c._id %>"><%= c.title %></a></td>
               <td><%= sign.type %></td>
               <td><%= sign.rank || "+1s" %></td>
-              <td><%= !sign.has_award ? '你的奖品被捐给了蛤' : (sign.express_no ? `${sign.prize_name}:${sign.express_name}(${sign.express_no})` : '已获奖，暂无快递信息') %></td>
+              <td>
+                <%= !sign.has_award ? '你的奖品被捐给了蛤' : ( (sign.express_info_filled ? '已填签收地址' : '未写签收地址') +' | '+ (sign.express_no ? `${sign.prize_name}:${sign.express_name}(${sign.express_no})` : '已获奖，暂无快递信息') ) %>
+              </td>
             </tr>
           <% }) %>
         </tbody>
