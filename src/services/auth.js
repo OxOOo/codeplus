@@ -172,6 +172,7 @@ exports.accountRequired = async function (ctx, next) {
     ctx.session.login_redirect_url = ctx.url;
     assert(ctx.state.user, '尚未登录', '/login');
     assert(ctx.state.normal_login, '尚未创建帐号', '/modify');
+    ctx.session.login_redirect_url = null;
 	await next();
 }
 
@@ -180,5 +181,6 @@ exports.adminRequired = async function (ctx, next) {
     ctx.session.login_redirect_url = ctx.url;
     assert(ctx.state.user, '尚未登录', '/login');
     assert(ctx.state.user.is_admin, '没有管理员权限');
+    ctx.session.login_redirect_url = null;
 	await next();
 }
