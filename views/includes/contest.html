@@ -40,7 +40,7 @@
             比赛网站为<a href="https://oj.thusaac.org" target="_blank">https://oj.thusaac.org</a>。
         <% } %>
         <hr/>
-        <div id="contest-desc">
+        <div id="contest-desc" class="markdown-body">
           <%- md.render(contest.description); %>
         </div>
     </div>
@@ -51,7 +51,7 @@
     <div class="overlap-content">
       <div class="panel">
         <div class="panel-heading">选手须知</div>
-        <div class="panel-body"><%- md.render(contest.terms) %></div>
+        <div class="panel-body markdown-body"><%- md.render(contest.terms) %></div>
       </div>
     </div>
   </div>

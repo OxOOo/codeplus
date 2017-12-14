@@ -69,7 +69,9 @@
     <div class="overlap-content">
       <div class="panel">
         <div class="panel-body">
-          <%- c.rank_msg ? md.render(c.rank_msg) : '' %>
+          <div class="markdown-body">
+            <%- c.rank_msg ? md.render(c.rank_msg) : '' %>
+          </div>
           <hr/>
           <a target="_blank" href="/contests/<%= c._id %>/ranklist/div1">div1排名</a>
           <a target="_blank" href="/contests/<%= c._id %>/ranklist/div2">div2排名</a>
