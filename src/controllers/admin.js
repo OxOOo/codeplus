@@ -42,6 +42,14 @@ router.get('/admin/contests/:contest_id', auth.adminRequired, async (ctx, next) 
 
     await ctx.render('admin_contest', {layout: 'admin_layout', contest: contest, award_names: award_names, price_info: price_info});
 });
+router.post('/admin/contests/create_contest', auth.adminRequired, async (ctx, next) => {
+    let c = new Contest();
+    c.begin_sign_time = c.end_sign_time = c.begin_contest_time = c.end_contest_time = Date.now();
+
+    await c.save();
+    
+    await ctx.redirect('back');
+});
 router.post('/admin/contests/:contest_id', auth.adminRequired, async (ctx, next) => {
     ctx.params.contest_id.should.be.a.String().and.not.empty();
     let info = ctx.request.body;
