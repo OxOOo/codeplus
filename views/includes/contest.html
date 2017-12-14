@@ -1,6 +1,22 @@
 <div class='panel panel-default'>
     <div class="panel-heading" id="contest-heading"><%= contest.title %></div>
     <div class='panel-body'>
+        <% contest.notices = contest.notices || [] %>
+        <% if (contest.notices.length > 0) { %>
+          <div id="notices-list-short">
+            <a href="#" class="notice-btn" data-id="<%= contest.notices[0]._id %>">[公告] [<%= moment_format_short(contest.notices[0].datetime) %>] <%= contest.notices[0].title %></a><br/>
+            <% if (contest.notices.length > 1) { %>
+              <a href="#" id="notices-more-btn">[公告] ...更多</a><br/>
+            <% } %>
+          </div>
+          <div id="notices-list-all" style="display: none">
+            <% for(var i = 0; i < contest.notices.length; i ++) { %>
+              <a href="#" class="notice-btn" data-id="<%= contest.notices[i]._id %>">[公告] [<%= moment_format_short(contest.notices[i].datetime) %>] <%= contest.notices[i].title %></a><br/>
+            <% } %>
+          </div>
+          <hr/>
+        <% } %>
+
         <div>报名开始时间: <%= moment_format(contest.begin_sign_time) %></div>
         <div>报名结束时间: <%= moment_format(contest.end_sign_time) %></div>
         <br/>
@@ -40,12 +56,14 @@
             比赛网站为<a href="https://oj.thusaac.org" target="_blank">https://oj.thusaac.org</a>。
         <% } %>
         <hr/>
+
         <div id="contest-desc" class="markdown-body">
           <%- md.render(contest.description); %>
         </div>
     </div>
 </div>
 
+<!-- 报名须知 -->
 <% if(contest.terms) { %>
   <div class="overlap-wrapper" style="display: none" id="terms">
     <div class="overlap-content">
@@ -57,12 +75,23 @@
   </div>
 <% } %>
 
+<!-- 比赛公告 -->
+<% contest.notices.forEach(notice => { %>
+  <div class="overlap-wrapper" style="display: none" id="notice-<%= notice._id %>">
+    <div class="overlap-content">
+      <div class="panel">
+        <div class="panel-heading">[公告]<%= notice.title %></div>
+        <div class="panel-body markdown-body">
+          <%- md.render(notice.content) %>
+        </div>
+        <div class="panel-footer">时间:<%= moment_format(notice.datetime) %></div>
+      </div>
+    </div>
+  </div>
+<% }) %>
+
 <script>
 $(function() {
-  // var firstHeader = $("#contest-desc").find("h1").first();
-  // $("#contest-heading").text(firstHeader.text());
-  // if(firstHeader.is(":first-child")) firstHeader.remove();
-
   $(".overlap-wrapper").click(function(e) {
     $(this).fadeOut(200);
   });
@@ -70,6 +99,17 @@ $(function() {
   $("#terms-link").click(function(e) {
     e.preventDefault();
     $(".overlap-wrapper#terms").fadeIn(200);
+  });
+
+  // 比赛公告
+  $('#notices-more-btn').click(function() {
+    $('#notices-list-short').hide();
+    $('#notices-list-all').show();
+  });
+  $('.notice-btn').click(function(e) {
+    e.preventDefault();
+    var id = $(this).attr('data-id');
+    $(".overlap-wrapper#notice-"+id).fadeIn(200);
   });
 });
 </script>

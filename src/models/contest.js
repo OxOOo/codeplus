@@ -70,6 +70,12 @@ let contestSchema = new mongoose.Schema({
 
     express_info_end: Boolean, // 快递填写是否结束
 
+    notices: [{
+        title: String,
+        datetime: Date,
+        content: String
+    }],
+
 	created_date: { type: Date, default: Date.now },
 });
 

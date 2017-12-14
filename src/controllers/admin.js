@@ -116,6 +116,59 @@ router.get('/admin/contests/:contest_id/preview', auth.adminRequired, async (ctx
 
     await ctx.render('admin_contest_preview', {layout: 'admin_layout', contest: contest});
 });
+// 新建公告
+router.post('/admin/contests/:contest_id/create_notice', auth.adminRequired, async (ctx, next) => {
+    ctx.request.body.title.should.be.a.String().and.not.empty();
+    ctx.request.body.content.should.be.a.String().and.not.empty();
+
+    let contest = await Contest.findById(ctx.params.contest_id);
+    auth.assert(contest, '比赛不存在');
+
+    contest.notices = contest.notices || [];
+    contest.notices.splice(0, 0, {
+        title: ctx.request.body.title,
+        content: ctx.request.body.content,
+        datetime: Date.now()
+    });
+    await contest.save();
+
+    ctx.state.flash.success = `新建公告成功`;
+    await ctx.redirect('back');
+});
+// 修改公告
+router.post('/admin/contests/:contest_id/modify_notice', auth.adminRequired, async (ctx, next) => {
+    ctx.request.query.notice_id.should.be.a.String().and.not.empty();
+    ctx.request.body.title.should.be.a.String().and.not.empty();
+    ctx.request.body.content.should.be.a.String().and.not.empty();
+
+    let contest = await Contest.findById(ctx.params.contest_id);
+    auth.assert(contest, '比赛不存在');
+
+    auth.assert(contest.notices, '没有公告');
+    let notice = await contest.notices.id(ctx.request.query.notice_id);
+    auth.assert(notice, '公告不存在');
+    _.assign(notice, _.pick(ctx.request.body, ['title', 'content']));
+    await contest.save();
+
+    ctx.state.flash.success = `修改公告成功`;
+    await ctx.redirect('back');
+});
+// 删除公告
+router.get('/admin/contests/:contest_id/delete_notice', auth.adminRequired, async (ctx, next) => {
+    ctx.request.query.notice_id.should.be.a.String().and.not.empty();
+
+    let contest = await Contest.findById(ctx.params.contest_id);
+    auth.assert(contest, '比赛不存在');
+
+    auth.assert(contest.notices, '没有公告');
+    let notice = await contest.notices.id(ctx.request.query.notice_id);
+    auth.assert(notice, '公告不存在');
+    notice.remove();
+    await contest.save();
+
+    ctx.state.flash.success = `删除公告成功`;
+    await ctx.redirect('back');
+});
 router.post('/admin/contests/:contest_id/update_award', auth.adminRequired, async (ctx, next) => {
     ctx.params.contest_id.should.be.a.String().and.not.empty();
     ctx.request.body.userlist.should.be.a.String().and.not.empty();

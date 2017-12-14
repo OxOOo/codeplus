@@ -41,6 +41,9 @@ app.use(async (ctx, next) => {
     ctx.state.moment_format = function(date) {
         return moment(date).format('YYYY-MM-DD HH:mm:ssZZ');
     }
+    ctx.state.moment_format_short = function(date) {
+        return moment(date).format('HH:mm');
+    }
     ctx.state.moment_parse = function(date) {
         return moment(date, 'YYYY-MM-DD HH:mm:ssZZ').toDate();
     }
