@@ -31,4 +31,4 @@ async function run(func) {
     }
 }
 
-setInterval(run, 1000, Counter); // 每分钟记录一次
+setInterval(run, 1000 * 60, Counter); // 每分钟记录一次
