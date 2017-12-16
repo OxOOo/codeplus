@@ -282,9 +282,9 @@ a:hover {
 }
 
 .alert-info {
-  background: rgba(0, 255, 243, 0.2);
+  background: rgba(255, 255, 255, 1);
   color: rgba(226, 134, 23, 1);
-  border: rgba(0, 255, 243, .3) 1px solid;
+  border: rgba(255, 255, 255, .5) 1px solid;
 }
 
 button.close {
