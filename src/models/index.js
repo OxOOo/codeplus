@@ -17,6 +17,7 @@ let OauthAccessToken = exports.OauthAccessToken = require('./oauth_access_token'
 let MDB = exports.MDB = require('./mdb');
 
 let Count = exports.Count = require('./count');
+let Visit = exports.Visit = require('./visit');
 
 mongoose.connect(config.MONGODB_URL, {
     useMongoClient: true

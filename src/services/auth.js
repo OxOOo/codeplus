@@ -1,12 +1,23 @@
 
 let _ = require('lodash');
 let utils = require('utility');
-let { User, NormalLogin, GithubLogin, Contest, ContestSign } = require('../models');
+let { User, NormalLogin, GithubLogin, Contest, ContestSign, Visit } = require('../models');
+let { log } = require('../config');
 require('should');
 
 const ERR_CODE = 978;
 
 const FRIENDLY_CHARSET = "123456789qwertyuplkjhgfdsazxcvbnmQWERTYUPKJHGFDSAZXCVBNM";
+
+exports.visit = async function (ctx, next) {
+    try {
+        await Visit.create({url: ctx.url, ip: ctx.state.ip, method: ctx.method});
+    } catch(e) {
+        console.error('Error on visit');
+        console.error(e);
+    }
+    await next();
+}
 
 /// 用户中间件
 /// 检查用户是否已经登录，查询数据库并放在ctx.state.user变量上

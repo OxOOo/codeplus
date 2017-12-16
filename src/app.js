@@ -49,6 +49,7 @@ app.use(async (ctx, next) => {
     ctx.state.moment_parse = function(date) {
         return moment(date, 'YYYY-MM-DD HH:mm:ssZZ').toDate();
     }
+    ctx.state.ip = ctx.headers['x-real-ip'] || ctx.ip;
     await next();
 });
 
@@ -63,6 +64,7 @@ let router = new Router();
 
 router.use(require('koa-logger')());
 router.use(flash);
+router.use(auth.visit);
 router.use(auth.userM);
 router.use(async (ctx, next) => {
     let {contest, contest_sign} = await chelper.fetchDefaultContest(ctx);
