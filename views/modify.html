@@ -46,7 +46,7 @@
   <div class='panel panel-default cp-edit'>
     <form id="form-account" method="post" action="/create_account">
     <div class='panel-heading'>
-      创建帐号
+      创建帐号(创建之后用户名不能修改)
       <i class="show-on-edit edit-btn fa fa-pencil"></i>
       <button class="invisible hide-on-edit done-btn" type="submit"><i class="fa fa-check"></i></button>
     </div>
@@ -100,7 +100,7 @@
 <div class='panel panel-default cp-edit'>
   <form id="form-info" method="post" action="/modify_info">
     <div class='panel-heading'>
-      基本资料
+      基本资料(<%= user.info_filled ? '已填写' : '待填写' %>)
       <i class="hide-on-edit edit-btn fa fa-pencil"></i>
       <button class="invisible show-on-edit done-btn" type="submit"><i class="fa fa-check"></i></button>
     </div>
@@ -116,6 +116,29 @@
         <input type="text" class="show-on-edit" name="school" value="<%= user.school %>">
       </div>
       <div class="cp-input-group">
+        <label>年级</label>
+        <div class="hide-on-edit cp-edit-display"><%= user.grade || "小学一年级" %></div>
+        <select class="show-on-edit" name="grade" value="<%= user.grade %>">
+          <option value="小学">小学</option>
+          <option value="初中">初中</option>
+          <option value="高一">高一</option>
+          <option value="高二">高二</option>
+          <option value="高三">高三</option>
+          <option value="大一">大一</option>
+          <option value="大二">大二</option>
+          <option value="大三">大三</option>
+          <option value="大四">大四</option>
+          <option value="研究生">研究生</option>
+          <option value="已工作">已工作</option>
+          <option value="其他">其他</option>
+        </select>
+      </div>
+      <div class="cp-input-group">
+        <label>专业(高中生及以下填“学生”)</label>
+        <div class="hide-on-edit cp-edit-display"><%= user.major || "白学家" %></div>
+        <input type="text" class="show-on-edit" name="major" value="<%= user.major %>">
+      </div>
+      <div class="cp-input-group">
         <label>性别</label>
         <div class="hide-on-edit cp-edit-display"><%= user.sex || "未知" %></div>
         <select class="show-on-edit" name="sex" value="<%= user.sex %>">
@@ -129,11 +152,6 @@
         <label>电话号码</label>
         <div class="hide-on-edit cp-edit-display"><%= user.phone_number || "369958" %></div>
         <input type="text" class="show-on-edit" name="phone_number" value="<%= user.phone_number %>">
-      </div>
-      <div class="cp-input-group">
-        <label>联系地址</label>
-        <div class="hide-on-edit cp-edit-display"><%= user.address || "幻想乡" %></div>
-        <input type="text" class="show-on-edit" name="address" value="<%= user.address %>">
       </div>
       <div class="cp-input-group">
         <label>衣服尺寸</label>

@@ -194,9 +194,10 @@ router.post('/modify_info', auth.loginRequired, async (ctx, next) => {
     let FIELDS = {
       real_name: "真实姓名",
       school: "学校",
+      grade: "年级",
+      major: "专业",
       sex: "性别",
       phone_number: "电话号码",
-      address: "联系地址",
       tshirt_size: "衣服尺寸",
     };
 

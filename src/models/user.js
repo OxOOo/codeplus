@@ -58,7 +58,15 @@ let userSchema = new mongoose.Schema({
 		type: String,
 		minlength: 1
 	},
-	address: {
+	address: { // 已被遗弃
+		type: String,
+		minlength: 1
+	},
+	grade: { // 年级
+		type: String,
+		minlength: 1
+	},
+	major: { // 专业
 		type: String,
 		minlength: 1
 	},
