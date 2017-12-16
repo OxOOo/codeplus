@@ -42,7 +42,7 @@ app.use(async (ctx, next) => {
         return moment(date).format('YYYY-MM-DD HH:mm:ssZZ');
     }
     ctx.state.moment_format_short = function(date) {
-        return moment(date).format('HH:mm');
+        return moment(date).format('MM-DD HH:mm');
     }
     ctx.state.moment_parse = function(date) {
         return moment(date, 'YYYY-MM-DD HH:mm:ssZZ').toDate();
