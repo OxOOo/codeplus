@@ -69,19 +69,19 @@ async function main() {
     console.log(area);
 
     provinces.push({
-        name: '台湾省',
+        name: '港澳台',
         id: '000',
         parentId: null,
         level: 'province'
     });
     cities.push({
-        name: '台湾省暂不支持发送快递，请联系管理员',
+        name: '此地区暂不支持发送快递，请联系管理员',
         id: '0000',
         parentId: '000',
         level: 'city'
     });
     area.push({
-        name: '台湾省暂不支持发送快递，请联系管理员',
+        name: '此地区暂不支持发送快递，请联系管理员',
         id: '00000',
         parentId: '0000',
         level: 'area'
