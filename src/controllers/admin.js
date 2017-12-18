@@ -28,7 +28,7 @@ router.get('/admin/contests/:contest_id', auth.adminRequired, async (ctx, next) 
     let contest = await Contest.findById(ctx.params.contest_id);
     auth.assert(contest, '比赛不存在');
 
-    let award_signs = await ContestSign.find({has_award: true});
+    let award_signs = await ContestSign.find({contestID: contest._id, has_award: true});
     let award_logins = await NormalLogin.find({userID: award_signs.map(x => {return x.userID;})});
     let award_names = award_logins.map(x => {return x.username;});
 
