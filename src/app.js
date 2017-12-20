@@ -49,6 +49,9 @@ app.use(async (ctx, next) => {
     ctx.state.moment_parse = function(date) {
         return moment(date, 'YYYY-MM-DD HH:mm:ssZZ').toDate();
     }
+    ctx.state.is_moment_new = function(date) {
+        return moment(date).add(moment.duration(1, 'day')) > moment.now();
+    }
     ctx.state.ip = ctx.headers['x-real-ip'] || ctx.ip;
     await next();
 });
