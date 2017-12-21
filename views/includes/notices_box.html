@@ -1,6 +1,6 @@
 <% if (contest.notices.length > 0) { %>
     <div class="alert alert-info" role="alert">
-        <div id="notices-list-short">
+        <div class="notices-list-short">
         <% for(var i = 0; i < contest.notices.length && i < 3; i ++) { %>
             <a href="#" class="notice-btn" data-id="<%= contest.notices[i]._id %>">
                 [公告] [<%= moment_format_short(contest.notices[i].datetime) %>] <%= contest.notices[i].title %>
@@ -10,10 +10,10 @@
             </a><br/>
         <% } %>
         <% if (contest.notices.length > 3) { %>
-            <a href="#" id="notices-more-btn">[公告] ...更多</a><br/>
+            <a href="#" class="notices-more-btn">[公告] ...更多</a><br/>
         <% } %>
         </div>
-        <div id="notices-list-all" style="display: none">
+        <div class="notices-list-all" style="display: none">
         <% for(var i = 0; i < contest.notices.length; i ++) { %>
             <a href="#" class="notice-btn" data-id="<%= contest.notices[i]._id %>">
                 [公告] [<%= moment_format_short(contest.notices[i].datetime) %>] <%= contest.notices[i].title %>
