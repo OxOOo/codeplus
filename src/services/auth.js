@@ -103,6 +103,7 @@ exports.github_login = async function (ctx, info) {
 }
 
 exports.register = async function (ctx, username, password) {
+    assert(username.length <= 20, '用户名太长');
     assert(!await NormalLogin.findOne({username: username}), '用户名已存在');
     
     let login = new NormalLogin();
@@ -124,6 +125,7 @@ exports.register = async function (ctx, username, password) {
 }
 
 exports.createAccount = async function (ctx, username, password) {
+    assert(username.length <= 20, '用户名太长');
     assert(!await NormalLogin.findOne({username: username}), '用户名已存在');
     assert(!ctx.normal_login, '已经存在帐号');
     
