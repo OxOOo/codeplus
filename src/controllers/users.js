@@ -219,7 +219,6 @@ router.post('/modify_express', auth.loginRequired, async (ctx, next) => {
       city: '市',
       county: '县',
       addr: '详细地址',
-      school: '学校',
     };
 
     for(const v in FIELDS)
