@@ -179,7 +179,7 @@ router.post('/admin/contests/:contest_id/update_award', auth.adminRequired, asyn
     await ContestSign.update({contestID: contest._id}, {$set: {has_award: false}}, {multi: true});
     let names = ctx.request.body.userlist.split('\n').map(x => {return _.trim(x);});
     let logins = await NormalLogin.find({username: names});
-    await ContestSign.update({userID: logins.map(x => {return x.userID})}, {$set: {has_award: true}}, {multi: true});
+    await ContestSign.update({contestID: contest._id, userID: logins.map(x => {return x.userID})}, {$set: {has_award: true}}, {multi: true});
 
     ctx.state.flash.success = `有${logins.length}人获奖`;
     await ctx.redirect('back');
