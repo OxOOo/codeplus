@@ -88,11 +88,13 @@ router.get('/contests/:contest_id', async (ctx, next) => {
         try {
             contest_links.zip = await chelper.fetchZIPPath(contest);
         } catch(e) {
+            console.error(e);
         }
         for(let type of ['div1', 'div2']) {
             try {
                 contest_links[type] = await chelper.fetchProblems(contest, type);
             } catch(e) {
+                console.error(e);
             }
         }
     }
