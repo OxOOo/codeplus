@@ -10,7 +10,7 @@ let iconv = require('iconv-lite');
 require('should');
 
 let config = require('../config');
-let { User, NormalLogin, Contest, ContestSign, OauthAPP } = require('../models');
+let { User, NormalLogin, Contest, ContestSign, OauthAPP, Count } = require('../models');
 let auth = require('../services/auth');
 let tools = require('../services/tools');
 let email = require('../services/email');
@@ -243,6 +243,28 @@ router.get('/admin/contests/:contest_id/express_info', auth.adminRequired, async
     await ctx.render('admin_contest_express_info', {layout: 'admin_layout',
         contest: contest, express_lines: express_lines,
         total_count: total_count, filled_count: filled_count, unfilled_count: unfilled_count
+    });
+});
+router.get('/admin/contests/:contest_id/signs_statistic', auth.adminRequired, async (ctx, next) => {
+    ctx.params.contest_id.should.be.a.String().and.not.empty();
+
+    let contest = await Contest.findById(ctx.params.contest_id);
+    auth.assert(contest, '比赛不存在');
+
+    let counts = {};
+    for(let type of ['div1', 'div2']) {
+        counts[type] = await Count.find({name: `contest_${type}_signs:${contest._id}`});
+    }
+
+    let nums = {};
+    nums.users = await User.count();
+    for(let type of ['div1', 'div2']) {
+        nums[`${type}_signs`] = await ContestSign.find({contestID: contest._id, type: type}).count();
+    }
+    nums.total_signs = await ContestSign.find({contestID: contest._id}).count();
+
+    await ctx.render('admin_contest_signs_statistic', {layout: 'admin_layout',
+        contest: contest, counts: counts, nums: nums
     });
 });
 router.get('/admin/contests/:contest_id/express_info_download', auth.adminRequired, async (ctx, next) => {
