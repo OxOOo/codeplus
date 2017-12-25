@@ -4,6 +4,7 @@ let { STORAGE } = require('../config');
 let { User, Contest, ContestSign, NormalLogin } = require('../models');
 let path = require('path');
 let mzfs = require('mz/fs');
+let _ = require('lodash');
 
 let auth = require('./auth');
 let tools = require('./tools');
@@ -37,7 +38,47 @@ let fetchContestExpressInfo = exports.fetchContestExpressInfo = async function (
     tools.bindFindByXX(logins, 'userID');
 
     let lines = [];
-    lines.push(["ID", "姓名", "比赛", "排名", "电话", "邮箱", "原学校", "性别", "衣服大小", "是否已填", "收件学校", "收件人姓名", "收件人联系电话", "省", "市", "区", "详细地址"]);
+    lines.push(["ID", "姓名", "比赛", "排名", "电话", "邮箱", "学校", "性别", "年级", "专业", "衣服大小", "是否已填", "收件人姓名", "收件人联系电话", "省", "市", "区", "详细地址"]);
+    signs.forEach((s) => {
+        let line = [];
+        line.push(logins.findByuserID(s.userID).username);
+        line.push(users.findBy_id(s.userID).real_name);
+        line.push(s.type);
+        line.push(s.rank || '暂无');
+        line.push(users.findBy_id(s.userID).phone_number);
+        line.push(users.findBy_id(s.userID).email);
+        line.push(users.findBy_id(s.userID).school);
+        line.push(users.findBy_id(s.userID).sex);
+        line.push(users.findBy_id(s.userID).grade);
+        line.push(users.findBy_id(s.userID).major);
+        line.push(users.findBy_id(s.userID).tshirt_size);
+        line.push(s.express_info_filled ? '是' : '否');
+        line.push(s.receiver);
+        line.push(s.phone);
+        line.push(s.prov);
+        line.push(s.city);
+        line.push(s.county);
+        line.push(s.addr);
+
+        for(let i = 0; i < line.length; i ++)
+            line[i] = line[i] || '未填';
+
+        lines.push(line);
+    });
+
+    return lines;
+}
+
+// 下载报名信息
+let fetchContestSignsInfo = exports.fetchContestSignsInfo = async function (contest) {
+    let signs = await ContestSign.find({contestID: contest._id}).sort('type rank');
+    let users = await User.find();
+    let logins = await NormalLogin.find();
+    tools.bindFindByXX(users, '_id');
+    tools.bindFindByXX(logins, 'userID');
+
+    let lines = [];
+    lines.push(["ID", "姓名", "比赛", "排名", "电话", "邮箱", "学校", "性别", "衣服大小"]);
     signs.forEach((s) => {
         let line = [];
         line.push(logins.findByuserID(s.userID).username);
@@ -49,14 +90,6 @@ let fetchContestExpressInfo = exports.fetchContestExpressInfo = async function (
         line.push(users.findBy_id(s.userID).school);
         line.push(users.findBy_id(s.userID).sex);
         line.push(users.findBy_id(s.userID).tshirt_size);
-        line.push(s.express_info_filled ? '是' : '否');
-        line.push(s.school);
-        line.push(s.receiver);
-        line.push(s.phone);
-        line.push(s.prov);
-        line.push(s.city);
-        line.push(s.county);
-        line.push(s.addr);
 
         for(let i = 0; i < line.length; i ++)
             line[i] = line[i] || '未填';

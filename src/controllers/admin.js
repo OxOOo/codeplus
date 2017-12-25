@@ -245,6 +245,47 @@ router.get('/admin/contests/:contest_id/express_info', auth.adminRequired, async
         total_count: total_count, filled_count: filled_count, unfilled_count: unfilled_count
     });
 });
+router.get('/admin/contests/:contest_id/express_info_download', auth.adminRequired, async (ctx, next) => {
+    ctx.params.contest_id.should.be.a.String().and.not.empty();
+
+    let contest = await Contest.findById(ctx.params.contest_id);
+    auth.assert(contest, '比赛不存在');
+
+    ctx.set("Content-Disposition", "attachment; filename=" + qs.escape(contest.title+"-快递信息") + ".csv" );
+    let lines = await chelper.fetchContestExpressInfo(contest);
+    let content = lines.map(x => {return x.join(',')}).join('\n') + '\n';
+    if (ctx.request.query.encoding) {
+        content = iconv.encode(content, ctx.request.query.encoding);
+    }
+    ctx.body = content;
+});
+router.get('/admin/contests/:contest_id/signs_info', auth.adminRequired, async (ctx, next) => {
+    ctx.params.contest_id.should.be.a.String().and.not.empty();
+
+    let contest = await Contest.findById(ctx.params.contest_id);
+    auth.assert(contest, '比赛不存在');
+
+    let signs_lines = await chelper.fetchContestSignsInfo(contest);
+
+    await ctx.render('admin_contest_signs_info', {layout: 'admin_layout',
+        contest: contest, signs_lines: signs_lines
+    });
+});
+router.get('/admin/contests/:contest_id/signs_info_download', auth.adminRequired, async (ctx, next) => {
+    ctx.params.contest_id.should.be.a.String().and.not.empty();
+
+    let contest = await Contest.findById(ctx.params.contest_id);
+    auth.assert(contest, '比赛不存在');
+
+    ctx.set("Content-Disposition", "attachment; filename=" + qs.escape(contest.title+"-报名信息") + ".csv" );
+    let lines = await chelper.fetchContestSignsInfo(contest);
+    let content = lines.map(x => {return x.join(',')}).join('\n') + '\n';
+    if (ctx.request.query.encoding) {
+        content = iconv.encode(content, ctx.request.query.encoding);
+    }
+    ctx.body = content;
+});
+
 router.get('/admin/contests/:contest_id/signs_statistic', auth.adminRequired, async (ctx, next) => {
     ctx.params.contest_id.should.be.a.String().and.not.empty();
 
@@ -266,20 +307,6 @@ router.get('/admin/contests/:contest_id/signs_statistic', auth.adminRequired, as
     await ctx.render('admin_contest_signs_statistic', {layout: 'admin_layout',
         contest: contest, counts: counts, nums: nums
     });
-});
-router.get('/admin/contests/:contest_id/express_info_download', auth.adminRequired, async (ctx, next) => {
-    ctx.params.contest_id.should.be.a.String().and.not.empty();
-
-    let contest = await Contest.findById(ctx.params.contest_id);
-    auth.assert(contest, '比赛不存在');
-
-    ctx.set("Content-Disposition", "attachment; filename=" + qs.escape(contest.title) + ".csv" );
-    let lines = await chelper.fetchContestExpressInfo(contest);
-    let content = lines.map(x => {return x.join(',')}).join('\n') + '\n';
-    if (ctx.request.query.encoding) {
-        content = iconv.encode(content, ctx.request.query.encoding);
-    }
-    ctx.body = content;
 });
 
 // oauth
