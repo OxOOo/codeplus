@@ -73,7 +73,8 @@ let contestSchema = new mongoose.Schema({
     notices: [{
         title: String,
         datetime: Date,
-        content: String
+        content: String,
+        hidden_names: [String]
     }],
 
 	created_date: { type: Date, default: Date.now },

@@ -1,6 +1,7 @@
 
 // 网站
 
+let _ = require('lodash');
 let Koa = require('koa');
 let Router = require('koa-router');
 let mount = require('koa-mount');
@@ -51,6 +52,13 @@ app.use(async (ctx, next) => {
     }
     ctx.state.is_moment_new = function(date) {
         return moment(date).add(moment.duration(1, 'day')) > moment.now();
+    }
+    ctx.state.translate_hidden_names = function(content, hidden_names, myname) {
+        for(let name of hidden_names) {
+            if (name == myname) continue;
+            while(content.indexOf(name) != -1) content = _.replace(content, name, name[0] + '**');
+        }
+        return content;
     }
     ctx.state.ip = ctx.headers['x-real-ip'] || ctx.ip;
     await next();

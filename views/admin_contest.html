@@ -197,6 +197,7 @@
           <tr>
             <th>标题</th>
             <th>内容</th>
+            <th>隐藏名</th>
             <th>时间</th>
             <th></th>
           </tr>
@@ -207,6 +208,7 @@
             <tr class="notice-<%= notice._id %>">
               <td class="notice-title"><%= notice.title %></td>
               <td class="notice-content"><%= notice.content %></td>
+              <td class="notice-hidden_names"><%= notice.hidden_names %></td>
               <td><%= moment_format(notice.datetime) %></td>
               <td>
                 <a href="/admin/contests/<%= contest._id %>/delete_notice?notice_id=<%= notice._id %>">删除</a>
@@ -223,6 +225,14 @@
           </label>
           <div class="col-sm-10">
             <input type="text" class="form-control" name="title" placeholder="标题">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">
+            隐藏名(用,分隔)
+          </label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" name="hidden_names" placeholder="隐藏名">
           </div>
         </div>
         <div class="form-group">
@@ -248,6 +258,7 @@
       $('#notice-form').attr('action', '/admin/contests/<%= contest._id %>/modify_notice?notice_id='+id);
       $('#notice-form').find("[name=title]").val(tr.find('.notice-title').text());
       $('#notice-form').find("[name=content]").val(tr.find('.notice-content').text());
+      $('#notice-form').find("[name=hidden_names]").val(tr.find('.notice-hidden_names').text());
       $('#notice-form').find('button').text('修改公告');
     });
   </script>

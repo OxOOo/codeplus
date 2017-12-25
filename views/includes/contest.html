@@ -82,7 +82,10 @@
       <div class="panel">
         <div class="panel-heading">[公告]<%= notice.title %></div>
         <div class="panel-body markdown-body">
-          <%- md.render(notice.content) %>
+          <%- md.render(translate_hidden_names(notice.content, notice.hidden_names, normal_login ? normal_login.username : '')) %>
+          <% if (notice.hidden_names && notice.hidden_names.length > 0 ) { %>
+            <p style="color: gray"><small>本公告中含有隐藏名字，请登录帐号后查看本公告，如果登录帐号之后没有在本公告中看到自己的用户名，则表示隐藏名字中不含自己。</small></p>
+          <% } %>
         </div>
         <div class="panel-footer">时间:<%= moment_format(notice.datetime) %></div>
       </div>

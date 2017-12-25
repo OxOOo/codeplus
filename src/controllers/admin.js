@@ -121,6 +121,12 @@ router.post('/admin/contests/:contest_id/create_notice', auth.adminRequired, asy
     ctx.request.body.title.should.be.a.String().and.not.empty();
     ctx.request.body.content.should.be.a.String().and.not.empty();
 
+    let hidden_names = [];
+    if (ctx.request.body.hidden_names)
+    {
+        hidden_names = ctx.request.body.hidden_names.split(',').map(x => _.trim(x));
+    }
+
     let contest = await Contest.findById(ctx.params.contest_id);
     auth.assert(contest, '比赛不存在');
 
@@ -128,6 +134,7 @@ router.post('/admin/contests/:contest_id/create_notice', auth.adminRequired, asy
     contest.notices.splice(0, 0, {
         title: ctx.request.body.title,
         content: ctx.request.body.content,
+        hidden_names: hidden_names,
         datetime: Date.now()
     });
     await contest.save();
@@ -141,6 +148,12 @@ router.post('/admin/contests/:contest_id/modify_notice', auth.adminRequired, asy
     ctx.request.body.title.should.be.a.String().and.not.empty();
     ctx.request.body.content.should.be.a.String().and.not.empty();
 
+    let hidden_names = [];
+    if (ctx.request.body.hidden_names)
+    {
+        hidden_names = ctx.request.body.hidden_names.split(',').map(x => _.trim(x));
+    }
+
     let contest = await Contest.findById(ctx.params.contest_id);
     auth.assert(contest, '比赛不存在');
 
@@ -148,6 +161,7 @@ router.post('/admin/contests/:contest_id/modify_notice', auth.adminRequired, asy
     let notice = await contest.notices.id(ctx.request.query.notice_id);
     auth.assert(notice, '公告不存在');
     _.assign(notice, _.pick(ctx.request.body, ['title', 'content']));
+    notice.hidden_names = hidden_names;
     await contest.save();
 
     ctx.state.flash.success = `修改公告成功`;

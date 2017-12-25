@@ -24,6 +24,7 @@ exports.visit = async function (ctx, next) {
 let userM = exports.userM = async function (ctx, next) {
 	let user_id = ctx.session.user_id;
     ctx.state.user = null;
+    ctx.state.normal_login = null;
     
 	if (user_id) {
         ctx.state.user = await User.findById(user_id);
