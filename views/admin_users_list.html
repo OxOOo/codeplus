@@ -1,0 +1,12 @@
+<div class='panel panel-default'>
+  <div class='panel-heading'>
+    <i class='icon-edit icon-large'></i>
+    用户列表
+  </div>
+  <div class='panel-body'>
+    <a href="/admin/users_list_download?encoding=utf-8">下载(UTF-8)</a>
+    <a href="/admin/users_list_download?encoding=gbk">下载(GBK)</a>
+    <% var lines = user_lines; %>
+    <% include includes/lines_table %>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+<table class="table table-bordered">
+<thead>
+    <tr>
+    <% lines[0].forEach(x => { %>
+        <th><%= x %></th>
+    <% }) %>
+    </tr>
+</thead>
+<tbody>
+    <% lines.slice(1).forEach(line => { %>
+    <tr>
+        <% line.forEach(x => {%>
+        <td><%= x %></td>
+        <% }) %>
+    </tr>
+    <% }) %>
+</tbody>
+</table>

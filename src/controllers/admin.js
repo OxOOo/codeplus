@@ -342,6 +342,26 @@ router.get('/admin/oauth/:oauth_id/delete', auth.adminRequired, async (ctx, next
     await ctx.redirect('back');
 });
 
+// 用户管理
+router.get('/admin/users', auth.adminRequired, async (ctx, next) => {
+    await ctx.render('admin_users', {layout: 'admin_layout'});
+});
+router.get('/admin/users_list', auth.adminRequired, async (ctx, next) => {
+    let user_lines = await chelper.fetchUsersInfo();
+    await ctx.render('admin_users_list', {layout: 'admin_layout',
+        user_lines: user_lines
+    });
+});
+router.get('/admin/users_list_download', auth.adminRequired, async (ctx, next) => {
+    ctx.set("Content-Disposition", "attachment; filename=" + qs.escape("Code+用户列表") + ".csv" );
+    let lines = await chelper.fetchUsersInfo();
+    let content = lines.map(x => {return x.join(',')}).join('\n') + '\n';
+    if (ctx.request.query.encoding) {
+        content = iconv.encode(content, ctx.request.query.encoding);
+    }
+    ctx.body = content;
+});
+
 router.get('/admin/control', auth.adminRequired, async (ctx, next) => {
     await ctx.render('admin_control', {layout: 'admin_layout'});
 });

@@ -9,23 +9,7 @@
     <h4>未填：<small><%= unfilled_count %></small></h4>
     <a href="/admin/contests/<%= contest._id %>/express_info_download?encoding=utf-8">下载(UTF-8)</a>
     <a href="/admin/contests/<%= contest._id %>/express_info_download?encoding=gbk">下载(GBK)</a>
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <% express_lines[0].forEach(x => { %>
-            <th><%= x %></th>
-          <% }) %>
-        </tr>
-      </thead>
-      <tbody>
-        <% express_lines.slice(1).forEach(line => { %>
-          <tr>
-            <% line.forEach(x => {%>
-              <td><%= x %></td>
-            <% }) %>
-          </tr>
-        <% }) %>
-      </tbody>
-    </table>
+    <% var lines = express_lines; %>
+    <% include includes/lines_table %>
   </div>
 </div>

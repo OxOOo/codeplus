@@ -78,7 +78,7 @@ let fetchContestSignsInfo = exports.fetchContestSignsInfo = async function (cont
     tools.bindFindByXX(logins, 'userID');
 
     let lines = [];
-    lines.push(["ID", "姓名", "比赛", "排名", "电话", "邮箱", "学校", "性别", "衣服大小"]);
+    lines.push(["ID", "姓名", "比赛", "排名", "电话", "邮箱", "学校", "性别", "年级", "专业", "衣服大小"]);
     signs.forEach((s) => {
         let line = [];
         line.push(logins.findByuserID(s.userID).username);
@@ -89,7 +89,38 @@ let fetchContestSignsInfo = exports.fetchContestSignsInfo = async function (cont
         line.push(users.findBy_id(s.userID).email);
         line.push(users.findBy_id(s.userID).school);
         line.push(users.findBy_id(s.userID).sex);
+        line.push(users.findBy_id(s.userID).grade);
+        line.push(users.findBy_id(s.userID).major);
         line.push(users.findBy_id(s.userID).tshirt_size);
+
+        for(let i = 0; i < line.length; i ++)
+            line[i] = line[i] || '未填';
+
+        lines.push(line);
+    });
+
+    return lines;
+}
+
+// 下载用户列表
+let fetchUsersInfo = exports.fetchUsersInfo = async function () {
+    let users = await User.find();
+    let logins = await NormalLogin.find();
+    tools.bindFindByXX(logins, 'userID');
+
+    let lines = [];
+    lines.push(["ID", "姓名", "电话", "邮箱", "学校", "性别", "年级", "专业", "衣服大小"]);
+    users.forEach((u) => {
+        let line = [];
+        line.push(logins.findByuserID(u._id) ? logins.findByuserID(u._id).username : null);
+        line.push(u.real_name);
+        line.push(u.phone_number);
+        line.push(u.email);
+        line.push(u.school);
+        line.push(u.sex);
+        line.push(u.grade);
+        line.push(u.major);
+        line.push(u.tshirt_size);
 
         for(let i = 0; i < line.length; i ++)
             line[i] = line[i] || '未填';
