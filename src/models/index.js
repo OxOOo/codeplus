@@ -19,6 +19,9 @@ let MDB = exports.MDB = require('./mdb');
 let Count = exports.Count = require('./count');
 let Visit = exports.Visit = require('./visit');
 
+let EMailTemplate = exports.EMailTemplate = require('./email_template');
+let EMailToSend = exports.EMailToSend = require('./email_to_send');
+
 mongoose.connect(config.MONGODB_URL, {
     useMongoClient: true
 }, function (err) {

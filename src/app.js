@@ -69,6 +69,7 @@ app.use(async (ctx, next) => {
         return content;
     }
     ctx.state.ip = ctx.headers['x-real-ip'] || ctx.ip;
+    ctx.state._ = require('lodash');
     await next();
 });
 

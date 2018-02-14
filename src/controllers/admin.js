@@ -7,10 +7,14 @@ let qs = require('querystring');
 let request = require('superagent');
 let moment = require('moment');
 let iconv = require('iconv-lite');
+let mzfs = require('mz/fs');
 require('should');
+
+let body = require('koa-convert')(require('koa-better-body')());
 
 let config = require('../config');
 let { User, NormalLogin, Contest, ContestSign, OauthAPP, Count } = require('../models');
+let { EMailTemplate, EMailToSend } = require('../models');
 let auth = require('../services/auth');
 let tools = require('../services/tools');
 let email = require('../services/email');
@@ -372,4 +376,78 @@ router.post('/admin/su', auth.adminRequired, async (ctx, next) => {
     auth.assert(login, '用户不存在');
     await auth.login(ctx, login.userID);
     await ctx.redirect('/');
+});
+
+// email
+router.get('/admin/email_templates', auth.adminRequired, async (ctx, next) => {
+    let templates = await EMailTemplate.find({}).sort('-_id');
+    await ctx.render('admin_email_templates', { layout: 'admin_layout', templates: templates });
+});
+router.get('/admin/email_templates/:template_id/preview', auth.adminRequired, async (ctx, next) => {
+    let template = await EMailTemplate.findById(ctx.params.template_id);
+    auth.assert(template, '模板不存在');
+    ctx.body = await email.renderTemplate(template.content, _.assign(template.default_env, await email.selectVariable(ctx.state.user)));
+});
+router.post('/admin/email_templates', auth.adminRequired, body, async (ctx, next) => {
+    let title = ctx.request.fields.title;
+    let template_file = ctx.request.fields.content ? ctx.request.fields.content[0] : null;
+    let default_env = ctx.request.fields.default_env;
+    auth.assert(title, '无标题');
+    auth.assert(template_file && template_file.path && (await mzfs.stat(template_file.path)).size > 0, '无模板');
+    
+    let content = await mzfs.readFile(template_file.path, 'utf-8');
+    default_env = default_env ? JSON.parse(default_env) : {};
+    
+    await EMailTemplate.create({title, content, default_env});
+
+    ctx.state.flash.success = '创建成功';
+    await ctx.redirect('back');
+});
+router.post('/admin/email_templates/:template_id', auth.adminRequired, body, async (ctx, next) => {
+    let template = await EMailTemplate.findById(ctx.params.template_id);
+    auth.assert(template, '模板不存在');
+
+    let title = ctx.request.fields.title;
+    let template_file = ctx.request.fields.content ? ctx.request.fields.content[0] : null;
+    let default_env = ctx.request.fields.default_env;
+
+    if (title) template.title = title;
+    if (template_file && template_file.path && (await mzfs.stat(template_file.path)).size > 0)
+        template.content = await mzfs.readFile(template_file.path, 'utf-8');
+    if (default_env) template.default_env = JSON.parse(default_env);
+
+    await template.save();
+
+    ctx.state.flash.success = '修改成功';
+    await ctx.redirect('back');
+});
+router.get('/admin/email_send_list', auth.adminRequired, async (ctx, next) => {
+    let current_page = Number(ctx.query.page) || 1;
+    let page_size = 20;
+    let total_page = Math.floor((await EMailToSend.find({}).count() + page_size - 1) / page_size);
+    let templates = await EMailTemplate.find({});
+    let emails = await EMailToSend.find({}).sort('_id').skip(current_page*page_size - page_size).limit(page_size);
+    tools.bindFindByXX(templates, '_id');
+
+    await ctx.render('admin_email_send_list', {
+        layout: 'admin_layout',
+        current_page: current_page, page_size: page_size, total_page: total_page,
+        templates: templates, emails: emails
+    });
+});
+router.get('/admin/email_send_list/:task_id/preview', auth.adminRequired, async (ctx, next) => {
+    let task = await EMailToSend.findById(ctx.params.task_id);
+    auth.assert(task, '发送任务不存在');
+
+    ctx.body = await email.renderEmailTask(task);
+});
+router.get('/admin/email_send_list/:task_id/resend', auth.adminRequired, async (ctx, next) => {
+    let task = await EMailToSend.findById(ctx.params.task_id);
+    auth.assert(task, '发送任务不存在');
+
+    task.has_sent = false;
+    await task.save();
+
+    ctx.state.flash.success = '重新发送';
+    await ctx.redirect('back');
 });

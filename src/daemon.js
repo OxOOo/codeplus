@@ -5,6 +5,16 @@ let { Count, User, Contest, ContestSign } = require('./models');
 let { log } = require('./config');
 let chelper = require('./services/chelper');
 
+let { EMailToSend } = require('./models');
+
+let juice = require('juice');
+let h2t = require('html-to-text');
+let email = require("emailjs/email");
+let util = require('util');
+let tools = require('./services/tools');
+let email_srv = require('./services/email');
+let config = require('./config');
+
 // 统计各种数量
 async function Counter() {
     log.info('running Counter()');
@@ -22,13 +32,70 @@ async function Counter() {
     }
 }
 
+// 发送邮件
+let server 	= email.server.connect({
+    user: config.EMAIL.USER,
+    password: config.EMAIL.PASSWORD, 
+    host: config.EMAIL.HOST, 
+    ssl: config.EMAIL.SSL
+});
+let sending = false;
+async function SendEMail() {
+    if (sending) return;
+
+    sending = true;
+    try {
+        log.info('running SendEMail()');
+
+        while(true)
+        {
+            let task = await EMailToSend.findOne({has_sent: false}).sort('-priority');
+            if (!task) break;
+            task.has_sent = true;
+            task.send_api = 'SMTPv1';
+
+            let mailHtml = null;
+            try {
+                mailHtml = await email_srv.renderEmailTask(task);
+                task.render_msg = 'success';
+            } catch(e) {
+                task.render_msg = e.message;
+                await task.save();
+                continue;
+            }
+            
+            let send = util.promisify(server.send).bind(server);
+            try {
+                task.info_msg = JSON.stringify(await send({
+                    text: h2t.fromString(mailHtml, { wordwrap: 80 }),
+                    from: `Code+ <${config.EMAIL.USER}>`,
+                    to: `${tools.emailName(task.to)} <${task.to}>`,
+                    subject: task.subject,
+                    attachment: [
+                        { data: juice(mailHtml), alternative: true },
+                    ],
+                }));
+            } catch(e) {
+                task.error_msg = e.message;
+            }
+
+            await task.save();
+        }
+    } catch(e) {
+        sending = false;
+        throw e;
+    }
+    sending = false;
+}
+
 async function run(func) {
     try {
         await func();
     } catch(e) {
         console.error(e);
-        process.exit(1);
     }
 }
 
 setInterval(run, 1000 * 60, Counter); // 每分钟记录一次
+
+setInterval(run, 1000, SendEMail); // 每1s检查一次

@@ -1,0 +1,87 @@
+<div class='panel panel-default grid'>
+  <div class='panel-heading'>
+    <i class='icon-edit icon-large'></i>
+    邮件发送任务
+  </div>
+  <table class='table table-bordered'>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>模板名称</th>
+        <th>接收人</th>
+        <th>主题</th>
+        <th>变量</th>
+        <th>优先级</th>
+        <th>创建时间</th>
+
+        <th>是否已发送</th>
+        <th>发送时间</th>
+        <th>发送API</th>
+        <th>渲染信息</th>
+        <th>错误信息</th>
+        <th>发送信息</th>
+
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% emails.forEach((e) => { %>
+        <tr>
+          <td class="more_info" data-full-info="<%= e._id %>"><%= String(e._id).substr(-6) %></td>
+          <td class="more_info" data-full-info="<%= templates.findBy_id(e.templateID).title %>"><%= _.truncate(templates.findBy_id(e.templateID).title, {length: 6}) %></td>
+          <td><%= e.to %></td>
+          <td class="more_info" data-full-info="<%= e.subject %>"><%= _.truncate(e.subject, {length: 7}) %></td>
+          <td class="more_info" data-full-info="<%= JSON.stringify(e.env, null, '\t') %>"><%= _.truncate(JSON.stringify(e.env, null, '\t'), {length: 10}) %></td>
+          <td><%= e.priority %></td>
+          <td><%= moment_format(e.created_at) %></td>
+
+          <td><%= e.has_sent ? '是' : '否' %></td>
+          <td><%= e.sent_at ? moment_format(e.sent_at) : null %></td>
+          <td><%= e.send_api %></td>
+          <td class="more_info" data-full-info="<%= e.render_msg %>"><%= _.truncate(e.render_msg, {length: 10}) %></td>
+          <td class="more_info" data-full-info="<%= e.error_msg %>"><%= _.truncate(e.error_msg, {length: 10}) %></td>
+          <td class="more_info" data-full-info="<%= e.info_msg %>"><%= _.truncate(e.info_msg, {length: 10}) %></td>
+
+          <td>
+            <a target="_blank" href="/admin/email_send_list/<%= e._id %>/preview">预览</a>|
+            <a href="/admin/email_send_list/<%= e._id %>/resend">重发</a>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+  <div class='panel-footer'>
+    <ul class='pagination pagination-sm'>
+      <li>
+        <a href='?page=1'>«</a>
+      </li>
+      <% for(let i = Math.max(1, current_page-5); i <= Math.min(total_page, current_page+5); i ++) { %>
+        <li class="<%= i == current_page ? 'active' : '' %>">
+          <a href='?page=<%= i %>'><%= i %></a>
+        </li>
+      <% } %>
+      <li>
+        <a href='?page=<%= total_page %>'>»</a>
+      </li>
+    </ul>
+  </div>
+</div>
+<script>
+  $(function() {
+    $('.more_info').attr('style', 'cursor: pointer');
+    $('.more_info').each(function() {
+      $(this).attr('data-small-info', $(this).text());
+      $(this).attr('data-display', 1);
+    });
+    $('.more_info').click(function() {
+      let full_info = $(this).attr('data-full-info');
+      let small_info = $(this).attr('data-small-info');
+      $(this).attr('data-display', 3-$(this).attr('data-display'));
+      if ($(this).attr('data-display') == 1) {
+        $(this).text(small_info);
+      } else {
+        $(this).text(full_info);
+      }
+    });
+  });
+</script>
