@@ -3,6 +3,7 @@ SERVER:
   ADDRESS: 0.0.0.0
   PORT: 4399
   URL_PREFIX: http://localhost:4399 # 地址前缀，不以/结尾
+  SECRET_KEYS: 'this is secret key' # 加密session用的key
 
 MONGODB: # mongodb配置
   HOSTNAME: 127.0.0.1
