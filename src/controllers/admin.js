@@ -426,7 +426,7 @@ router.get('/admin/email_send_list', auth.adminRequired, async (ctx, next) => {
     let page_size = 20;
     let total_page = Math.floor((await EMailToSend.find({}).count() + page_size - 1) / page_size);
     let templates = await EMailTemplate.find({});
-    let emails = await EMailToSend.find({}).sort('_id').skip(current_page*page_size - page_size).limit(page_size);
+    let emails = await EMailToSend.find({}).sort('-_id').skip(current_page*page_size - page_size).limit(page_size);
     tools.bindFindByXX(templates, '_id');
 
     await ctx.render('admin_email_send_list', {
