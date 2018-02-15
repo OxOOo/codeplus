@@ -432,17 +432,18 @@ router.get('/admin/email_send_list', auth.adminRequired, async (ctx, next) => {
     let current_page = Number(ctx.query.page) || 1;
     let page_size = 20;
     let total_page = Math.floor((await EMailToSend.find({}).count() + page_size - 1) / page_size);
+    let unfinished_count = await EMailToSend.find({has_sent: false}).count();
     let templates = await EMailTemplate.find({});
     let emails = await EMailToSend.find({}).sort('-_id').skip(current_page*page_size - page_size).limit(page_size);
     tools.bindFindByXX(templates, '_id');
 
     if (ctx.query.filter && _.trim(ctx.query.filter).length) {
-        emails = await EMailToSend.find({}).$where(ctx.query.filter);
+        emails = await EMailToSend.find({}).sort('-_id').$where(ctx.query.filter);
     }
 
     await ctx.render('admin_email_send_list', {
         layout: 'admin_layout',
-        current_page: current_page, page_size: page_size, total_page: total_page,
+        current_page: current_page, page_size: page_size, total_page: total_page, unfinished_count: unfinished_count,
         templates: templates, emails: emails,
         filter: ctx.query.filter
     });
