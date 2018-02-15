@@ -49,6 +49,10 @@ a:hover {
   color: #E60012;
 }
 
+table td {
+  font-size: 13px;
+}
+
 /* Layout components */
 .clearfix {
   clear: both;
