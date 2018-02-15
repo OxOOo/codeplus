@@ -3,6 +3,22 @@
     <i class='icon-edit icon-large'></i>
     邮件发送任务
   </div>
+  <div class='panel-body filters'>
+    <div class='row'>
+      <div class='col-md-4'>
+        <form action="">
+          <div class='input-group'>
+            <input class='form-control' placeholder='搜索,`this`表示每条记录' type='text' name="filter" value="<%= filter %>">
+            <span class='input-group-btn'>
+              <button class='btn' type='submit'>
+                <i class='icon-search'></i>
+              </button>
+            </span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
   <table class='table table-bordered'>
     <thead>
       <tr>
@@ -26,7 +42,7 @@
     </thead>
     <tbody>
       <% emails.forEach((e) => { %>
-        <tr>
+        <tr class="email_to_send" data-id="<%= e._id %>">
           <td class="more_info" data-full-info="<%= e._id %>"><%= String(e._id).substr(-6) %></td>
           <td class="more_info" data-full-info="<%= templates.findBy_id(e.templateID).title %>"><%= _.truncate(templates.findBy_id(e.templateID).title, {length: 6}) %></td>
           <td><%= e.to %></td>
@@ -44,7 +60,8 @@
 
           <td>
             <a target="_blank" href="/admin/email_send_list/<%= e._id %>/preview">预览</a>|
-            <a href="/admin/email_send_list/<%= e._id %>/resend">重发</a>
+            <a href="/admin/email_send_list/<%= e._id %>/resend">重发</a>|
+            <a href="/admin/email_send_list/<%= e._id %>/sent">取消</a>
           </td>
         </tr>
       <% }) %>
@@ -64,6 +81,10 @@
         <a href='?page=<%= total_page %>'>»</a>
       </li>
     </ul>
+    <div class='pull-right'>
+      <a style="cursor:pointer" onclick="modify('resend')">重发该页</a>|
+      <a style="cursor:pointer" onclick="modify('sent')">取消该页</a>
+    </div>
   </div>
 </div>
 <script>
@@ -84,4 +105,14 @@
       }
     });
   });
+  function modify(type) {
+    async.eachSeries($('.email_to_send'), function(ele, cb) {
+      let id = $(ele).attr('data-id');
+      $.get('/admin/email_send_list/'+id+'/'+type, function() {
+        cb();
+      });
+    }, function() {
+      location.reload();
+    });
+  }
 </script>

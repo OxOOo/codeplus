@@ -429,10 +429,15 @@ router.get('/admin/email_send_list', auth.adminRequired, async (ctx, next) => {
     let emails = await EMailToSend.find({}).sort('-_id').skip(current_page*page_size - page_size).limit(page_size);
     tools.bindFindByXX(templates, '_id');
 
+    if (ctx.query.filter && _.trim(ctx.query.filter).length) {
+        emails = await EMailToSend.find({}).$where(ctx.query.filter);
+    }
+
     await ctx.render('admin_email_send_list', {
         layout: 'admin_layout',
         current_page: current_page, page_size: page_size, total_page: total_page,
-        templates: templates, emails: emails
+        templates: templates, emails: emails,
+        filter: ctx.query.filter
     });
 });
 router.get('/admin/email_send_list/:task_id/preview', auth.adminRequired, async (ctx, next) => {
@@ -449,5 +454,15 @@ router.get('/admin/email_send_list/:task_id/resend', auth.adminRequired, async (
     await task.save();
 
     ctx.state.flash.success = '重新发送';
+    await ctx.redirect('back');
+});
+router.get('/admin/email_send_list/:task_id/sent', auth.adminRequired, async (ctx, next) => {
+    let task = await EMailToSend.findById(ctx.params.task_id);
+    auth.assert(task, '发送任务不存在');
+
+    task.has_sent = true;
+    await task.save();
+
+    ctx.state.flash.success = '取消发送';
     await ctx.redirect('back');
 });
