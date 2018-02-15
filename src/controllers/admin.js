@@ -454,7 +454,8 @@ router.get('/admin/email_send_list/:task_id/resend', auth.adminRequired, async (
     await task.save();
 
     ctx.state.flash.success = '重新发送';
-    await ctx.redirect('back');
+    if(ctx.query.xhr) ctx.body = 'success';
+    else await ctx.redirect('back');
 });
 router.get('/admin/email_send_list/:task_id/sent', auth.adminRequired, async (ctx, next) => {
     let task = await EMailToSend.findById(ctx.params.task_id);
@@ -464,5 +465,30 @@ router.get('/admin/email_send_list/:task_id/sent', auth.adminRequired, async (ct
     await task.save();
 
     ctx.state.flash.success = '取消发送';
+    if(ctx.query.xhr) ctx.body = 'success';
+    else await ctx.redirect('back');
+});
+router.get('/admin/email_create', auth.adminRequired, async (ctx, next) => {
+    let templates = await EMailTemplate.find({}).sort('-_id');
+    let emails = (await User.find({email: {$exists: true}}).select('email')).map(x => x.email);
+    await ctx.render('admin_email_create', {layout: 'admin_layout', templates: templates, emails: emails});
+});
+router.post('/admin/email_create', auth.adminRequired, async (ctx, next) => {
+    let template = await EMailTemplate.findById(ctx.request.body.templateID);
+    auth.assert(ctx.request.body.templateID && template, '找不到模板');
+    let subject = ctx.request.body.subject;
+    auth.assert(subject, '需要主题');
+    auth.assert(ctx.request.body.addresses, '需要邮件地址');
+    let addresses = ctx.request.body.addresses.split('\n').map(x => _.trim(x)).filter(x => x.length>0);
+
+    for(let addr of addresses) {
+        await EMailToSend.create({
+            templateID: template._id,
+            to: addr,
+            subject: subject
+        });
+    }
+
+    ctx.state.flash.success = '创建成功';
     await ctx.redirect('back');
 });

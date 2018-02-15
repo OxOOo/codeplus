@@ -1,0 +1,34 @@
+<div class='panel panel-default'>
+  <div class='panel-heading'>
+    <i class='icon-edit icon-large'></i>
+    创建邮件
+  </div>
+  <div class='panel-body'>
+    <form action="/admin/email_create" method="post">
+      <div class="form-group">
+        <label>模板</label>
+        <select class="form-control" name="templateID">
+          <% templates.forEach(t => { %>
+            <option value="<%= t._id %>"><%= t.title %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>主题</label>
+        <input class="form-control" name="subject"/>
+      </div>
+      <div class="form-group">
+        <label>收件地址(每行一个)</label>
+        <textarea class="form-control" rows="5" name="addresses"></textarea>
+      </div>
+      <button type="submit" class="btn btn-default">创建邮件</button>
+      <button type="button" class="btn btn-info" onclick="allin()">全部收件人</button>
+    </form>
+  </div>
+</div>
+<spin id="all_email_list" style="display: none"><%= emails.join('\n') %></spin>
+<script>
+  function allin() {
+    $('form textarea[name=addresses]').val($('#all_email_list').text());
+  }
+</script>

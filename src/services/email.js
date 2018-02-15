@@ -64,7 +64,7 @@ exports.sendForgotEmail = async (user) => {
 
     await EMailToSend.create({
         templateID: template._id,
-        to: user.email_will,
+        to: user.email,
         subject: 'Code+ 密码找回',
         env: {
             code: user.forgot_password_code,

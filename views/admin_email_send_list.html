@@ -82,8 +82,10 @@
       </li>
     </ul>
     <div class='pull-right'>
+      <spin>该页共<%= emails.length %>封邮件</spin>|
       <a style="cursor:pointer" onclick="modify('resend')">重发该页</a>|
       <a style="cursor:pointer" onclick="modify('sent')">取消该页</a>
+      <spin id="processing" style="display:none"></spin>
     </div>
   </div>
 </div>
@@ -106,9 +108,14 @@
     });
   });
   function modify(type) {
-    async.eachSeries($('.email_to_send'), function(ele, cb) {
+    let total = $('.email_to_send').length;
+    let finished = 0;
+    async.eachLimit($('.email_to_send'), 20, function(ele, cb) {
       let id = $(ele).attr('data-id');
-      $.get('/admin/email_send_list/'+id+'/'+type, function() {
+      $.get('/admin/email_send_list/'+id+'/'+type+'?xhr=1', function() {
+        finished ++;
+        $('#processing').text('|'+finished+'/'+total);
+        $('#processing').show();
         cb();
       });
     }, function() {
