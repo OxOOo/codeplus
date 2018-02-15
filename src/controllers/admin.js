@@ -421,6 +421,13 @@ router.post('/admin/email_templates/:template_id', auth.adminRequired, body, asy
     ctx.state.flash.success = '修改成功';
     await ctx.redirect('back');
 });
+router.get('/admin/email_templates/:template_id/download', auth.adminRequired, async (ctx, next) => {
+    let template = await EMailTemplate.findById(ctx.params.template_id);
+    auth.assert(template, '模板不存在');
+
+    ctx.set('Content-Disposition', 'attachment; filename="template.html"');
+    ctx.body = template.content;
+});
 router.get('/admin/email_send_list', auth.adminRequired, async (ctx, next) => {
     let current_page = Number(ctx.query.page) || 1;
     let page_size = 20;

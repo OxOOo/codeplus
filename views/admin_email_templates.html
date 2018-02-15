@@ -22,6 +22,7 @@
           <td><%= moment_format(t.created_at) %></td>
           <td>
             <a target="_blank" href="/admin/email_templates/<%= t._id %>/preview">预览</a> |
+            <a href="/admin/email_templates/<%= t._id %>/download">下载</a> |
             <a style="cursor: pointer" onclick="modifyTemplate('<%= t._id %>')">修改</a>
           </td>
         </tr>
