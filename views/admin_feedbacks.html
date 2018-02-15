@@ -1,0 +1,22 @@
+<div class='panel panel-default grid'>
+  <div class='panel-heading'>
+    <i class='icon-edit icon-large'></i>
+    反馈列表
+  </div>
+  <% include includes/feedbacks %>
+  <div class='panel-footer'>
+    <ul class='pagination pagination-sm'>
+      <li>
+        <a href='?page=1'>«</a>
+      </li>
+      <% for(let i = Math.max(1, current_page-5); i <= Math.min(total_page, current_page+5); i ++) { %>
+        <li class="<%= i == current_page ? 'active' : '' %>">
+          <a href='?page=<%= i %>'><%= i %></a>
+        </li>
+      <% } %>
+      <li>
+        <a href='?page=<%= total_page %>'>»</a>
+      </li>
+    </ul>
+  </div>
+</div>

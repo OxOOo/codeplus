@@ -15,6 +15,7 @@ let body = require('koa-convert')(require('koa-better-body')());
 let config = require('../config');
 let { User, NormalLogin, Contest, ContestSign, OauthAPP, Count } = require('../models');
 let { EMailTemplate, EMailToSend } = require('../models');
+let { Feedback } = require('../models');
 let auth = require('../services/auth');
 let tools = require('../services/tools');
 let email = require('../services/email');
@@ -367,7 +368,10 @@ router.get('/admin/users_list_download', auth.adminRequired, async (ctx, next) =
 });
 
 router.get('/admin/control', auth.adminRequired, async (ctx, next) => {
-    await ctx.render('admin_control', {layout: 'admin_layout'});
+    let feedbacks = await Feedback.find({}).sort('-_id').limit(5);
+    let logins = await NormalLogin.find({userID: feedbacks.filter(x => x.userID != null).map(x => x.userID)});
+    tools.bindFindByXX(logins, 'userID');
+    await ctx.render('admin_control', {layout: 'admin_layout', feedbacks: feedbacks, logins: logins});
 });
 // su
 router.post('/admin/su', auth.adminRequired, async (ctx, next) => {
@@ -378,7 +382,7 @@ router.post('/admin/su', auth.adminRequired, async (ctx, next) => {
     await ctx.redirect('/');
 });
 
-// email
+// 邮件
 router.get('/admin/email_templates', auth.adminRequired, async (ctx, next) => {
     let templates = await EMailTemplate.find({}).sort('-_id');
     await ctx.render('admin_email_templates', { layout: 'admin_layout', templates: templates });
@@ -499,4 +503,20 @@ router.post('/admin/email_create', auth.adminRequired, async (ctx, next) => {
 
     ctx.state.flash.success = '创建成功';
     await ctx.redirect('back');
+});
+
+// 反馈
+router.get('/admin/feedbacks', auth.adminRequired, async (ctx, next) => {
+    let current_page = Number(ctx.query.page) || 1;
+    let page_size = 20;
+    let total_page = Math.floor((await Feedback.find({}).count() + page_size - 1) / page_size);
+    let feedbacks = await Feedback.find({}).sort('-_id').skip(current_page*page_size-page_size).limit(page_size);
+    let logins = await NormalLogin.find({userID: feedbacks.filter(x => x.userID != null).map(x => x.userID)});
+    tools.bindFindByXX(logins, 'userID');
+
+    await ctx.render('admin_feedbacks', {
+        layout: 'admin_layout',
+        current_page: current_page, page_size: page_size, total_page: total_page,
+        feedbacks: feedbacks, logins: logins
+    });
 });

@@ -22,6 +22,8 @@ let Visit = exports.Visit = require('./visit');
 let EMailTemplate = exports.EMailTemplate = require('./email_template');
 let EMailToSend = exports.EMailToSend = require('./email_to_send');
 
+let Feedback = exports.Feedback = require('./feedback');
+
 mongoose.connect(config.MONGODB_URL, {
     useMongoClient: true
 }, function (err) {

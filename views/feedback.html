@@ -1,4 +1,48 @@
 <div class='panel panel-default'>
+    <div class="panel-heading">直接反馈</div>
+    <div class='panel-body'>
+        <form action="/feedback" method="post">
+            <textarea rows="5" class="feedback-input" name="content" placeholder="这里是反馈意见"></textarea>
+            <div class="pull-right">
+                <button type="submit" class="feedback-btn">发送</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .feedback-input {
+        width: 100%;
+        box-sizing: border-box;
+        outline: none;
+
+        border: rgba(0,0,0,.1) 1px solid;
+        border-radius: 6px;
+        padding: 4px;
+    }
+    .feedback-input:focus {
+        border: rgba(0,0,0,.3) 1px solid;
+    }
+
+    .feedback-btn {
+        height: 26px;
+        outline: none;
+        border: 0px;
+        border-radius: 6px;
+        text-align: center;
+        line-height: 26px;
+
+        color: rgba(0, 0, 0, 0.4);
+    }
+    .feedback-btn:hover {
+        color: rgba(0, 0, 0, 0.6);
+    }
+    .feedback-btn:active {
+        color: rgba(0, 0, 0, 0.8);
+    }
+</style>
+
+<div class='panel panel-default'>
     <div class="panel-heading">反馈与支持</div>
     <div class='panel-body'>
         请发送邮件至 <a href="mailto:<%= email %>"><%= email %></a><br/>
