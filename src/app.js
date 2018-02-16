@@ -90,6 +90,16 @@ router.use(async (ctx, next) => {
     let {contest, contest_sign} = await chelper.fetchDefaultContest(ctx);
     ctx.state.latest_contest = contest;
     ctx.state.latest_contest_sign = contest_sign;
+
+    ctx.state.email_subscribe = config.SERVER.URL_PREFIX + '/email_subscribe';
+    ctx.state.email_unsubscribe = config.SERVER.URL_PREFIX + '/email_unsubscribe';
+    ctx.state.email_subscribe_template = config.SERVER.URL_PREFIX + '/email_subscribe?email=<%= email %>';
+    ctx.state.email_unsubscribe_template = config.SERVER.URL_PREFIX + '/email_unsubscribe?email=<%= email %>';
+    if (ctx.state.user && ctx.state.user.email) {
+        ctx.state.email_subscribe += '?email=' + ctx.state.user.email;
+        ctx.state.email_unsubscribe += '?email=' + ctx.state.user.email;
+    }
+    
     await next();
 });
 

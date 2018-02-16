@@ -10,6 +10,7 @@ require('should');
 
 let config = require('../config');
 let { User, Contest, ContestSign, MDB } = require('../models');
+let { EMailBlacklist } = require('../models');
 let auth = require('../services/auth');
 let tools = require('../services/tools');
 let email = require('../services/email');
@@ -112,7 +113,8 @@ router.post('/forgot_password_reset', async (ctx, next) => {
 
 // 修改资料
 router.get('/modify', auth.loginRequired, async (ctx, next) => {
-    await ctx.render('modify', {current_page: 'modify', title: "修改资料"});
+    let blocked = ctx.state.user.email && await EMailBlacklist.findOne({email: ctx.state.user.email});
+    await ctx.render('modify', {current_page: 'modify', title: "修改资料", blocked: blocked});
 });
 // 修改昵称
 router.post('/modify_nickname', auth.loginRequired, async (ctx, next) => {

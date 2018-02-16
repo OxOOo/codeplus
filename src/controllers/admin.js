@@ -14,7 +14,7 @@ let body = require('koa-convert')(require('koa-better-body')());
 
 let config = require('../config');
 let { User, NormalLogin, Contest, ContestSign, OauthAPP, Count } = require('../models');
-let { EMailTemplate, EMailToSend } = require('../models');
+let { EMailTemplate, EMailToSend, EMailBlacklist } = require('../models');
 let { Feedback } = require('../models');
 let auth = require('../services/auth');
 let tools = require('../services/tools');
@@ -503,6 +503,10 @@ router.post('/admin/email_create', auth.adminRequired, async (ctx, next) => {
 
     ctx.state.flash.success = '创建成功';
     await ctx.redirect('back');
+});
+router.get('/admin/email_blacklist', auth.adminRequired, async (ctx, next) => {
+    let blacklist = await EMailBlacklist.find({});
+    await ctx.render('admin_email_blacklist', { layout: 'admin_layout', blacklist: blacklist });
 });
 
 // 反馈

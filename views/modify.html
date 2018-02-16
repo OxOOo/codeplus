@@ -84,6 +84,13 @@
   <form method="post" action="/modify_email">
     <div class='panel-heading'>
       邮箱
+      <% if (user.email) { %>
+        <% if (blocked) {%>
+          <small>已取消订阅,点击<a href="<%= email_subscribe %>">此处</a>重新订阅</small>
+        <% } else { %>
+          <small>已订阅Code+比赛官方邮件推送,点击<a href="<%= email_unsubscribe %>">此处</a>取消订阅</small>
+        <% } %>
+      <% } %>
       <i class="hide-on-edit edit-btn fa fa-pencil"></i>
       <button class="invisible show-on-edit done-btn" type="submit"><i class="fa fa-check"></i></button>
     </div>

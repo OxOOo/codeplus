@@ -5,7 +5,7 @@ let { Count, User, Contest, ContestSign } = require('./models');
 let { log } = require('./config');
 let chelper = require('./services/chelper');
 
-let { EMailToSend } = require('./models');
+let { EMailToSend, EMailBlacklist } = require('./models');
 
 let juice = require('juice');
 let h2t = require('html-to-text');
@@ -65,7 +65,12 @@ async function SendEMail() {
             }
             
             let send = util.promisify(server.send).bind(server);
+            task.info_msg = null;
+            task.error_msg = null;
             try {
+                if (task.priority <= 0 && await EMailBlacklist.findOne({email: task.to})) {
+                    throw new Error('[blacklist]receiver address in blacklist');
+                }
                 task.info_msg = JSON.stringify(await send({
                     text: h2t.fromString(mailHtml, { wordwrap: 80 }),
                     from: `Code+ <${config.EMAIL.USER}>`,

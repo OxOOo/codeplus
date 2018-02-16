@@ -225,6 +225,10 @@ table td {
   border-bottom: rgba(0,0,0,.12) 1px solid;
 }
 
+.panel-heading small {
+  font-size: 13px;
+}
+
 .panel-heading .fa {
   line-height: inherit;
 }

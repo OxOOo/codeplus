@@ -1,0 +1,29 @@
+<div class='panel panel-default'>
+  <div class='panel-heading'>
+    <i class='icon-edit icon-large'></i>
+    取消订阅的邮箱列表
+  </div>
+  <div class='panel-body'>
+    <table class="table table-bordered text-center">
+      <thead>
+        <tr>
+          <th class="text-center">邮箱</th>
+          <th class="text-center">时间</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% blacklist.forEach((b) => { %>
+          <tr>
+            <td><%= b.email %></td>
+            <td><%= moment_format(b.created_at) %></td>
+          </tr>
+        <% }) %>
+        <% if (blacklist.length == 0) { %>
+          <tr>
+            <td colspan="2">无</td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>

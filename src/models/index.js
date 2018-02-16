@@ -21,6 +21,7 @@ let Visit = exports.Visit = require('./visit');
 
 let EMailTemplate = exports.EMailTemplate = require('./email_template');
 let EMailToSend = exports.EMailToSend = require('./email_to_send');
+let EMailBlacklist = exports.EMailBlacklist = require('./email_blacklist');
 
 let Feedback = exports.Feedback = require('./feedback');
 
