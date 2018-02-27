@@ -11,7 +11,7 @@ let tools = require('./tools');
 
 // 获取默认比赛信息
 let fetchDefaultContest = exports.fetchDefaultContest = async function(ctx) {
-    let contest = await Contest.findOne({public: true}).sort('-no');
+    let contest = await Contest.findOne({public: true, express_info_end: false}).sort('no');
     let contest_sign = null;
     if (ctx.state.user) {
         contest_sign = await ContestSign.findOne({userID: ctx.state.user._id, contestID: contest._id});

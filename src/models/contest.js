@@ -68,7 +68,11 @@ let contestSchema = new mongoose.Schema({
     div2_contest_id: Number, // OJ上的比赛ID
     practise_contest_id: Number, // 练习赛ID
 
-    express_info_end: Boolean, // 快递填写是否结束
+    express_info_end: {
+        type: Boolean, // 快递填写是否结束
+        required: true,
+        default: false
+    },
 
     notices: [{
         title: String,

@@ -53,6 +53,7 @@ async function SendEMail() {
             if (!task) break;
             task.has_sent = true;
             task.send_api = 'SMTPv1';
+            task.sent_at = new Date();
 
             let mailHtml = null;
             try {
