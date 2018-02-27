@@ -87,9 +87,9 @@ router.use(flash);
 router.use(auth.visit);
 router.use(auth.userM);
 router.use(async (ctx, next) => {
-    let {contest, contest_sign} = await chelper.fetchDefaultContest(ctx);
-    ctx.state.latest_contest = contest;
-    ctx.state.latest_contest_sign = contest_sign;
+    let {contest, contest_sign} = await chelper.fetchExpressContest(ctx);
+    ctx.state.express_contest = contest;
+    ctx.state.express_contest_sign = contest_sign;
 
     ctx.state.email_subscribe = config.SERVER.URL_PREFIX + '/email_subscribe';
     ctx.state.email_unsubscribe = config.SERVER.URL_PREFIX + '/email_unsubscribe';

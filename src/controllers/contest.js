@@ -17,7 +17,7 @@ const router = module.exports = new Router();
 
 // 首页
 router.get('/', async (ctx, next) => {
-    let {contest, contest_sign} = await chelper.fetchDefaultContest(ctx);
+    let {contest, contest_sign} = await chelper.fetchLatestContest(ctx);
     await ctx.render("index", { contest: contest, contest_sign: contest_sign, current_page: '/', title: contest.title });
 });
 

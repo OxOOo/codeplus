@@ -9,8 +9,18 @@ let _ = require('lodash');
 let auth = require('./auth');
 let tools = require('./tools');
 
-// 获取默认比赛信息
-let fetchDefaultContest = exports.fetchDefaultContest = async function(ctx) {
+// 获取最新比赛信息
+let fetchLatestContest = exports.fetchLatestContest = async function(ctx) {
+    let contest = await Contest.findOne({public: true}).sort('-no');
+    let contest_sign = null;
+    if (ctx.state.user) {
+        contest_sign = await ContestSign.findOne({userID: ctx.state.user._id, contestID: contest._id});
+    }
+    return {contest, contest_sign};
+}
+
+// 获取快递比赛信息
+let fetchExpressContest = exports.fetchExpressContest = async function(ctx) {
     let contest = await Contest.findOne({public: true, express_info_end: false}).sort('no');
     let contest_sign = null;
     if (ctx.state.user) {
