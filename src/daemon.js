@@ -15,6 +15,12 @@ let tools = require('./services/tools');
 let email_srv = require('./services/email');
 let config = require('./config');
 
+function sleep(ms) {
+    return new Promise((resolve, reject) => {
+        setTimeout(resolve, ms);
+    })
+}
+
 // 统计各种数量
 async function Counter() {
     log.info('running Counter()');
@@ -51,6 +57,8 @@ async function SendEMail() {
         {
             let task = await EMailToSend.findOne({has_sent: false}).sort('-priority');
             if (!task) break;
+            if (task.priority <= 0) await sleep(3000);
+
             task.has_sent = true;
             task.send_api = 'SMTPv1';
             task.sent_at = new Date();
