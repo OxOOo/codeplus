@@ -14,6 +14,12 @@ let userSchema = new mongoose.Schema({
 
 	is_admin: Boolean, // 是否管理员
 
+	rating: {
+		type: Number,
+		required: true,
+		default: 1500
+	},
+
 	// 邮箱
 	email_passed: { // 邮箱是否通过验证
 		type: Boolean,

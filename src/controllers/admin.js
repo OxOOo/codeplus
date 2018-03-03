@@ -45,7 +45,24 @@ router.get('/admin/contests/:contest_id', auth.adminRequired, async (ctx, next) 
         }
     }
 
-    await ctx.render('admin_contest', {layout: 'admin_layout', contest: contest, award_names: award_names, price_info: price_info});
+    let rating_signs = await ContestSign.find({contestID: contest._id});
+    let rating_logins = await NormalLogin.find({userID: rating_signs.map(x => {return x.userID;})});
+
+    let rating_info = [];
+    tools.bindFindByXX(rating_logins, 'userID');
+    for(let x of rating_signs) {
+        if (x.rating_before) {
+            rating_info.push([rating_logins.findByuserID(x.userID).username, x.rating_before, x.rating_now, x.rating_delta]);
+        }
+    }
+
+    await ctx.render('admin_contest', {
+        layout: 'admin_layout',
+        contest: contest,
+        award_names: award_names,
+        price_info: price_info,
+        rating_info: rating_info
+    });
 });
 router.post('/admin/contests/create_contest', auth.adminRequired, async (ctx, next) => {
     let c = new Contest();
@@ -227,6 +244,40 @@ router.post('/admin/contests/:contest_id/update_price_info', auth.adminRequired,
             await sign.save();
         }
         ctx.state.flash.success = `共更新${lines.length}人的获奖信息`;
+    } else {
+        ctx.state.flash.success = `清空获奖信息`;
+    }
+    
+    await ctx.redirect('back');
+});
+router.post('/admin/contests/:contest_id/update_rating_info', auth.adminRequired, async (ctx, next) => {
+    ctx.params.contest_id.should.be.a.String().and.not.empty();
+    let rating_info = ctx.request.body.rating_info;
+    rating_info.should.be.a.String();
+
+    let contest = await Contest.findById(ctx.params.contest_id);
+    auth.assert(contest, '比赛不存在');
+
+    await ContestSign.update({contestID: contest._id}, {$set: {rating_before: null, rating_now: null, rating_delta: null}}, {multi: true});
+    
+    if (rating_info.trim().length != 0) {
+        let lines = rating_info.trim().split('\n').map(x => _.trim(x));
+        for(let line of lines) {
+            let tokens = line.split('\t');
+            tokens.should.have.lengthOf(4);
+            let [username, rating_before, rating_now, rating_delta] = tokens;
+            let login = await NormalLogin.findOne({username});
+            auth.assert(login, `用户${username}不存在`);
+            let sign = await ContestSign.findOne({contestID: contest._id, userID: login.userID});
+            auth.assert(sign, `用户${username}未报名`);
+            _.assign(sign, {rating_before, rating_now, rating_delta});
+            await sign.save();
+
+            let user = await User.findById(login.userID);
+            user.rating = rating_now;
+            await user.save();
+        }
+        ctx.state.flash.success = `共更新${lines.length}人的Rating`;
     } else {
         ctx.state.flash.success = `清空获奖信息`;
     }

@@ -46,6 +46,7 @@
             <th>场次</th>
             <th>排名</th>
             <th>获奖信息</th>
+            <th>Rating变化</th>
           </tr>
         </thead>
         <tbody>
@@ -60,6 +61,13 @@
                   <%= !sign.has_award ? '你的奖品被捐给了蛤' : ( (sign.express_info_filled ? '已填签收地址' : '未写签收地址') +' | '+ (sign.express_no ? `${sign.prize_name}:${sign.express_name}(${sign.express_no})` : '已获奖，暂无快递信息') ) %>
                 <% } else {%>
                   比赛未结束
+                <% } %>
+              </td>
+              <td>
+                <% if (sign.rating_before) { %>
+                  <%= sign.rating_before %> <%= sign.rating_delta >= 0 ? '+' : '-' %> <%= Math.abs(sign.rating_delta) %> => <%= sign.rating_now %>
+                <% } else { %>
+                  暂无
                 <% } %>
               </td>
             </tr>

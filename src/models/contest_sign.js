@@ -25,6 +25,10 @@ let contestSignSchema = new mongoose.Schema({
     has_award: Boolean, // 是否获奖
     rank: Number, // 排名
 
+    rating_before: Number,
+    rating_now: Number,
+    rating_delta: Number,
+
     // 快递信息
     express_info_filled: Boolean,
     // Address
