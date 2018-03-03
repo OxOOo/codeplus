@@ -112,6 +112,24 @@ let fetchContestSignsInfo = exports.fetchContestSignsInfo = async function (cont
     return lines;
 }
 
+// 下载报名用户帐号信息
+let fetchContestPassInfo = exports.fetchContestPassInfo = async function (contest) {
+    let signs = await ContestSign.find({contestID: contest._id});
+    let logins = await NormalLogin.find();
+    tools.bindFindByXX(logins, 'userID');
+
+    let lines = [];
+    signs.forEach((s) => {
+        let line = [];
+        line.push(logins.findByuserID(s.userID).username);
+        line.push(logins.findByuserID(s.userID).password);
+
+        lines.push(line);
+    });
+
+    return lines;
+}
+
 // 下载用户列表
 let fetchUsersInfo = exports.fetchUsersInfo = async function () {
     let users = await User.find();

@@ -28,8 +28,9 @@
             <td><%= c.express_info_end ? '是' : '否' %></td>
             <td><a href="/admin/contests/<%= c._id %>/express_info">快递信息</a></td>
             <td>
-              <a href="/admin/contests/<%= c._id %>/signs_statistic">报名人数</a>
-              <a href="/admin/contests/<%= c._id %>/signs_info">报名表</a>
+              <a href="/admin/contests/<%= c._id %>/signs_statistic">报名人数</a> |
+              <a href="/admin/contests/<%= c._id %>/signs_info">报名表</a> | 
+              <a href="/admin/contests/<%= c._id %>/signs_pass_download">报名帐号</a>
             </td>
           </tr>
         <% }) %>
