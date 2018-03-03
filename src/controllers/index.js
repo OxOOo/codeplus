@@ -2,6 +2,7 @@
 let Router = require('koa-router');
 let _ = require('lodash');
 let path = require('path');
+let mzfs = require('mz/fs');
 let moment = require('moment');
 require('should');
 
@@ -12,6 +13,11 @@ let auth = require('../services/auth');
 const router = module.exports = new Router();
 
 let support_email = config.SUPPORT || config.EMAIL.USER;
+
+router.get('/faq', async ctx => {
+    let faq = await mzfs.readFile(path.join(__dirname, '..', '..', 'faq.md'), 'utf-8');
+    await ctx.render("faq", { title: 'FAQ', current_page: 'faq', faq: faq});
+});
 
 router.get('/feedback', async ctx => {
     await ctx.render("feedback", { title: '反馈与支持', current_page: 'feedback', email: support_email });
