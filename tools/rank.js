@@ -25,7 +25,7 @@ async function solve(type) {
     for(let i = 0; i < lines.length; i ++) {
         let tokens = _.split(lines[i], /\s+/);
         if (!tokens[1].startsWith('code+_')) continue;
-        if (tokens.length != 10)
+        if (tokens.length != 11)
         {
             throw new Error(`error at line ${i+1}`);
         }
@@ -68,7 +68,8 @@ async function solve(type) {
                 if (y.range_start <= x && x < y.range_end) u = y;
             }
             assert(u != null);
-            if (u.username in randomed) continue;
+            if (_.some(randomed, x => x == u.username)) continue;
+            // if (u.username in randomed) continue;
             randomed.push(u.username);
             break;
         }
