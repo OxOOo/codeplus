@@ -44,6 +44,15 @@ router.post('/normal_login', async (ctx, next) => {
     ctx.session.login_redirect_url = null;
     await ctx.redirect(login_redirect_url || '/');
 });
+router.post('/salt_login', async (ctx, next) => {
+    ctx.request.body.username.should.be.a.String().and.not.eql("","请填写用户名");
+    ctx.request.body.password.should.be.a.String().and.not.eql("","请填写密码");
+    await auth.salt_login(ctx, ctx.request.body.username, ctx.request.body.password);
+    ctx.state.flash.success = '登录成功';
+    let login_redirect_url = ctx.session.login_redirect_url;
+    ctx.session.login_redirect_url = null;
+    await ctx.redirect(login_redirect_url || '/');
+});
 router.get('/github_callback', async (ctx, next) => {
     ctx.request.query.code.should.be.a.String().and.not.empty();
     

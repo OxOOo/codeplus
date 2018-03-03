@@ -85,6 +85,16 @@ exports.normal_login = async function (ctx, username, password) {
 	ctx.state.user = await User.findById(login.userID);
 }
 
+// 正常登录
+exports.salt_login = async function (ctx, username, password) {
+    let login = await NormalLogin.findOne({username: username});
+    assert(login, '用户不存在');
+    assert(login.password == password, '密码错误');
+
+    ctx.session.user_id = login.userID;
+	ctx.state.user = await User.findById(login.userID);
+}
+
 // Github登录
 exports.github_login = async function (ctx, info) {
     let login = await GithubLogin.findOne({id: info.id});
