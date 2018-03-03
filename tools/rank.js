@@ -1,3 +1,6 @@
+// 输入排名表
+// 输出有学校的排名
+// 输出幸运将
 
 let _ = require('lodash');
 let mzfs = require('mz/fs');
@@ -5,7 +8,7 @@ let assert = require('assert');
 let { Contest, ContestSign, User, NormalLogin } = require('../src/models');
 
 async function solve(type) {
-    let contest = await Contest.findOne({no: 2});
+    let contest = await Contest.findOne({no: 3});
     console.log(contest.title);
 
     const input_file = type + '_rank.txt';
@@ -22,11 +25,6 @@ async function solve(type) {
     for(let i = 0; i < lines.length; i ++) {
         let tokens = _.split(lines[i], /\s+/);
         if (!tokens[1].startsWith('code+_')) continue;
-        if (tokens.length == 9)
-        {
-            tokens.splice(2, 0, tokens[1].substr(6));
-            console.log(tokens[1], tokens[2]);
-        }
         if (tokens.length != 10)
         {
             throw new Error(`error at line ${i+1}`);
@@ -36,13 +34,13 @@ async function solve(type) {
         let login = await NormalLogin.findOne({username: tokens[2]});
         assert(login);
         let sign = await ContestSign.findOne({contestID: contest._id, userID: login.userID});
-        if (!sign || sign.type != type) continue;
+        assert(sign && sign.type == type);
         let user = await User.findById(login.userID);
         assert(user);
         tokens.splice(3, 0, _.trim(user.school).length > 0 ? user.school : '火星学院');
         outputs.push(tokens);
 
-        if (rank > 50)
+        if (rank > 30)
         {
             random_users.push({
                 username: login.username,
