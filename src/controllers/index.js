@@ -29,7 +29,7 @@ router.post('/feedback', async (ctx, next) => {
     content = _.trim(content);
 
     let last = await Feedback.findOne({}).sort('-_id');
-    auth.assert(!last || moment(last.created_at).add(10, 's').isBefore(moment.now()), '反馈太频繁,请稍后再试');
+    auth.assert(!last || moment(last.created_at).add(1, 's').isBefore(moment.now()), '大家的反馈太频繁,请稍后再试');
 
     let feedback = new Feedback();
     if (ctx.state.user) feedback.userID = ctx.state.user._id;

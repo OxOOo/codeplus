@@ -290,6 +290,21 @@ router.get('/admin/contests/:contest_id/signs_info_download', auth.adminRequired
     }
     ctx.body = content;
 });
+router.get('/admin/contests/:contest_id/signs_pass_download', auth.adminRequired, async (ctx, next) => {
+    ctx.params.contest_id.should.be.a.String().and.not.empty();
+
+    let contest = await Contest.findById(ctx.params.contest_id);
+    auth.assert(contest, '比赛不存在');
+
+    let pass_lines = await chelper.fetchContestPassInfo(contest);
+
+    ctx.set("Content-Disposition", "attachment; filename=pass.txt");
+    let content = pass_lines.map(x => x.join(' ')).join('\n');
+    if (ctx.request.query.encoding) {
+        content = iconv.encode(content, ctx.request.query.encoding);
+    }
+    ctx.body = content;
+});
 
 router.get('/admin/contests/:contest_id/signs_statistic', auth.adminRequired, async (ctx, next) => {
     ctx.params.contest_id.should.be.a.String().and.not.empty();
