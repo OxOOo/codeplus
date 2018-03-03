@@ -8,7 +8,7 @@ let send = require('koa-send');
 require('should');
 
 let config = require('../config');
-let { User, Contest, ContestSign } = require('../models');
+let { User, Contest, ContestSign, NormalLogin } = require('../models');
 let auth = require('../services/auth');
 let chelper = require('../services/chelper');
 let tools = require('../services/tools');
@@ -117,6 +117,30 @@ router.get('/contests/:contest_id/ranklist/:type', async (ctx, next) => {
     auth.assert(contest.end_contest_time < Date.now(), '比赛未结束');
 
     let lines = contest[`${ctx.params.type}_ranklist`] ? contest[`${ctx.params.type}_ranklist`].split('\n').map(x => {return x.split('\t')}) : '暂无';
+    
+    // prepare rating
+    let name_idx = _.includes(lines[0], 'id') ? _.indexOf(lines[0], 'id') : -1;
+    let has_rating = _.some(await ContestSign.find({contestID: contest._id, type: ctx.params.type}), x => x.rating_before);
+    if (name_idx >= 0 && has_rating) {
+        lines[0].push('Rating');
+
+        let names = lines.slice(1).map(x => x[name_idx]);
+        let logins = await NormalLogin.find({username: names});
+        let signs = await ContestSign.find({contestID: contest._id, userID: logins.map(x => x.userID)});
+        tools.bindFindByXX(logins, 'username');
+        tools.bindFindByXX(signs, 'userID');
+
+        for(let i = 1; i < lines.length; i ++) {
+            let name = lines[i][name_idx];
+            let s = signs.findByuserID(logins.findByusername(name).userID);
+            if (s.rating_before) {
+                lines[i].push(`${s.rating_before} ${s.rating_delta>=0?'+':'-'} ${Math.abs(s.rating_delta)} => ${s.rating_now}`);
+            } else {
+                lines[i].push('暂无');
+            }
+        }
+    }
+
     let header = lines[0];
     let ranks = lines.slice(1);
     if (_.includes(header, 'id')) header[_.indexOf(header, 'id')] = '姓名';

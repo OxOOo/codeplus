@@ -187,6 +187,33 @@
 </div>
 
 <div class='panel panel-default'>
+  <div class='panel-heading'>
+    <i class='icon-edit icon-large'></i>
+    比赛《<%= contest.title %>》的Rating
+  </div>
+  <div class='panel-body'>
+    <form class="form-horizontal" action="/admin/contests/<%= contest._id %>/update_rating_info" method="post">
+      <div class="form-group">
+        <label class="col-sm-2 control-label">
+          Rating
+          <p class="help-block">
+            第一列username，第二列之前的rating,第三列是现在的rating,第四列是变化量
+          </p>
+        </label>
+        <div class="col-sm-10">
+          <textarea class="form-control" rows="10" name="rating_info"><%- rating_info.map(x => x.join('\t')).join('\n') %></textarea>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button type="submit" class="btn btn-default">提交</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class='panel panel-default'>
     <div class='panel-heading'>
       <i class='icon-edit icon-large'></i>
       比赛《<%= contest.title %>》的公告
