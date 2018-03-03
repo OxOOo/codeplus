@@ -5,6 +5,7 @@ let { User, Contest, ContestSign, NormalLogin } = require('../models');
 let path = require('path');
 let mzfs = require('mz/fs');
 let _ = require('lodash');
+let yaml = require('js-yaml');
 
 let auth = require('./auth');
 let tools = require('./tools');
@@ -169,12 +170,25 @@ let fetchZIPPath = exports.fetchZIPPath = async function(contest) {
     return null;
 }
 
+let readConfig = async function(root_dir) {
+    if (await mzfs.exists(path.join(root_dir, 'conf.json'))) {
+        return JSON.parse(await mzfs.readFile(path.join(root_dir, 'conf.json'), 'utf-8'));
+    }
+    if (await mzfs.exists(path.join(root_dir, 'conf.yaml'))) {
+        return yaml.safeLoad(await mzfs.readFile(path.join(root_dir, 'conf.yaml'), 'utf-8'));
+    }
+    if (await mzfs.exists(path.join(root_dir, 'conf.yml'))) {
+        return yaml.safeLoad(await mzfs.readFile(path.join(root_dir, 'conf.yml'), 'utf-8'));
+    }
+    throw new Error(`can not find config file in [${root_dir}]`);
+}
+
 let fetchProblemInfo = exports.fetchProblemInfo = async function (contest, type, idx) {
     let contest_path = path.join(STORAGE.REPO, contest.repository_local_name);
     let root_dir = path.join(contest_path, type);
-    let conf = JSON.parse(await mzfs.readFile(path.join(root_dir, 'conf.json'), 'utf-8'));
+    let conf = await readConfig(root_dir);
     let problem_dir = path.join(root_dir, conf['subdir'][idx]);
-    let problem_conf = JSON.parse(await mzfs.readFile(path.join(problem_dir, 'conf.json'), 'utf-8'));
+    let problem_conf = await readConfig(problem_dir);
     let problem_name = path.basename(problem_dir);
     let problem_title = problem_conf['title']['zh-cn'];
     let problem_content = await mzfs.readFile(path.join(contest_path, 'statements', 'tuoj', type, problem_name + '.md'), 'utf-8');
@@ -205,7 +219,7 @@ let fetchProblemInfo = exports.fetchProblemInfo = async function (contest, type,
 let fetchProblems = exports.fetchProblems = async function(contest, type) {
     let contest_path = path.join(STORAGE.REPO, contest.repository_local_name);
     let root_dir = path.join(contest_path, type);
-    let conf = JSON.parse(await mzfs.readFile(path.join(root_dir, 'conf.json'), 'utf-8'));
+    let conf = await readConfig(root_dir);
     let problems = [];
     for(let idx in conf['subdir']) {
         problems.push(await fetchProblemInfo(contest, type, idx));
