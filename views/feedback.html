@@ -1,11 +1,15 @@
 <div class='panel panel-default'>
     <div class="panel-heading">直接反馈</div>
     <div class='panel-body'>
-        <form action="/feedback" method="post">
-            <textarea rows="5" class="feedback-input" name="content" placeholder="这里是反馈意见"></textarea>
-            <div class="pull-right">
-                <button type="submit" class="feedback-btn">发送</button>
-            </div>
+        <form action="/feedback" method="post" name="feedback-form">
+            <textarea
+                oninput="tryResize(event)"
+                onkeydown="tryFeedback(event)"
+                id="feedback-ta"
+                rows="5"
+                class="feedback-input"
+                name="content"
+                placeholder="这里是反馈意见，Ctrl+Enter 提交"></textarea>
         </form>
     </div>
 </div>
@@ -15,32 +19,31 @@
         width: 100%;
         box-sizing: border-box;
         outline: none;
+        border-radius: 4px;
 
-        border: rgba(0,0,0,.1) 1px solid;
-        border-radius: 6px;
-        padding: 4px;
-    }
-    .feedback-input:focus {
-        border: rgba(0,0,0,.3) 1px solid;
-    }
-
-    .feedback-btn {
-        height: 26px;
-        outline: none;
-        border: 0px;
-        border-radius: 6px;
-        text-align: center;
-        line-height: 26px;
-
-        color: rgba(0, 0, 0, 0.4);
-    }
-    .feedback-btn:hover {
-        color: rgba(0, 0, 0, 0.6);
-    }
-    .feedback-btn:active {
-        color: rgba(0, 0, 0, 0.8);
+        border: none;
+        padding: 10px 15px;
+        font-size: 16px;
+        line-height: 24px;
+        font-family: PingfangSC, "Source Hans Sans SC", "NotoSansCJK SC", RobotoDraft, Roboto, Helvetica, sans-serif;
+        background: #F0F0F0;
+        box-shadow: rgba(0,0,0,.12) 0 2px 6px inset;
+        resize: none;
     }
 </style>
+<script>
+function tryResize(e) {
+    let initial = 140;
+    let target = e.target;
+    target.style.height = initial;
+    if(target.clientHeight < target.scrollHeight)
+        target.style.height = target.scrollHeight;
+}
+function tryFeedback(e) {
+    if(e.key === 'Enter' && e.ctrlKey)
+        document["feedback-form"].submit();
+}
+</script>
 
 <div class='panel panel-default'>
     <div class="panel-heading">反馈与支持</div>
