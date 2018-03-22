@@ -1,9 +1,9 @@
 
 ## 1. Code+(cp.thusaac.org)和OJ(oj.thusaac.org)是什么关系?
 
-Code+是清华大学计算机系学生算法与竞赛协会(简称算协)活动部主办的一系列比赛,官网是[https://cp.thusaac.org](https://cp.thusaac.org).
+Code+是清华大学计算机系学生算法与竞赛协会(简称算协)主办的一系列比赛,官网是[https://cp.thusaac.org](https://cp.thusaac.org).
 
-OJ是算协平台部负责维护的一个网站,网址是[https://oj.thusaac.org](https://oj.thusaac.org)其上承担了很多评测任务,Code+比赛也在该OJ上进行评测.
+OJ是算协负责维护的一个网站,网址是[https://oj.thusaac.org](https://oj.thusaac.org)其上承担了很多评测任务,Code+比赛也在该OJ上进行评测.
 
 简单来说:
 

@@ -65,12 +65,15 @@ router.get('/contests', async (ctx, next) => {
     let contests = await Contest.find({public: true}).sort('-no');
     let my_contests = [];
     let my_signs = [];
+    let my_awards = [];
     if (ctx.state.user) {
         my_signs = await ContestSign.find({userID: ctx.state.user._id});
         my_contests = await Contest.find({_id: my_signs.map(x => x.contestID)}).sort('-no');
+        let award_signs = await ContestSign.find({userID: ctx.state.user._id, has_award: true});
+        my_awards = await Contest.find({_id: award_signs.map(x => x.contestID)}).sort('-no');
         tools.bindFindByXX(my_signs, 'contestID');
     }
-    await ctx.render('contests', {current_page: 'contests', title: "比赛列表", contests: contests, my_contests: my_contests, my_signs: my_signs});
+    await ctx.render('contests', {current_page: 'contests', title: "比赛列表", contests: contests, my_contests: my_contests, my_signs: my_signs, my_awards: my_awards});
 });
 
 router.get('/contests/:contest_id', async (ctx, next) => {
