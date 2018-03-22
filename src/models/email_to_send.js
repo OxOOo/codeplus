@@ -18,7 +18,7 @@ let emailToSendSchema = new mongoose.Schema({
         required: true
     },
     env: Object,
-    priority: { // 优先级,先发送大的,默认0
+    priority: { // 优先级,先发送大的,默认0    x<=0表示订阅消息,0<x<=10表示推送消息,10<x表示及时消息
         type: Number,
         required: true,
         default: 0

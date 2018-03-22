@@ -557,13 +557,15 @@ router.post('/admin/email_create', auth.adminRequired, async (ctx, next) => {
     let subject = ctx.request.body.subject;
     auth.assert(subject, '需要主题');
     auth.assert(ctx.request.body.addresses, '需要邮件地址');
+    let priority = ctx.request.body.priority || 0;
     let addresses = ctx.request.body.addresses.split('\n').map(x => _.trim(x)).filter(x => x.length>0);
 
     for(let addr of addresses) {
         await EMailToSend.create({
             templateID: template._id,
             to: addr,
-            subject: subject
+            subject: subject,
+            priority: priority
         });
     }
 

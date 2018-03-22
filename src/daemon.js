@@ -57,10 +57,10 @@ async function SendEMail() {
         {
             let task = await EMailToSend.findOne({has_sent: false}).sort('-priority');
             if (!task) break;
-            if (task.priority <= 0) await sleep(3000);
+            if (task.priority <= 10) await sleep(3000);
 
             task.has_sent = true;
-            task.send_api = 'SMTPv1';
+            task.send_api = 'SMTPv2';
             task.sent_at = new Date();
 
             let mailHtml = null;

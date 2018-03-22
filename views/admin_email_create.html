@@ -15,7 +15,12 @@
       </div>
       <div class="form-group">
         <label>主题</label>
-        <input class="form-control" name="subject"/>
+        <input type="text" class="form-control" name="subject"/>
+      </div>
+      <div class="form-group">
+        <label>优先级</label>
+        <input type="number" class="form-control" name="priority" value="0"/>
+        <p class="help-block"><%= "x<=0表示订阅消息,0<x<=10表示推送消息,10<x表示及时消息" %></p>
       </div>
       <div class="form-group">
         <label>收件地址(每行一个)</label>

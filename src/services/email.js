@@ -38,7 +38,7 @@ exports.sendActiveEmail = async (user) => {
             link: url,
             logo: logo
         },
-        priority: 1
+        priority: 11
     });
 }
 
@@ -70,7 +70,7 @@ exports.sendForgotEmail = async (user) => {
             code: user.forgot_password_code,
             logo: logo
         },
-        priority: 1
+        priority: 11
     });
 }
 
