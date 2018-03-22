@@ -10,7 +10,7 @@ let config = yaml.safeLoad(fs.readFileSync(path.join(__dirname, '..', 'config.ym
 
 let log = exports.log = new Log('info');
 
-let SERVER = exports.SERVER = _.pick(config['SERVER'], ['ADDRESS', 'PORT', 'URL_PREFIX', 'SECRET_KEYS']);
+let SERVER = exports.SERVER = _.pick(config['SERVER'], ['ADDRESS', 'PORT', 'URL_PREFIX', 'SECRET_KEYS', 'MAXAGE']);
 
 // 数据库相关
 if ('MONGO_HOST' in process.env) { // for docker

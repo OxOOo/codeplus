@@ -110,7 +110,9 @@ router.use('', require('./controllers/admin').routes());
 router.use('', require('./controllers/oauth').routes());
 
 app.use(router.routes());
-app.use(require('koa-static')('public'));
+app.use(require('koa-static')('public', {
+    maxage: SERVER.MAXAGE
+}));
 app.use(async (ctx, next) => {
     await ctx.render('404', {layout: false});
 });
