@@ -24,7 +24,7 @@ let fetchLatestContest = exports.fetchLatestContest = async function(ctx) {
 let fetchExpressContest = exports.fetchExpressContest = async function(ctx) {
     let contest = await Contest.findOne({public: true, express_info_end: false}).sort('no');
     let contest_sign = null;
-    if (ctx.state.user) {
+    if (ctx.state.user && contest) {
         contest_sign = await ContestSign.findOne({userID: ctx.state.user._id, contestID: contest._id});
     }
     return {contest, contest_sign};

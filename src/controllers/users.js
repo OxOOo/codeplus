@@ -236,7 +236,7 @@ router.post('/modify_express', auth.loginRequired, async (ctx, next) => {
         ctx.request.body[v].should.be.a.String().and.not.eql("", `${FIELDS[v]}不能为空`);
     
     let {contest, contest_sign} = await chelper.fetchExpressContest(ctx);
-    auth.assert(contest_sign && contest_sign.has_award, '抱歉,你没有获奖');
+    auth.assert(contest && contest_sign && contest_sign.has_award, '抱歉,你没有获奖');
 
     auth.assert(!contest.express_info_end, '快递填写已结束，请联系管理员');
 
