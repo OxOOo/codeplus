@@ -61,12 +61,20 @@ let contestSchema = new mongoose.Schema({
         type: String,
     },
 
+    contests: { // 有哪些比赛
+        type: [String],
+        default: []
+    },
+
     rank_msg: String, // 排名说明
-    div1_ranklist: String,
-    div2_ranklist: String,
-    div1_contest_id: Number, // OJ上的比赛ID
-    div2_contest_id: Number, // OJ上的比赛ID
-    practise_contest_id: Number, // 练习赛ID
+    ranklist: { // div1 -> String
+        type: Object,
+        default: {}
+    },
+    contest_ids: { // div1 -> Number, practise -> Number
+        type: Object,
+        default: {}
+    },
 
     express_info_end: {
         type: Boolean, // 快递填写是否结束

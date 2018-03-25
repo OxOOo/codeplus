@@ -30,9 +30,9 @@ router.get('/contests/sign', auth.loginRequired, async (ctx, next) => {
     auth.assert(ctx.state.normal_login, '尚未创建帐号，不能报名，前往<a href="/modify">创建帐号</a>');
     auth.assert(ctx.state.user.email_passed, '尚未关联邮箱，不能报名，前往<a href="/modify">关联邮箱</a>');
     auth.assert(ctx.state.user.info_filled, '基本信息不完善，不能报名，前往<a href="/modify">完善基本信息</a>');
-    auth.assert(_.includes(['div1', 'div2'], ctx.request.query.type), '报名类型不正确');
 
     let contest = await chelper.contestSignCheck(ctx.request.query.contest_id);
+    auth.assert(_.includes(contest.contests, ctx.request.query.type), '报名类型不正确');
 
     let contest_sign = await ContestSign.findOne({userID: ctx.state.user._id, contestID: contest._id});
     auth.assert(!contest_sign, '已报名');
@@ -93,7 +93,7 @@ router.get('/contests/:contest_id', async (ctx, next) => {
         } catch(e) {
             console.error(e);
         }
-        for(let type of ['div1', 'div2']) {
+        for(let type of contest.contests) {
             try {
                 contest_links[type] = await chelper.fetchProblems(contest, type);
             } catch(e) {
@@ -113,13 +113,13 @@ router.get('/contests/:contest_id', async (ctx, next) => {
 router.get('/contests/:contest_id/ranklist/:type', async (ctx, next) => {
     ctx.params.contest_id.should.be.a.String().and.not.empty();
     ctx.params.type.should.be.a.String().and.not.empty();
-    auth.assert(['div1', 'div2'].indexOf(ctx.params.type) != -1, '参数非法');
 
     let contest = await Contest.findById(ctx.params.contest_id);
     auth.assert(contest, '比赛不存在');
     auth.assert(contest.end_contest_time < Date.now(), '比赛未结束');
+    auth.assert(_.includes(contest.contests, ctx.params.type), '参数非法');
 
-    let lines = contest[`${ctx.params.type}_ranklist`] ? contest[`${ctx.params.type}_ranklist`].split('\n').map(x => {return x.split('\t')}) : '暂无';
+    let lines = contest.ranklist[ctx.params.type] ? contest.ranklist[ctx.params.type].split('\n').map(x => x.split('\t')) : '暂无';
     
     // prepare rating
     let name_idx = _.includes(lines[0], 'id') ? _.indexOf(lines[0], 'id') : -1;
@@ -171,12 +171,12 @@ router.get('/contests/:contest_id/download', async (ctx, next) => {
 router.get('/contests/:contest_id/problem/:type/:idx', async (ctx, next) => {
     ctx.params.contest_id.should.be.a.String().and.not.empty();
     ctx.params.type.should.be.a.String().and.not.empty();
-    auth.assert(['div1', 'div2'].indexOf(ctx.params.type) != -1, '参数非法');
     ctx.params.idx.should.be.a.String().and.not.empty();
 
     let contest = await Contest.findById(ctx.params.contest_id);
     auth.assert(contest, '比赛不存在');
     auth.assert(contest.end_contest_time < Date.now(), '比赛未结束');
+    auth.assert(_.includes(contest.contests, ctx.params.type), '参数非法');
 
     let p = await chelper.fetchProblemInfo(contest, ctx.params.type, ctx.params.idx);
 
@@ -189,12 +189,12 @@ router.get('/contests/:contest_id/problem/:type/:idx', async (ctx, next) => {
 router.get('/contests/:contest_id/solution/:type/:idx', async (ctx, next) => {
     ctx.params.contest_id.should.be.a.String().and.not.empty();
     ctx.params.type.should.be.a.String().and.not.empty();
-    auth.assert(['div1', 'div2'].indexOf(ctx.params.type) != -1, '参数非法');
     ctx.params.idx.should.be.a.String().and.not.empty();
 
     let contest = await Contest.findById(ctx.params.contest_id);
     auth.assert(contest, '比赛不存在');
     auth.assert(contest.end_contest_time < Date.now(), '比赛未结束');
+    auth.assert(_.includes(contest.contests, ctx.params.type), '参数非法');
 
     let p = await chelper.fetchProblemInfo(contest, ctx.params.type, ctx.params.idx);
 

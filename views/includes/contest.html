@@ -37,8 +37,10 @@
               <a href="/contests/unsign?contest_id=<%= contest._id %>&user_id=<%= user._id %>">取消报名</a>
         
           <% } else { %>
-              <a href="/contests/sign?contest_id=<%= contest._id %>&user_id=<%= user._id %>&type=div1">报名div1</a> |
-              <a href="/contests/sign?contest_id=<%= contest._id %>&user_id=<%= user._id %>&type=div2">报名div2</a>
+              <% contest.contests.forEach((type, idx) => { %>
+                <% if (idx > 0) { %>| <% } %>
+                <a href="/contests/sign?contest_id=<%= contest._id %>&user_id=<%= user._id %>&type=<%= type %>">报名<%= type %></a>
+              <% }) %>
           <% } %>
         <% } %>
         

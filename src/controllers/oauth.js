@@ -99,12 +99,12 @@ router.post('/oauth/contest_info', auth.jsonFormatError, async ctx => {
     let ids = [];
     for(let s of signs) {
         let c = contests.findBy_id(s.contestID);
-        let contest_id = c[`${s.type}_contest_id`];
+        let contest_id = c.contest_ids[s.type];
         if (_.isNumber(contest_id)) {
             ids.push(contest_id);
         }
-        if (_.isNumber(c.practise_contest_id)) {
-            ids.push(c.practise_contest_id);
+        if (_.isNumber(c.contest_ids['practise'])) {
+            ids.push(c.contest_ids['practise']);
         }
     }
 

@@ -3,7 +3,7 @@
         <% if(contest_links.zip) { %>
             <a href="/contests/<%= contest._id %>/download">下载</a><br/>
         <% } %>
-        <% for(let type of ['div1', 'div2']) { %>
+        <% for(let type of contest.contests) { %>
             <% if (!contest_links[type]) continue; %>
             <table class="table" width="100%">
                 <thead>

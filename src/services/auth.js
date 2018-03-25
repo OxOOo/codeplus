@@ -11,7 +11,9 @@ const FRIENDLY_CHARSET = "123456789qwertyuplkjhgfdsazxcvbnmQWERTYUPKJHGFDSAZXCVB
 
 exports.visit = async function (ctx, next) {
     try {
-        await Visit.create({url: ctx.url, ip: ctx.state.ip, method: ctx.method});
+        if (!ctx.query.notrecord) {
+            await Visit.create({url: ctx.url, ip: ctx.state.ip, method: ctx.method});
+        }
     } catch(e) {
         console.error('Error on visit');
         console.error(e);

@@ -30,7 +30,7 @@ async function Counter() {
 
     for(let contest of await Contest.find()) {
         if (contest.begin_sign_time <= Date.now() && Date.now() <= contest.end_sign_time) {
-            for(let type of ['div1', 'div2']) {
+            for(let type of contest.contests) {
                 let count = await ContestSign.find({contestID: contest._id, type: type}).count();
                 await Count.create({name: `contest_${type}_signs:${contest._id}`, value: count});
             }

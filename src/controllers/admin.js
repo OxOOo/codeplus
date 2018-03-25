@@ -90,15 +90,17 @@ router.post('/admin/contests/:contest_id', auth.adminRequired, async (ctx, next)
     ]));
     await contest.save();
 
-    for(let type of ['div1', 'div2', 'practise']) {
+    contest.contests = info.contests.split(',').map(x => _.trim(x)).filter(x => x.length > 0);
+
+    for(let type of _.concat(contest.contests, 'practise')) {
         let name = `${type}_contest_id`;
-        contest[name] = null;
-        if (info[name] && _.trim(info[name]).length > 0) contest[name] = _.trim(info[name]);
+        contest.contest_ids[type] = null;
+        if (info[name] && _.trim(info[name]).length > 0) contest.contest_ids[type] = Number(_.trim(info[name]));
     }
     await contest.save();
 
     let ranked_count = {};
-    for(let type of ['div1', 'div2']) {
+    for(let type of contest.contests) {
         await ContestSign.update({contestID: contest._id, type: type}, {$set: {rank: null}}, {multi: true});
         ranked_count[type] = -1;
 
@@ -122,11 +124,11 @@ router.post('/admin/contests/:contest_id', auth.adminRequired, async (ctx, next)
             }
         }
 
-        contest[`${type}_ranklist`] = lines.map(x => {return x.join('\t')}).join('\n');
+        contest.ranklist[type] = lines.map(x => {return x.join('\t')}).join('\n');
     }
     await contest.save();
 
-    ctx.state.flash.success = `更新成功,div1有效排名${ranked_count['div1']}个，div2有效排名${ranked_count['div2']}个`;
+    ctx.state.flash.success = `更新成功,` + _.keys(ranked_count).map(x => `${x}有效排名${ranked_count[x]}个`).join(',');
 
     await ctx.redirect('back');
 });
@@ -364,13 +366,13 @@ router.get('/admin/contests/:contest_id/signs_statistic', auth.adminRequired, as
     auth.assert(contest, '比赛不存在');
 
     let counts = {};
-    for(let type of ['div1', 'div2']) {
+    for(let type of contest.contests) {
         counts[type] = await Count.find({name: `contest_${type}_signs:${contest._id}`});
     }
 
     let nums = {};
     nums.users = await User.count();
-    for(let type of ['div1', 'div2']) {
+    for(let type of contest.contests) {
         nums[`${type}_signs`] = await ContestSign.find({contestID: contest._id, type: type}).count();
     }
     nums.total_signs = await ContestSign.find({contestID: contest._id}).count();

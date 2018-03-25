@@ -10,12 +10,17 @@
           <tr>
             <td><a href="/contests/<%= c._id %>"><%= c.title %></a></td>
             <td>
-              <% if (c.end_contest_time < Date.now() && c.div1_ranklist && c.div2_ranklist) { %>
-                <a target="_blank" href="/contests/<%= c._id %>/ranklist/div1">div1</a> |
-                <a target="_blank" href="/contests/<%= c._id %>/ranklist/div2">div2</a> |
+              <% c.contests.forEach((type) => { %>
+                <% if (c.end_contest_time < Date.now() && c.ranklist[type]) { %>
+                  <a target="_blank" href="/contests/<%= c._id %>/ranklist/<%= type %>"><%= type %></a> |
+                <% } else { %>
+                  <del><%= type %></del> |
+                <% } %>
+              <% }) %>
+              <% if (c.rank_msg && c.rank_msg.length > 0) { %>
                 <a class="msg-link" data-for="<%= c._id %>" href="#">排名说明</a>
               <% } else { %>
-                <del>div1</del> | <del>div2</del> | <del>排名说明</del>
+                <del>排名说明</del>
               <% } %>
             </td>
             <td>
@@ -31,6 +36,33 @@
     </table>
   </div>
 </div>
+
+<% contests.forEach((c) => { %>
+  <div class="overlap-wrapper" id="msg-<%= c._id %>" style="display: none">
+    <div class="overlap-content">
+      <div class="panel">
+        <div class="panel-body">
+          <div class="markdown-body">
+            <%- c.rank_msg ? md.render(c.rank_msg) : '' %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% }) %>
+
+<script>
+  $(function() {
+    $(".overlap-wrapper").click(function(e) {
+      $(this).fadeOut(200);
+    });
+  
+    $(".msg-link").click(function(e) {
+      e.preventDefault();
+      $(".overlap-wrapper#msg-" + $(this).attr('data-for')).fadeIn(200);
+    });
+  });
+</script>
 
 <% if (user) { %>
   <div class='panel panel-default'>
@@ -103,30 +135,3 @@
     </div>
   </div>
 <% } %>
-
-<% contests.forEach((c) => { %>
-  <div class="overlap-wrapper" id="msg-<%= c._id %>" style="display: none">
-    <div class="overlap-content">
-      <div class="panel">
-        <div class="panel-body">
-          <div class="markdown-body">
-            <%- c.rank_msg ? md.render(c.rank_msg) : '' %>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-<% }) %>
-
-<script>
-  $(function() {
-    $(".overlap-wrapper").click(function(e) {
-      $(this).fadeOut(200);
-    });
-  
-    $(".msg-link").click(function(e) {
-      e.preventDefault();
-      $(".overlap-wrapper#msg-" + $(this).attr('data-for')).fadeIn(200);
-    });
-  });
-</script>

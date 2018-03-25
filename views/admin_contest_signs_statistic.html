@@ -5,26 +5,29 @@
     </div>
     <div class='panel-body'>
         <p>报名总数：<%= nums.total_signs %></p><br/>
-        <p>div1人数：<%= nums.div1_signs %></p><br/>
-        <p>div2人数：<%= nums.div2_signs %></p><br/>
+        <% contest.contests.forEach((type) => { %>
+        <p><%= type %>人数：<%= nums[`${type}_signs`] %></p><br/>
+        <% }) %>
         <p>注册用户总数：<%= nums.users %></p><br/>
     </div>
 </div>
 
+<% contest.contests.forEach((type) => { %>
+
 <div class='panel panel-default'>
   <div class='panel-heading'>
     <i class='icon-edit icon-large'></i>
-    比赛《<%= contest.title %>》的div1报名统计
+    比赛《<%= contest.title %>》的<%= type %>报名统计
   </div>
   <div class='panel-body'>
-    <svg id="div1_svg" width="1500" height="660"></svg>
+    <svg id="<%= type %>_svg" width="1500" height="660"></svg>
   </div>
-  <div id="div1_data" style="display: none" ><%= JSON.stringify(counts.div1) %></div>
+  <div id="<%= type %>_data" style="display: none" ><%= JSON.stringify(counts[type]) %></div>
   <script>
     $(function() {
-      var div1_statistic = JSON.parse($('#div1_data').text());
+      var <%= type %>_statistic = JSON.parse($('#<%= type %>_data').text());
 
-      var svg = d3.select("#div1_svg"),
+      var svg = d3.select("#<%= type %>_svg"),
           margin = {top: 20, right: 20, bottom: 30, left: 50},
           width = +svg.attr("width") - margin.left - margin.right,
           height = +svg.attr("height") - margin.top - margin.bottom,
@@ -42,16 +45,16 @@
           .x(function(d) { return x(d.recorded_at); })
           .y1(function(d) { return y(d.value); });
       
-      div1_statistic.forEach(function(x) {
+      <%= type %>_statistic.forEach(function(x) {
         x.recorded_at = parseTime(x.recorded_at);
       });
 
-      x.domain(d3.extent(div1_statistic, function(d) { return d.recorded_at; }));
-      y.domain([0, d3.max(div1_statistic, function(d) { return d.value; })]);
+      x.domain(d3.extent(<%= type %>_statistic, function(d) { return d.recorded_at; }));
+      y.domain([0, d3.max(<%= type %>_statistic, function(d) { return d.value; })]);
       area.y0(y(0));
 
       g.append("path")
-          .datum(div1_statistic)
+          .datum(<%= type %>_statistic)
           .attr("fill", "steelblue")
           .attr("d", area);
 
@@ -72,63 +75,4 @@
   </script>
 </div>
 
-<div class='panel panel-default'>
-  <div class='panel-heading'>
-    <i class='icon-edit icon-large'></i>
-    比赛《<%= contest.title %>》的div2报名统计
-  </div>
-  <div class='panel-body'>
-    <svg id="div2_svg" width="1500" height="660"></svg>
-  </div>
-  <div id="div2_data" style="display: none" ><%= JSON.stringify(counts.div2) %></div>
-  <script>
-    $(function() {
-      var div2_statistic = JSON.parse($('#div2_data').text());
-
-      var svg = d3.select("#div2_svg"),
-          margin = {top: 20, right: 20, bottom: 30, left: 50},
-          width = +svg.attr("width") - margin.left - margin.right,
-          height = +svg.attr("height") - margin.top - margin.bottom,
-          g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-      var parseTime = d3.utcParse("%Y-%m-%dT%H:%M:%S.%LZ");
-
-      var x = d3.scaleTime()
-          .rangeRound([0, width]);
-
-      var y = d3.scaleLinear()
-          .rangeRound([height, 0]);
-
-      var area = d3.area()
-          .x(function(d) { return x(d.recorded_at); })
-          .y1(function(d) { return y(d.value); });
-      
-          div2_statistic.forEach(function(x) {
-        x.recorded_at = parseTime(x.recorded_at);
-      });
-
-      x.domain(d3.extent(div2_statistic, function(d) { return d.recorded_at; }));
-      y.domain([0, d3.max(div2_statistic, function(d) { return d.value; })]);
-      area.y0(y(0));
-
-      g.append("path")
-          .datum(div2_statistic)
-          .attr("fill", "steelblue")
-          .attr("d", area);
-
-      g.append("g")
-          .attr("transform", "translate(0," + height + ")")
-          .call(d3.axisBottom(x));
-
-      g.append("g")
-          .call(d3.axisLeft(y))
-          .append("text")
-          .attr("fill", "#000")
-          .attr("transform", "rotate(-90)")
-          .attr("y", 6)
-          .attr("dy", "0.71em")
-          .attr("text-anchor", "end")
-          .text("注册人数");
-    });
-  </script>
-</div>
+<% }) %>
