@@ -97,6 +97,7 @@ router.post('/admin/contests/:contest_id', auth.adminRequired, async (ctx, next)
         contest.contest_ids[type] = null;
         if (info[name] && _.trim(info[name]).length > 0) contest.contest_ids[type] = Number(_.trim(info[name]));
     }
+    contest.markModified('contest_ids');
     await contest.save();
 
     let ranked_count = {};
@@ -126,6 +127,7 @@ router.post('/admin/contests/:contest_id', auth.adminRequired, async (ctx, next)
 
         contest.ranklist[type] = lines.map(x => {return x.join('\t')}).join('\n');
     }
+    contest.markModified('ranklist');
     await contest.save();
 
     ctx.state.flash.success = `更新成功,` + _.keys(ranked_count).map(x => `${x}有效排名${ranked_count[x]}个`).join(',');
