@@ -10,10 +10,6 @@ MONGODB: # mongodb配置
   HOSTNAME: 127.0.0.1
   DATABASE: codeplus_test
 
-REDIS: # redis配置
-  HOSTNAME: 127.0.0.1
-  PORT: 6379
-
 EMAIL: # 邮箱设置，用于找回密码等功能
   USER: unknow@163.com
   PASSWORD: abcdef # 163邮箱要求使用授权码登录，而不是密码

@@ -12,8 +12,8 @@ async function main() {
         contest = new Contest();
     }
     contest.title = title;
-    contest.description = await mzfs.readFile(path.join(__dirname, 'test.md'), 'utf-8');
-    contest.terms = await mzfs.readFile(path.join(__dirname, 'test.md'), 'utf-8');
+    contest.description = await mzfs.readFile(path.join(__dirname, '..', 'docs', 'test.md'), 'utf-8');
+    contest.terms = await mzfs.readFile(path.join(__dirname, '..', 'docs', 'terms.md'), 'utf-8');
     contest.public = true;
     contest.begin_sign_time = "2017-11-18 00:00+800";
     contest.end_sign_time = "2017-11-25 13:00+800";
